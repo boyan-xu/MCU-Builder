@@ -1,4 +1,4 @@
 interface:
   display_name: "Build with AI MCU"
-  short_description: "Turn maker ideas into MCU projects / 从想法到单片机作品"
-  default_prompt: "Use $build-with-ai-mcu to help me choose and build a project based on my budget, tools, and skills. 按我的预算、设备和基础，帮我把想法做出来。"
+  short_description: "Turn your idea into a working microcontroller project"
+  default_prompt: "Use $build-with-ai-mcu to understand what I want to make and help me build it with the hardware and tools I already have."
