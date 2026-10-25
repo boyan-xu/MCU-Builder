@@ -7,7 +7,8 @@ import test from 'node:test';
 const root = fileURLToPath(new URL('../skills/', import.meta.url));
 const names = ['build-with-ai-mcu', 'develop-with-ai-mcu'];
 const shared = ['assets/parts-checklist.html', 'references/checklist.md', 'references/working-style.md', 'references/rea.md',
-  'references/uno-led/README.md', 'references/uno-led/connections.json', 'references/uno-led/uno-led.ino', 'references/uno-led/wiring.svg'];
+  'references/verification.md', 'references/uno-led/README.md', 'references/uno-led/connections.json', 'references/uno-led/uno-led.ino', 'references/uno-led/wiring.svg',
+  'references/uno-led/diagram.json', 'references/uno-led/simulation-result.json'];
 
 test('both skills carry identical shared resources for independent installation', () => {
   for (const file of shared) {
