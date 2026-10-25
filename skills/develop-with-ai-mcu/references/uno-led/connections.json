@@ -1,0 +1,10 @@
+{
+  "board": "Arduino UNO Rev3",
+  "logicVoltage": "5 V",
+  "ledPin": 8,
+  "connections": [
+    {"id":"W1","from":"UNO D8","to":"R1 pin 1"},
+    {"id":"W2","from":"R1 pin 2","to":"LED1 A"},
+    {"id":"W3","from":"LED1 K","to":"UNO GND"}
+  ]
+}
