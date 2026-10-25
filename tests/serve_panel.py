@@ -31,6 +31,12 @@ PUBLIC_FILES = (
     'skills/develop-with-ai-mcu/references/uno-led/connections.json',
     'skills/develop-with-ai-mcu/references/uno-led/uno-led.ino',
     'skills/develop-with-ai-mcu/references/uno-led/wiring.svg',
+    'skills/build-with-ai-mcu/references/verification.md',
+    'skills/develop-with-ai-mcu/references/verification.md',
+    'skills/build-with-ai-mcu/references/uno-led/diagram.json',
+    'skills/develop-with-ai-mcu/references/uno-led/diagram.json',
+    'skills/build-with-ai-mcu/references/uno-led/simulation-result.json',
+    'skills/develop-with-ai-mcu/references/uno-led/simulation-result.json',
 )
 
 
