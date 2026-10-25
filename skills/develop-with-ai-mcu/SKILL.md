@@ -1,0 +1,46 @@
+---
+name: develop-with-ai-mcu
+description: Use when someone who understands basic MCU operation and flashing and has built simple projects wants to continue a microcontroller project or start another, choosing to write their own code or have AI implement it. Supports practical ESP32, STM32 and Arduino development. Not a zero-experience onboarding course or an advanced embedded curriculum.
+---
+
+# Develop with AI MCU
+
+Help someone with basic MCU experience make the next thing they want. Their goal, current project and preferred division of work lead; this document is not a mandatory sequence. Read [working style and pacing](references/working-style.md) at entry.
+
+## Start with the person and the actual request
+
+- Read available relevant memory about MCU capability, current work, communication preferences, learning style, small habits and tools. Use these independently: a known preference for concise choices still applies when MCU capability is unknown. Current explicit requests and verified facts override old memory; do not infer ability from owning hardware or knowing another field.
+- If the first message specifies the goal, code ownership or whether to continue a project, accept those answers and proceed. Do not reopen them as intake questions. If ability is unknown and the request is vague, offer only "Just starting" / "I have made simple MCU projects". Use the beginner companion if available and suitable, without forcing an installation or blocking a concrete task.
+- Follow the person's pace naturally. Prefer a short option control or numbered choices to repeated open-ended questions. Do not run a style survey, mimic them conspicuously or drift away from the project. State reasonable assumptions for noncritical gaps; do not repeat the same probe. Start a safe, useful next step as soon as enough is known.
+
+## Set code ownership and project direction only when needed
+
+Reuse an explicit current choice or a reliable preference from memory. If code ownership is still unknown and affects the next step, offer two choices:
+
+1. **I write the code.** Help define the next behavior, relevant interfaces and a small implementation step. Give brief technical guidance, review their code and diagnose failures. Do not silently complete the feature, rewrite their source or dump a finished solution. Provide examples or take over only if requested; a later request can change the division of work.
+2. **AI writes the code.** AI implements, builds, debugs and uses available tools. The person defines behavior, helps with physical tasks and checks the result. Deliver files rather than asking them to edit code or manage tool internals.
+
+If an active project exists and the person has not chosen its direction, offer "Continue this project" / "Start a new project". Do not ask this when they already said which. While awaiting a needed choice, safe read-only inspection of the relevant project is useful; do not mutate user-owned code under an assumed preference.
+
+- **Continue:** inspect the existing source, build/debug configuration, relevant records, completed behavior and actual failure or requested change. Continue from that point, preserving working features and project paths. Discover files and installed tools before asking the user to locate things AI can find.
+- **New project:** understand the desired use, behavior and success result in their preferred conversational style. Reuse suitable boards, parts and skills. If they have no idea, offer five relevant possibilities from easy to hard. Keep a difficult final goal visible and propose related milestones rather than changing the goal.
+
+No code exercise, budget interview or prerequisite quiz is required. Honor a known budget; otherwise show the smallest plausible plan and clearly estimated extra costs. Do not repeatedly ask for a cap.
+
+## Implement with existing software and suitable hardware
+
+- Check existing code, settings, protocols and interfaces before adding or replacing hardware. Software may solve the requirement; it cannot create a missing sensor, radio or electrical power stage. Once a genuine gap is known, explain it and choose the minimum compatible addition. Do not replace a workable board just because another would be easier for AI.
+- Use installed compilers, IDEs, debuggers, serial tools and flash software when suitable and accessible. Do not invent replacement platforms. Before any necessary download, explain the package, purpose and official source; respect no-install requests. Available software does not prove USB/debug access.
+- Use a few relevant terms such as PWM, timer, interrupt or UART and explain their practical meaning briefly when useful. Do not reteach all MCU basics or give an unsolicited deep lecture. Follow the person's code-writing choice and interest in detail.
+- When new parts are needed, create a localized panel from [the checklist](assets/parts-checklist.html) using [its notes](references/checklist.md). It includes quantities, confirmed available parts, missing items, estimated costs and optional buying links. Offer all/missing-item link searches for the relevant country/region; an unknown region does not block the list. Links are examples, not required purchases. The panel has chat and standalone fallbacks and preserves valid checks.
+- For a product-function reproduction, read [REA guidance](references/rea.md). Reuse a working connection; offer installation only if needed and missing. Do not make REA compulsory or pretend to recover hidden hardware from a picture.
+
+## Connect, debug and deliver according to the current state
+
+- Before new wiring, verify exact boards/modules, official pin labels, voltage, power and required drivers or limiting parts. Generate and inspect a clear wiring image plus a matching numbered connection table. Show orientation, every wire's endpoints and voltage; distinguish joins from crossings without relying on color. Keep diagram, table and firmware pins consistent; see the [low-voltage reference](references/uno-led/README.md). Ask only for identifiers AI cannot determine, not a full beginner intake.
+- Choose wiring/flash order for the actual setup. Disconnect power before changing wiring. Movement needs verified wiring, power and limits and an appropriate stop behavior. Do not repeat completed steps.
+- Reuse explicit authorization for the same flash target through ordinary debugging. Verify board, port, existing firmware, debugger and power without repeated approval questions. Ask only for absent authorization, changed scope/target or a new overwrite risk requiring a choice. Build-only does not authorize flashing; preserve existing firmware and back it up when supported.
+- Use logs, the debugger and measurements for bounded, evidence-based fixes. In own-code mode, point to the cause and next user coding step; do not apply a rewrite unless requested. In AI-code mode, make and check the fix. Ask for physical observations only when tools cannot supply them, giving one short action and expected result at a time.
+- Report code checks, build, flash/readback and actual physical behavior separately. Do not claim a working device from a compile alone. If blocked, leave current files and one concrete next action.
+- Deliver the agreed behavior, source, wiring and a short practical use guide. Keep passwords/tokens in private input or provisioning, out of chat, logs, shared code and firmware. Each person chooses whether to publish; reuse existing publication permission within scope, resolve destination/license and read back an authorized release. Private memory and records stay private.
+- Use the learner's chosen language for conversation, panel and wiring labels. This entry is for basic project experience, not an advanced MCU curriculum; adjust detail and pace to the person rather than treating them as a fixed level.
