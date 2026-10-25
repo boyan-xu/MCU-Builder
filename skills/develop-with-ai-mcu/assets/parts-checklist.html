@@ -1,0 +1,223 @@
+<meta charset="utf-8">
+<div id="mcu-parts-panel">
+  <style>
+    #mcu-parts-panel { color-scheme: light dark; font: 16px/1.5 system-ui,sans-serif; color: light-dark(#152b32,#ecf3f4); background: light-dark(#f6f9f8,#162024); padding: 24px; max-width: 1000px; margin: auto; border-radius: 16px; }
+    #mcu-parts-panel * { box-sizing: border-box; }
+    #mcu-parts-panel h1 { font-size: 1.5em; margin: 0 0 6px; }
+    #mcu-parts-panel p { margin: 8px 0 16px; }
+    #mcu-parts-panel .table-wrap { overflow-x: auto; }
+    #mcu-parts-panel table { border-collapse: collapse; width: 100%; text-align: start; }
+    #mcu-parts-panel caption { text-align: start; padding: 8px 0; font-weight: 600; }
+    #mcu-parts-panel th, #mcu-parts-panel td { padding: 12px 10px; border-bottom: 1px solid light-dark(#d6e1e0,#3a4b50); vertical-align: top; }
+    #mcu-parts-panel td:first-child { min-width: 90px; }
+    #mcu-parts-panel td:nth-child(2) { min-width: 190px; }
+    #mcu-parts-panel small { display: block; font-size: .85em; margin-top: 4px; }
+    #mcu-parts-panel input[type=checkbox] { width: 20px; height: 20px; accent-color: #14836f; cursor: pointer; }
+    #mcu-parts-panel .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-top: 20px; }
+    #mcu-parts-panel label { display: block; }
+    #mcu-parts-panel input[type=text], #mcu-parts-panel select, #mcu-parts-panel button, #mcu-parts-panel textarea { font: inherit; border: 1px solid light-dark(#b7c9c7,#52676d); border-radius: 8px; padding: 9px 12px; background: light-dark(#fff,#202e33); color: inherit; }
+    #mcu-parts-panel input[type=text] { max-width: 100%; width: 260px; }
+    #mcu-parts-panel button { cursor: pointer; min-height: 44px; }
+    #mcu-parts-panel button.primary { background: #126d5c; color: #fff; border-color: #126d5c; }
+    #mcu-parts-panel button:disabled { opacity: .55; cursor: default; }
+    #mcu-parts-panel :focus-visible { outline: 3px solid #ba8215; outline-offset: 3px; }
+    #mcu-parts-panel a { color: light-dark(#086a58,#83dec9); }
+    #mcu-parts-panel textarea { width: 100%; min-height: 170px; margin: 8px 0; }
+    #mcu-parts-panel [hidden] { display: none; }
+    #mcu-parts-panel #parts-summary { font-weight: 600; }
+    @media (max-width: 540px) { #mcu-parts-panel { padding: 14px; } #mcu-parts-panel .controls > * { width: 100%; } }
+  </style>
+  <h1 id="parts-title">Parts checklist</h1>
+  <p id="parts-intro"></p>
+  <div class="table-wrap">
+    <table>
+      <caption id="parts-caption"></caption>
+      <thead><tr id="parts-columns"></tr></thead>
+      <tbody id="parts-rows"></tbody>
+    </table>
+  </div>
+  <p id="parts-summary" aria-live="polite"></p>
+  <p id="parts-cost-note"></p>
+  <div class="controls">
+    <label><span id="parts-region-label"></span><br><input id="parts-region" type="text" autocomplete="off" maxlength="120"></label>
+    <label><span id="parts-scope-label"></span><br><select id="parts-scope"><option value="missing"></option><option value="all"></option></select></label>
+    <button id="parts-ask" class="primary" type="button"></button>
+  </div>
+  <p id="parts-notice" role="status"></p>
+  <div id="parts-request-box" hidden>
+    <label for="parts-request" id="parts-request-label"></label>
+    <textarea id="parts-request" readonly></textarea>
+    <button id="parts-copy" type="button"></button>
+  </div>
+  <noscript>Open this checklist with JavaScript enabled to use its controls.</noscript>
+  <script type="application/json" id="parts-data">
+  {
+    "projectId": "sample-led",
+    "projectName": "Example: external LED",
+    "language": "en",
+    "currency": "USD",
+    "region": "",
+    "parts": [
+      {"id":"board","name":"Arduino UNO Rev3","specification":"UNO R3, USB cable included","quantity":1,"purpose":"Run the program","owned":true,"unitPrice":null},
+      {"id":"led","name":"Red LED","specification":"Through-hole LED, polarity marked","quantity":1,"purpose":"Show on/off","owned":false,"unitPrice":null},
+      {"id":"resistor","name":"Resistor","specification":"330 ohm, 0.25 W","quantity":1,"purpose":"Limit LED current","owned":false,"unitPrice":null},
+      {"id":"wires","name":"Jumper wires","specification":"Suitable for board and breadboard","quantity":3,"purpose":"Make connections","owned":false,"unitPrice":null},
+      {"id":"breadboard","name":"Breadboard","specification":"Solderless, isolated rows","quantity":1,"purpose":"Hold LED and resistor","owned":false,"unitPrice":null}
+    ]
+  }
+  </script>
+</div>
+<script id="checklist-app">
+const CHECKLIST_TEXT = {
+  en: {
+    title: 'Parts checklist', intro: 'Check an item only when the required quantity is ready. Buying links are examples; equivalent parts from other sellers are welcome.',
+    columns: ['Ready', 'Part and specification', 'Quantity', 'Purpose', 'Extra cost', 'Link'], owned: 'Already available', ready: 'Ready', missing: 'Missing', unknown: 'Not priced', link: 'Example listing',
+    summary: (r,n) => `${r} of ${n} items ready`, cost: (v,n) => `Estimated missing-parts cost: ${v}${n ? ` + ${n} unpriced item(s)` : ''}`,
+    costNote: 'Estimates only. Confirm shipping, consumables and current prices before buying.', region: 'Country or region (optional)', scope: 'Find links for', scopes: ['Missing items', 'All items'],
+    ask: 'Ask AI for buying links', prepare: 'Prepare buying-link request', request: 'Copy this request to your AI', copy: 'Copy request', copied: 'Request copied.', select: 'Select the request above and copy it.',
+    sent: 'Request sent to your AI.', volatile: 'Progress could not be saved here; keep this page open.', saved: 'Progress saved.', empty: 'All items are ready. Choose all items if you still want links.',
+    prompt: 'Find current optional buying links for these parts. Match the specifications, quantities and delivery region; state uncertain stock, prices and shipping. Equivalent sellers are fine. Do not place an order.',
+    noRegion: 'Ask for the country or region before choosing sellers.', project: 'Project', ship: 'Delivery region', language: 'Reply in English.'
+  },
+  zh: {
+    title: '材料检查清单', intro: '确认所需数量已备齐后再勾选。购买链接仅供参考，也可以买其他店铺的同规格材料。',
+    columns: ['已备齐', '材料与规格', '数量', '用途', '新增费用', '链接'], owned: '已有材料', ready: '已备齐', missing: '缺少', unknown: '待核价', link: '参考商品',
+    summary: (r,n) => `${n} 项材料中已备齐 ${r} 项`, cost: (v,n) => `缺件预计费用：${v}${n ? `，另有 ${n} 项待核价` : ''}`,
+    costNote: '费用为估算；购买前需核实运费、耗材和现价。', region: '国家或地区（可选）', scope: '查找范围', scopes: ['只查缺件', '全部材料'],
+    ask: '让 AI 找购买链接', prepare: '生成购买链接请求', request: '把这段请求复制给你的 AI', copy: '复制请求', copied: '已复制请求。', select: '请选中上方请求文字并复制。',
+    sent: '已把请求发给 AI。', volatile: '此处无法保存进度，请暂时保留页面。', saved: '进度已保存。', empty: '材料已备齐；如仍需链接，请选择全部材料。',
+    prompt: '请为这些材料查找当前可购买的参考链接，核对规格、数量和配送地区，说明未核实的库存、价格与运费。不限指定店铺，同规格替代可以。不代我下单。',
+    noRegion: '选择店铺前，请先问我所在的国家或地区。', project: '项目', ship: '配送地区', language: '请用中文回复。'
+  },
+  es: {
+    title: 'Lista de materiales', intro: 'Marca un material cuando tengas la cantidad necesaria. Los enlaces son ejemplos; puedes comprar piezas equivalentes en otras tiendas.',
+    columns: ['Listo', 'Material y especificación', 'Cantidad', 'Uso', 'Coste adicional', 'Enlace'], owned: 'Ya disponible', ready: 'Listo', missing: 'Falta', unknown: 'Sin precio', link: 'Producto de referencia',
+    summary: (r,n) => `${r} de ${n} materiales listos`, cost: (v,n) => `Coste estimado de lo que falta: ${v}${n ? ` + ${n} material(es) sin precio` : ''}`,
+    costNote: 'Solo estimaciones. Comprueba envío, consumibles y precios antes de comprar.', region: 'País o región (opcional)', scope: 'Buscar enlaces para', scopes: ['Lo que falta', 'Todos los materiales'],
+    ask: 'Pedir enlaces de compra a la IA', prepare: 'Preparar solicitud de enlaces', request: 'Copia esta solicitud a tu IA', copy: 'Copiar solicitud', copied: 'Solicitud copiada.', select: 'Selecciona y copia el texto de arriba.',
+    sent: 'Solicitud enviada a tu IA.', volatile: 'No se pudo guardar el progreso; mantén esta página abierta.', saved: 'Progreso guardado.', empty: 'Todo está listo. Elige todos los materiales si aún quieres enlaces.',
+    prompt: 'Busca enlaces de compra actuales y opcionales para estos materiales. Comprueba especificaciones, cantidades y región de entrega; indica dudas sobre existencias, precios y envío. Se aceptan tiendas equivalentes. No hagas ningún pedido.',
+    noRegion: 'Pregunta primero por el país o la región antes de elegir tiendas.', project: 'Proyecto', ship: 'Región de entrega', language: 'Responde en español.'
+  }
+};
+
+function validateChecklist(data) {
+  if (!data || typeof data.projectId !== 'string' || !data.projectId.trim() || typeof data.projectName !== 'string' || !['en','zh','es'].includes(data.language) || !Array.isArray(data.parts)) throw new Error('Invalid checklist data');
+  new Intl.NumberFormat(data.language, {style:'currency', currency:data.currency}).format(0);
+  const ids = new Set();
+  for (const part of data.parts) {
+    if (!part || typeof part.id !== 'string' || !part.id.trim() || ['__proto__','constructor','prototype'].includes(part.id) || ids.has(part.id)) throw new Error('Invalid or duplicate part id');
+    ids.add(part.id);
+    if (!['name','specification','purpose'].every(k => typeof part[k] === 'string' && part[k].trim()) || !Number.isSafeInteger(part.quantity) || part.quantity < 1 || typeof part.owned !== 'boolean') throw new Error('Invalid part');
+    if (part.unitPrice != null && (typeof part.unitPrice !== 'number' || !Number.isFinite(part.unitPrice * part.quantity) || part.unitPrice < 0)) throw new Error('Invalid price');
+  }
+}
+
+function partSignature(part) {
+  return JSON.stringify([part.specification, part.quantity]);
+}
+
+function restoreChecklist(data, saved) {
+  validateChecklist(data);
+  const old = saved && saved.version === 1 && saved.projectId === data.projectId ? saved : null;
+  const rows = Object.create(null);
+  for (const part of data.parts) {
+    const previous = old?.rows?.[part.id];
+    rows[part.id] = {signature: partSignature(part), ready: previous ? previous.signature === partSignature(part) && previous.ready === true : part.owned};
+  }
+  return {version:1, projectId:data.projectId, region: typeof old?.region === 'string' ? old.region : (typeof data.region === 'string' ? data.region : ''), rows};
+}
+
+function checklistSummary(data, state) {
+  const missing = data.parts.filter(p => !state.rows[p.id].ready);
+  return {ready:data.parts.length-missing.length, missingCount:missing.length, knownCost:missing.reduce((n,p) => n + (p.unitPrice == null ? 0 : p.unitPrice*p.quantity),0), unknownCostCount:missing.filter(p=>p.unitPrice == null).length};
+}
+
+function shoppingRequest(data, state, scope) {
+  const t = CHECKLIST_TEXT[data.language];
+  const parts = data.parts.filter(p => scope === 'all' || !state.rows[p.id].ready);
+  return [t.prompt, `${t.project}: ${data.projectName}`, state.region.trim() ? `${t.ship}: ${state.region.trim()}` : t.noRegion,
+    ...parts.map(p=>`- ${p.name} | ${p.specification} | ${p.quantity}`), t.language].join('\n');
+}
+
+function safeShopURL(value) {
+  try { const u = new URL(value); return ['http:','https:'].includes(u.protocol) ? u.href : null; } catch { return null; }
+}
+
+if (typeof document !== 'undefined') {
+  const root = document.getElementById('mcu-parts-panel');
+  const el = id => root.querySelector(`#${id}`);
+  try {
+    const data = JSON.parse(el('parts-data').textContent);
+    validateChecklist(data);
+    const t = CHECKLIST_TEXT[data.language], host = window.openai, key = `mcu-parts:${data.projectId}`;
+    let stored = null;
+    try { stored = JSON.parse(localStorage.getItem(key)); } catch {}
+    const fromHost = host?.widgetState?.privateContent?.checklist;
+    let state = restoreChecklist(data, fromHost?.projectId === data.projectId ? fromHost : stored);
+    root.lang = data.language;
+    const money = n => new Intl.NumberFormat(data.language,{style:'currency',currency:data.currency}).format(n);
+    const node = (tag,text) => { const n=document.createElement(tag); if(text != null) n.textContent=text; return n; };
+    el('parts-title').textContent = `${t.title} · ${data.projectName}`;
+    el('parts-intro').textContent=t.intro; el('parts-caption').textContent=data.projectName;
+    for (const label of t.columns) { const th=node('th',label); th.scope='col'; el('parts-columns').append(th); }
+    el('parts-region-label').textContent=t.region; el('parts-region').value=state.region;
+    el('parts-scope-label').textContent=t.scope;
+    [...el('parts-scope').options].forEach((o,i)=>o.textContent=t.scopes[i]);
+    el('parts-ask').textContent=typeof host?.sendFollowUpMessage==='function' ? t.ask : t.prepare;
+    el('parts-copy').textContent=t.copy; el('parts-request-label').textContent=t.request;
+    el('parts-cost-note').textContent=t.costNote;
+    function render() {
+      el('parts-rows').replaceChildren();
+      for (const part of data.parts) {
+        const row=node('tr'), readyCell=node('td'), label=node('label'), check=node('input');
+        check.type='checkbox'; check.checked=state.rows[part.id].ready; check.setAttribute('aria-label',`${t.ready}: ${part.name}`);
+        check.addEventListener('change',()=>{state.rows[part.id].ready=check.checked; render(); save(); el('parts-rows').querySelectorAll('input')[data.parts.indexOf(part)].focus();});
+        label.append(check,node('small',check.checked?t.ready:t.missing)); readyCell.append(label); row.append(readyCell);
+        const info=node('td'); info.append(node('strong',part.name),node('small',part.specification));
+        if(part.owned) info.append(node('small',t.owned));
+        row.append(info,node('td',part.quantity),node('td',part.purpose),node('td',state.rows[part.id].ready?money(0):part.unitPrice==null?t.unknown:money(part.unitPrice*part.quantity)));
+        const linkCell=node('td'), url=safeShopURL(part.url);
+        if(url) { const a=node('a',t.link); a.href=url; a.target='_blank'; a.rel='noopener noreferrer'; linkCell.append(a); }
+        else linkCell.textContent='—';
+        row.append(linkCell); el('parts-rows').append(row);
+      }
+      const total=checklistSummary(data,state);
+      el('parts-summary').textContent=`${t.summary(total.ready,data.parts.length)} · ${t.cost(money(total.knownCost),total.unknownCostCount)}`;
+      el('parts-ask').disabled=total.missingCount===0 && el('parts-scope').value==='missing';
+      el('parts-request-box').hidden=true;
+    }
+    function save() {
+      let localSaved=false;
+      try { localStorage.setItem(key,JSON.stringify(state)); localSaved=true; } catch {}
+      el('parts-notice').textContent=localSaved?t.saved:t.volatile;
+      const snapshot={modelContent:{projectId:data.projectId,region:state.region,missingIds:data.parts.filter(p=>!state.rows[p.id].ready).map(p=>p.id)},privateContent:{checklist:state}};
+      if(typeof host?.setWidgetState==='function' && new TextEncoder().encode(JSON.stringify(snapshot)).length < 16384) {
+        try { Promise.resolve(host.setWidgetState(snapshot)).then(()=>{el('parts-notice').textContent=t.saved;}).catch(()=>{}); } catch {}
+      }
+    }
+    el('parts-region').addEventListener('input',()=>{state.region=el('parts-region').value; el('parts-request-box').hidden=true; save();});
+    el('parts-scope').addEventListener('change',render);
+    el('parts-ask').addEventListener('click',async()=>{
+      const prompt=shoppingRequest(data,state,el('parts-scope').value);
+      el('parts-request').value=prompt;
+      if(typeof host?.sendFollowUpMessage==='function') {
+        try { await host.sendFollowUpMessage({prompt,title:t.ask}); el('parts-notice').textContent=t.sent; return; } catch {}
+      }
+      el('parts-request-box').hidden=false;
+    });
+    el('parts-copy').addEventListener('click',async()=>{
+      try { await navigator.clipboard.writeText(el('parts-request').value); el('parts-notice').textContent=t.copied; }
+      catch { el('parts-request').focus(); el('parts-request').select(); el('parts-notice').textContent=t.select; }
+    });
+    window.addEventListener('openai:set_globals',event=>{
+      const incoming=event.detail?.globals?.widgetState?.privateContent?.checklist;
+      if(incoming?.projectId===data.projectId) {state=restoreChecklist(data,incoming);el('parts-region').value=state.region;render();}
+    });
+    render();
+  } catch (error) {
+    el('parts-notice').textContent=`Checklist error: ${error.message}`;
+    el('parts-ask').disabled=true;
+  }
+}
+</script>
