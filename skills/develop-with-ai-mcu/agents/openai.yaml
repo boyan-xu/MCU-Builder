@@ -1,0 +1,4 @@
+interface:
+  display_name: "Develop with AI MCU"
+  short_description: "Build your next MCU project with your choice of code ownership"
+  default_prompt: "Use $develop-with-ai-mcu to help me continue or start a microcontroller project, following my preferred way of working and who should write the code."
