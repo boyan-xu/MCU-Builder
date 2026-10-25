@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="680" viewBox="0 0 1280 680" role="img" aria-labelledby="title desc">
+  <title id="title">Arduino UNO Rev3: external LED on digital pin 8</title>
+  <desc id="desc">Component side, USB at left. W1 connects D8 to resistor R1 pin 1. W2 connects R1 pin 2 to LED1 anode A. W3 connects LED1 cathode K to the digital header GND. Use a 330 ohm resistor and disconnect power before wiring.</desc>
+  <style>text{font-family:Arial,sans-serif;fill:#18313a} .small{font-size:16px} .label{font-size:20px;font-weight:600} .wire{fill:none;stroke-width:5;stroke-linejoin:round;stroke-linecap:round} .terminal{fill:white;stroke:#18313a;stroke-width:2}</style>
+  <rect width="1280" height="680" fill="#f6f9f8"/>
+  <text x="48" y="48" font-size="28" font-weight="600">External LED · Arduino UNO Rev3</text>
+  <text x="48" y="79" class="small">Component-side view · USB at left · 5 V logic · Disconnect all power before wiring</text>
+  <rect x="90" y="285" width="620" height="280" rx="22" fill="#d9eeeb" stroke="#24766c" stroke-width="3"/>
+  <rect x="64" y="352" width="90" height="66" rx="5" fill="#d5dce0" stroke="#53636d" stroke-width="2"/>
+  <text x="78" y="392" class="label">USB</text>
+  <text x="190" y="405" font-size="30" font-weight="600">UNO Rev3</text>
+  <text x="190" y="439" class="label">Use printed header labels</text>
+  <text x="190" y="474" class="small">Simplified board outline; routes are not to scale.</text>
+  <text x="190" y="507" class="small">No external supply in this example.</text>
+  <rect x="148" y="272" width="280" height="30" rx="4" fill="#283e45"/>
+  <rect x="440" y="272" width="224" height="30" rx="4" fill="#283e45"/>
+  <g class="small" text-anchor="middle">
+    <text x="160" y="260">SCL</text><text x="188" y="235">SDA</text><text x="216" y="260">AREF</text>
+    <text x="272" y="260">13</text><text x="300" y="260">12</text><text x="328" y="260">11</text><text x="356" y="260">10</text><text x="384" y="260">9</text>
+    <text x="454" y="260">7</text><text x="482" y="260">6</text><text x="510" y="260">5</text><text x="538" y="260">4</text><text x="566" y="260">3</text><text x="594" y="260">2</text><text x="622" y="260">1</text><text x="650" y="260">0</text>
+  </g>
+  <g fill="#c9d5d8">
+    <circle cx="160" cy="287" r="4"/><circle cx="188" cy="287" r="4"/><circle cx="216" cy="287" r="4"/>
+    <circle cx="272" cy="287" r="4"/><circle cx="300" cy="287" r="4"/><circle cx="328" cy="287" r="4"/><circle cx="356" cy="287" r="4"/><circle cx="384" cy="287" r="4"/>
+    <circle cx="454" cy="287" r="4"/><circle cx="482" cy="287" r="4"/><circle cx="510" cy="287" r="4"/><circle cx="538" cy="287" r="4"/><circle cx="566" cy="287" r="4"/><circle cx="594" cy="287" r="4"/><circle cx="622" cy="287" r="4"/><circle cx="650" cy="287" r="4"/>
+  </g>
+  <g id="W1" data-from="UNO D8" data-to="R1 pin 1">
+    <path d="M412 287 V165 H820" class="wire" stroke="#087b73"/>
+    <text x="480" y="151" class="label">W1 · D8 → R1 pin 1</text>
+  </g>
+  <rect x="820" y="146" width="124" height="38" rx="5" fill="#f4e2b8" stroke="#695331" stroke-width="3"/>
+  <text x="822" y="218" class="label">R1 · 330 Ω</text>
+  <text x="822" y="244" class="small">0.25 W · no polarity</text>
+  <text x="813" y="134" class="small">1</text><text x="937" y="134" class="small">2</text>
+  <g id="W2" data-from="R1 pin 2" data-to="LED1 A">
+    <path d="M944 165 H1060 V190" class="wire" stroke="#b87412"/>
+    <text x="958" y="134" class="label">W2</text>
+  </g>
+  <rect x="1028" y="190" width="64" height="82" rx="26" fill="#f6c9c9" stroke="#963b46" stroke-width="3"/>
+  <path d="M1043 217 H1077 L1060 243 Z M1040 248 H1080" fill="none" stroke="#963b46" stroke-width="3"/>
+  <text x="1099" y="203" class="small">A (+)</text><text x="1099" y="226" class="small">anode</text>
+  <text x="1099" y="263" class="small">K (−)</text><text x="1099" y="286" class="small">cathode</text>
+  <text x="825" y="326" class="label">LED1 · red LED</text>
+  <g id="W3" data-from="LED1 K" data-to="UNO GND">
+    <path d="M1060 272 V386 H1198 V110 H244 V287" class="wire" stroke="#3b4d63"/>
+    <text x="714" y="98" class="label">W3 · LED1 K → UNO GND</text>
+  </g>
+  <g class="terminal">
+    <circle cx="412" cy="287" r="6"/><circle cx="244" cy="287" r="6"/>
+    <circle cx="820" cy="165" r="5"/><circle cx="944" cy="165" r="5"/><circle cx="1060" cy="190" r="5"/><circle cx="1060" cy="272" r="5"/>
+  </g>
+  <text x="244" y="330" class="label" text-anchor="middle">GND</text>
+  <text x="412" y="330" class="label" text-anchor="middle">D8</text>
+  <text x="48" y="611" class="label">W1: D8 → resistor · W2: resistor → LED anode · W3: LED cathode → GND</text>
+  <text x="48" y="646" class="small">Keep the LED legs on separate breadboard rows. Never omit the series resistor. Match wire IDs and pin labels, not color alone.</text>
+</svg>
