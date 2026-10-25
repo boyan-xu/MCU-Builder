@@ -2,6 +2,14 @@
   "board": "Arduino UNO Rev3",
   "logicVoltage": "5 V",
   "ledPin": 8,
+  "simulatorPins": {
+    "UNO D8": "uno:8",
+    "R1 pin 1": "r1:1",
+    "R1 pin 2": "r1:2",
+    "LED1 A": "led1:A",
+    "LED1 K": "led1:C",
+    "UNO GND": "uno:GND.1"
+  },
   "connections": [
     {"id":"W1","from":"UNO D8","to":"R1 pin 1"},
     {"id":"W2","from":"R1 pin 2","to":"LED1 A"},
