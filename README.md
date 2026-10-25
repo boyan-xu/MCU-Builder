@@ -1,73 +1,62 @@
-# Build with AI MCU / 从想法到单片机作品
+[English](README.md) · [简体中文](docs/README.zh-CN.md) · [Español](docs/README.es.md)
 
-An AI skill for people who want to make things with microcontrollers, even if they have never written code.
-一个面向单片机新手与创客的 AI Skill：你描述想要的效果，AI 帮你选材料、写代码、使用工具和验证结果。
+# Build with AI MCU
 
-**Start with what you want to make, not a code course.**
-先做想做的东西；只有你想了解代码或底层逻辑时，再深入解释。
+**Turn your idea into something you can use.**
 
-## How it helps / 它怎么帮你
+Build with AI MCU is an AI skill for people who are new to microcontrollers. You do not need to learn coding or electronics first. Start by telling the AI what you want to make and how you want it to work.
 
-1. **Know you first.** Read relevant global memory when your AI can access it; check your current budget, tools and skills. 没有可用记忆就简短询问，不假装了解你，也不重复问可靠的已知信息。
-2. **Pick a project that fits.** If you have no idea, get five ideas from easy to hard, with rough extra cost and the main challenge. 结合兴趣、已有材料、3D 打印机、CNC、建模或代码基础推荐，不固定让每个人买同一块板。
-3. **Keep big goals, start small.** A hard goal becomes a related first task, with parts and progress you can reuse. 保留最终目标，每一步有具体效果；不会把小任务预算说成整机预算。
-4. **Describe, build, check.** AI handles code and available tool work; you connect parts and check the result. 默认不布置写代码作业；接线、供电和实际效果仍需你配合。
-5. **Share if you want.** Your own project can stay private or become open source. 本 Skill 开源，不代表你的作品也必须公开。
+The AI helps shape your idea and finds a practical way to build it using the hardware, tools, and skills you already have. It helps with parts lists, optional shopping links, clear wiring diagrams, code, flashing, and debugging, so you can focus on what you want your project to do.
 
-## Install / 安装
+There is no fixed course that everyone must follow. Start with one small feature or work toward a bigger goal. The path adapts to your situation, and the result is a project that fits your needs, with the files and instructions to keep using and changing it.
+
+## How it works
+
+- **Your idea comes first.** Talk about what you want to make, where you will use it and what success looks like. Available memory helps, but your current needs lead. No budget interview or theory course is required to begin.
+- **Reuse what you have.** AI checks existing boards, parts and software before suggesting purchases or downloads. A suitable board is not replaced just because another is easier to use.
+- **See what is missing.** Get a checkable parts panel with specifications, quantities, purpose and estimated extra cost. Optional buying links can be found for your country or region; equivalent products from other sellers are welcome.
+- **Wire with a clear picture.** Get a labeled image and matching connection steps. AI checks the exact parts, explains a few needed basics and chooses whether wiring or flashing should come first.
+- **Let AI handle code and debugging.** You describe behavior and help with physical steps. AI uses available tools and reuses existing flashing permission for the same target. It reports tested results and limits honestly.
+- **Keep your own result.** Receive source files, wiring and a short use guide. You choose whether your project stays private or becomes open source.
+
+## Install
 
 Download this repository with **Code → Download ZIP**, or clone it:
-可用 GitHub 的 **Code → Download ZIP** 下载，也可运行：
 
 ```sh
 git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 ```
 
-Copy the entire `skills/build-with-ai-mcu` folder into your AI tool's supported skill directory. For Codex, use `$CODEX_HOME/skills` if set, otherwise `~/.codex/skills`. The result should contain:
-把整个 Skill 文件夹放进所用 AI 工具支持的 Skills 目录。Codex 优先使用已设置的 `$CODEX_HOME/skills`，否则使用 `~/.codex/skills`。目录结果如下：
+Copy the entire `skills/build-with-ai-mcu` folder into your AI tool's supported skills directory. For Codex, use `$CODEX_HOME/skills` when set, otherwise `~/.codex/skills`. Check an existing same-name skill before replacing it. Refresh skill discovery or start a new session if needed.
+
+One set of [skill instructions](skills/build-with-ai-mcu/SKILL.md) serves all three languages. The conversation, parts panel and project instructions follow your chosen language. Other AI tools must support this skill format or let you load its instructions; available tools vary.
+
+## Start with your idea
 
 ```text
-<skills-directory>/build-with-ai-mcu/
-  SKILL.md
-  agents/openai.yaml
+Use $build-with-ai-mcu. I want a reminder when I leave a door open.
+I already have an ESP32 and Arduino IDE. I have never used a microcontroller.
+Help me work out how it should behave, and handle the code for me.
 ```
 
-Do not replace an existing skill without checking it first. Refresh skill discovery or start a new session if your tool needs it.
-已有同名 Skill 时先检查，不直接覆盖；按工具要求刷新技能发现或开启新会话。
+Have no idea yet? Ask for five suitable projects. Have parts or a half-built project? Start there. A difficult goal can be split into related steps without losing the original idea.
 
-This is an instruction skill, not a driver, compiler or flashing service. There is no required MCP server or bundled executable. Other AI tools need to support a `SKILL.md` skill, or let you load the file as instructions; tool access differs by platform.
-它是流程指令，不是驱动、编译器或烧录服务，不依赖指定 MCP 服务，也不附带可执行程序。其他 AI 平台需支持此类 Skill 或手动加载指令；可用工具因平台而异。
+## Parts panel and wiring example
 
-## Try it / 开始使用
+- [Reusable checklist](skills/build-with-ai-mcu/assets/parts-checklist.html): AI fills it with your actual parts. It works in a supported chat panel or as a standalone HTML file. Checks are saved when the host or browser allows it; changed specifications or quantities need checking again.
+- [Panel integration notes](skills/build-with-ai-mcu/references/checklist.md): buying-link requests use the host's AI action when available, otherwise they become text you can copy. A standalone page does not secretly contact an AI or shop.
+- [Low-voltage wiring example](skills/build-with-ai-mcu/references/uno-led/README.md): an inspected diagram, connection table and matching pin assignment. It illustrates the delivery standard, not a required first project.
 
-```text
-Use $build-with-ai-mcu. I have never used a microcontroller.
-I have a 3D printer and some CAD skills. My new-parts budget is 200 CNY.
-Help me choose something useful to make.
-```
+## Tools and limits
 
-```text
-用 $build-with-ai-mcu。我想做外出也能用手机控制的机械臂，
-但我刚入门，会一点建模，预算 200 元。
-先帮我找一个能通向这个目标的小任务，代码由你来写。
-```
+This is a beginner skill, not an advanced embedded course or a flashing service. AI needs working tool connections to build, debug or reach your device. Browser flashing still needs compatible hardware, firmware and local access; zero-install support is not guaranteed.
 
-Have a board already? Say what it is and what you want it to do. The skill should reuse it when it fits rather than start a shopping list from scratch.
-已经有板子就说明型号和目标，合适时先复用；你无需先学会写代码。
+Necessary downloads are explained first. Your existing work and private credentials are protected. A successful build or flash does not prove the physical project works. Hardware checks and permission still matter, without repeated approval requests for the same authorized operation. Your memory and private records are not published with projects.
 
-## Tools and limits / 工具与边界
+## Check the source
 
-- **Memory is optional.** An AI can use only the memory its platform exposes. Old facts need checking, and your private memory stays out of public projects. 全局记忆不可用时先问必要信息，不要求新建个人数据库。
-- **Budget comes before advice.** Costs include needed cables, power and tools; prices are estimates unless checked. 先问本次预算与币种，再推荐；按已有材料计算新增花费，不承诺固定价格。
-- **No silent downloads.** Before a driver, compiler or other download, AI must say what it is, why it is needed and the official source. 下载前说明，不默认安装整套 IDE；不愿安装时尊重限制。
-- **Browser flashing is a possible route.** It still needs a compatible browser/board, compiled firmware and local device access. AI cannot reach USB hardware without a working connection. 网页烧录不等于所有设备零安装，也不代替编译。
-- **Protect existing work.** Build-only requests do not authorize flashing. Verify the target and preserve existing firmware; confirm motor wiring, power and limits before movement. 编译、烧录和实物成功分别报告，不把一个说成另一个。
-- **Keep secrets private.** Use private device setup or local input for passwords and tokens, not chat or public source. 不上传秘密、个人记忆或私有工程记录；公开项目须经你选择。
+Run `node --test tests/*.test.mjs` for the panel logic and example consistency checks. The skill can also be checked with the official [skill-creator validator](https://github.com/openai/skills/tree/main/skills/.system/skill-creator). Simulation and software checks do not replace physical testing.
 
-For browser flashing, see the vendor's [esptool-js](https://github.com/espressif/esptool-js). It writes compatible ESP firmware through Web Serial; it does not compile your source. For the skill format, see [OpenAI's skill-creator](https://github.com/openai/skills/tree/main/skills/.system/skill-creator).
-网页烧录可参考上述 Espressif 官方项目；具体板型与浏览器兼容性应在实际操作前核实。
+## License
 
-## License / 许可证
-
-[MIT](LICENSE). You may use, share and change this skill. Your hardware projects keep their own ownership and license choices.
-你可以使用、分享与修改此 Skill；自己的硬件项目由你决定归属与许可方式。
+[MIT](LICENSE). You may use, share and change this skill. Each learner chooses their own project's publication and license.
