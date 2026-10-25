@@ -2,6 +2,8 @@
 
 Read this at entry for either MCU skill. It guides conversation and pacing, not a list of questions to ask.
 
+The goal is creating the person's product, not teaching MCU use. Experience changes the explanation and division of work, not the allowed product-complexity ceiling. Favor a useful result promptly; estimate milestones from real constraints instead of promising every idea in a fixed number of days. Follow [verification rules](verification.md) for simulation, first operation and the current CAD/printing boundary.
+
 ## Use relevant memory in separate dimensions
 
 Consult available memory for more than MCU history: communication preferences, learning style, small working habits, language, pace, preferred tools, interests and practical constraints can all change how to help. Retrieve only context relevant to this interaction. Keep private history private; never invent access or silently turn this workflow into permission to write global memory.
