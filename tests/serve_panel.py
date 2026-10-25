@@ -18,6 +18,19 @@ PUBLIC_FILES = (
     'skills/build-with-ai-mcu/references/uno-led/uno-led.ino',
     'skills/build-with-ai-mcu/references/uno-led/wiring.svg',
     'tests/checklist.test.mjs', 'tests/wiring.test.mjs', 'tests/serve_panel.py',
+    'tests/packaging.test.mjs',
+    'skills/build-with-ai-mcu/references/working-style.md',
+    'skills/build-with-ai-mcu/references/rea.md',
+    'skills/develop-with-ai-mcu/SKILL.md',
+    'skills/develop-with-ai-mcu/agents/openai.yaml',
+    'skills/develop-with-ai-mcu/assets/parts-checklist.html',
+    'skills/develop-with-ai-mcu/references/checklist.md',
+    'skills/develop-with-ai-mcu/references/working-style.md',
+    'skills/develop-with-ai-mcu/references/rea.md',
+    'skills/develop-with-ai-mcu/references/uno-led/README.md',
+    'skills/develop-with-ai-mcu/references/uno-led/connections.json',
+    'skills/develop-with-ai-mcu/references/uno-led/uno-led.ino',
+    'skills/develop-with-ai-mcu/references/uno-led/wiring.svg',
 )
 
 
