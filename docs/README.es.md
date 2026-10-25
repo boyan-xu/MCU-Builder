@@ -1,86 +1,83 @@
 [English](../README.md) · [简体中文](README.zh-CN.md) · [Español](README.es.md)
 
-# Build with AI MCU
+# Haz realidad tus ideas con microcontroladores
 
-**Convierte tu idea en algo que puedas usar.**
+**Trae una idea. Crea algo que puedas usar.**
 
-Build with AI MCU ofrece dos habilidades para asistentes de IA: una para tu primer proyecto con microcontroladores y otra para los siguientes. No necesitas aprender programación ni electrónica antes de empezar. Si ya tienes algo de experiencia, puedes escribir tu propio código o dejar que lo haga la IA. Empieza por lo que quieres crear y cómo debe funcionar.
+Explica qué quieres que haga tu producto. La IA concreta los requisitos y se encarga del diseño, materiales, firmware, simulación, configuración y depuración con las herramientas a las que realmente tiene acceso. No necesitas aprender a programar microcontroladores ni gestionar el código para empezar.
 
-La IA te ayuda a definir la idea y a encontrar una forma práctica de realizarla, aprovechando el hardware, las herramientas y los conocimientos que ya tienes. Te ayuda con la lista de materiales, enlaces de compra opcionales, diagramas de conexión claros, código, carga del programa y depuración, para que puedas centrarte en lo que quieres conseguir.
+Aprovecha el hardware y los programas que ya tienes. Recibe una lista de materiales que puedes marcar, enlaces de compra opcionales para tu región, un diagrama claro y pasos breves para el trabajo físico. En diseños compatibles, la IA ejecuta una simulación real del microcontrolador y revisa el diseño eléctrico por separado antes de guiar la primera prueba conectada.
 
-No hay un curso fijo que todo el mundo deba seguir. Puedes empezar con una función sencilla o avanzar hacia un objetivo mayor. El proceso se adapta a tu situación y el resultado es un proyecto que responde a tus necesidades, con los archivos y las instrucciones para seguir usándolo y modificándolo.
+Un avisador, un controlador, un dispositivo con sensores: el comportamiento que buscas marca el rumbo. El proceso sigue tu idea y su viabilidad real, sin imponer un límite por tu nivel de experiencia. Avanza mediante resultados concretos hasta obtener algo útil, con los archivos e indicaciones para seguir usándolo y mejorándolo.
 
-## Elige tu habilidad
+## Elige cómo trabajar
 
-| Habilidad | Para quién | Quién escribe el código |
+| Entrada | Qué hace | Quién escribe el código |
 | --- | --- | --- |
-| [Build with AI MCU](../skills/build-with-ai-mcu/SKILL.md) | Sin experiencia o empezando | La IA por defecto |
-| [Develop with AI MCU](../skills/develop-with-ai-mcu/SKILL.md) | Conoce el funcionamiento básico y la carga del programa; ha creado proyectos sencillos | Tú o la IA; puedes cambiar de elección |
+| [Haz realidad tus ideas con microcontroladores](../skills/build-with-ai-mcu/SKILL.md) | La IA lleva la parte técnica desde la idea hasta el producto | La IA por defecto |
+| [Desarrollo colaborativo](../skills/develop-with-ai-mcu/SKILL.md) | Colabora en un producto nuevo o continúa un proyecto existente | Tú o la IA; puedes cambiar de elección |
 
-Cada habilidad funciona por separado. La experiencia conocida y la petición actual tienen prioridad; no hay que repetir una prueba de nivel ni cambiar de entrada a la fuerza. Si no se conoce tu experiencia y la petición es vaga, basta una elección breve entre empezar de cero o haber hecho proyectos sencillos.
+Cada entrada funciona por separado y se adapta a tu experiencia y preferencias. Una petición clara evita preguntas ajenas a la tarea; no hay una prueba de nivel que decida qué puedes crear. Cambia el título público, pero se mantienen la dirección del repositorio, las carpetas y las llamadas `$build-with-ai-mcu` y `$develop-with-ai-mcu`.
 
-## Cómo funciona
+## De la idea al producto
 
-- **Tu idea es lo primero.** Si la primera frase ya explica lo que quieres, se omiten las preguntas ajenas a la tarea. La memoria relevante puede incluir experiencia, forma de conversar, preferencias de aprendizaje y pequeños hábitos. Se usan por separado; la petición actual manda, sin cuestionarios de presupuesto o estilo.
-- **Conversa con naturalidad y empieza a actuar.** Recibe opciones breves cuando ayuden, sin la misma pregunta una y otra vez. La conversación sigue tu ritmo y el objetivo del proyecto. Cuando el siguiente paso está claro, empieza; no hace falta completar una larga entrevista.
-- **Aprovecha lo que tienes.** Primero se revisan código, configuración e interfaces para ver si basta una solución de software. No se cambia una placa adecuada por comodidad ni se intenta suplir con código un sensor o una etapa de potencia que falta. Se usan primero las herramientas de desarrollo y carga existentes.
-- **Comprueba qué falta.** Un panel permite marcar materiales y consultar especificaciones, cantidades, uso y coste adicional estimado. Puedes pedir enlaces para tu país o región y elegir productos equivalentes de otras tiendas.
-- **Conecta con una imagen clara.** Recibe un diagrama etiquetado y pasos de conexión que coinciden con él. La IA verifica los modelos, explica lo esencial y decide si conviene conectar o cargar el programa primero.
-- **Elige quién escribe si ya tienes experiencia.** En la entrada inicial, la IA escribe por defecto. En la siguiente puedes escribir con orientación, revisión y ayuda para depurar, o dejar la implementación a la IA. No se repiten elecciones conocidas y puedes cambiarlas. Se conserva el permiso de carga para el mismo dispositivo.
-- **Conserva tu propio proyecto.** Recibe el código fuente, las conexiones y una guía breve. Tú decides si el proyecto será privado o de código abierto.
+1. **Define el resultado.** Habla de lo que debe hacer y cómo comprobarlo. La memoria relevante puede incluir herramientas, experiencia, preferencias al conversar, forma de aprender y pequeños hábitos. Tu petición actual tiene prioridad, sin cuestionarios de presupuesto o estilo.
+2. **Reutiliza lo adecuado.** Primero se revisan código, configuración, interfaces y hardware existentes. Para piezas nuevas se prefieren combinaciones de MCU y módulos con simulación documentada que cumplan la necesidad; no se cambia una placa útil por comodidad.
+3. **Comprueba qué comprar.** El panel muestra especificaciones, cantidades, materiales disponibles, faltantes y coste adicional estimado. Los enlaces regionales son ejemplos; puedes elegir piezas equivalentes de otras tiendas.
+4. **La IA implementa y verifica.** Escribe, compila, simula y corrige el firmware con las herramientas disponibles. Si quieres escribir, elige la entrada colaborativa. No necesitas completar un curso ni gestionar cambios de código.
+5. **Conecta y prueba.** Recibe una imagen revisada y texto coincidente. El orden entre conexiones sin alimentación y carga en la placa depende del montaje. Cada vez se indica una acción breve, el resultado esperado y qué comunicar; se conserva la autorización del mismo dispositivo.
+6. **Conserva tu producto.** Recibe código, conexiones, archivos y resultados de simulación, una guía breve y límites conocidos. Tú decides si el producto será privado o de código abierto.
 
-## Instalación
+La conversación sigue tu ritmo sin insistir en la misma pregunta ni desviarse. Cuando el siguiente paso está claro, se empieza. Obtener algo útil en pocos días es un objetivo cuando lo permiten el alcance, las herramientas y las piezas, no una promesa para cualquier idea ni un catálogo fijo de ejercicios iniciales.
 
-Descarga el repositorio con **Code → Download ZIP** en GitHub, o ejecuta:
+## Simulación y primera puesta en marcha
+
+En diseños compatibles se prueban los escenarios pertinentes de arranque, funcionamiento normal, límites, tiempos y fallos antes de operar el circuito con dispositivos o cargas externas. Se guardan la versión real de código o compilación, conexiones, proyecto y resultados, y se repiten las comprobaciones afectadas por cambios. Compilar, probar lógica en el ordenador o crear una maqueta web no equivale a simular el MCU.
+
+La simulación no demuestra ausencia total de errores ni que sea imposible dañar el hardware. Se comprueban aparte alimentación, polaridad, niveles lógicos, corriente, resistencias, controladores y límites de carga. Se informa por separado de compilación, pruebas de lógica, simulación MCU, revisión eléctrica, carga/lectura y comportamiento físico.
+
+Si tu placa o módulo no tiene un modelo adecuado, la IA explica lo que no puede cubrir y continúa con código, compilación y comprobaciones de lógica. Con permiso para el dispositivo exacto y tras revisar objetivo y condiciones eléctricas, puede hacerse una carga y diagnóstico de la placa aislando las cargas externas. Eso alimenta la placa, pero no significa que todo el producto haya superado la simulación ni permita pasar directamente a plena carga. Consulta [las reglas de verificación](../skills/build-with-ai-mcu/references/verification.md).
+
+## Instalar y empezar
+
+Descarga con **Code → Download ZIP** en GitHub o ejecuta:
 
 ```sh
 git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 ```
 
-Copia la carpeta completa que elijas (`skills/build-with-ai-mcu` o `skills/develop-with-ai-mcu`) al directorio de habilidades de tu herramienta de IA; puedes instalar una o las dos. En Codex, usa `$CODEX_HOME/skills` si está definido; de lo contrario, `~/.codex/skills`. Revisa cualquier habilidad del mismo nombre antes de sustituirla. Actualiza la detección de habilidades o abre otra sesión si hace falta.
-
-Cada habilidad mantiene unas instrucciones para los tres idiomas e incluye sus propios recursos. La conversación, el panel y las indicaciones del proyecto siguen el idioma elegido. Otras herramientas deben admitir este formato o permitir cargar las instrucciones; las capacidades varían según la plataforma.
-
-## Empieza con tu idea
+Copia la carpeta completa de una o ambas entradas (`skills/build-with-ai-mcu`, `skills/develop-with-ai-mcu`) al directorio de habilidades admitido por tu herramienta. En Codex, usa `$CODEX_HOME/skills` si está definido; si no, `~/.codex/skills`. Revisa una habilidad del mismo nombre antes de sustituirla; actualiza la detección o abre otra sesión si hace falta. Cada entrada incluye sus recursos y unas instrucciones para los tres idiomas. Las herramientas disponibles varían según la plataforma.
 
 ```text
-Usa $build-with-ai-mcu. Quiero un aviso cuando deje una puerta abierta.
-Ya tengo un ESP32 y Arduino IDE, pero nunca he usado un microcontrolador.
-Ayúdame a definir cómo debe funcionar y encárgate del código.
+Usa $build-with-ai-mcu. Crea un avisador que suene si dejo la puerta abierta
+más de 30 segundos. Encárgate de la parte técnica; ya tengo un ESP32
+y Arduino IDE. Ayúdame a conseguir un resultado que funcione.
 ```
-
-Si no tienes una idea, pide cinco proyectos adecuados. Si ya tienes materiales o un proyecto a medias, empieza desde ahí. Un objetivo difícil puede dividirse en pasos relacionados sin perder la idea original.
-
-Si ya tienes experiencia, también puedes empezar así:
 
 ```text
-Usa $develop-with-ai-mcu. Continúa mi proyecto STM32 que ya funciona y añade control PWM.
-Quiero escribir el código. Ayúdame a revisar la configuración del temporizador
-y a elegir el siguiente paso de programación más pequeño.
+Usa $develop-with-ai-mcu. Continúa mi proyecto STM32 que ya funciona y añade PWM.
+Quiero escribir el código. Revisa el temporizador y ayúdame a elegir
+el siguiente cambio pequeño.
 ```
 
-## Una función que viste en otro producto
+Si no tienes una idea, pide cinco posibilidades adecuadas. Si ya hay materiales o un producto a medias, empieza desde ahí. Los pasos deben llevar a tu objetivo, no sustituirlo por un ejercicio ajeno.
 
-Indica el comportamiento concreto que quieres. Cuando sea adecuado, la IA comprueba y reutiliza una conexión disponible de [REA](https://github.com/morluto/rea); solo propone instalarlo o conectarlo si hace falta. Los proyectos normales no requieren REA y rechazarlo no detiene el trabajo. Consulta [el flujo opcional](../skills/build-with-ai-mcu/references/rea.md).
+## Herramientas y evidencias incluidas
 
-Antes de comercializar o publicar la reproducción, deben estar claros los permisos y derechos correspondientes. REA no concede derechos sobre el producto analizado; aprender por cuenta propia no es un permiso automático. El objetivo es implementar el comportamiento de forma independiente, no redistribuir código o recursos propietarios.
+- [Panel de materiales](../skills/build-with-ai-mcu/assets/parts-checklist.html) y [notas de integración](../skills/build-with-ai-mcu/references/checklist.md): marca materiales y conserva el progreso válido en chats compatibles o HTML independiente. Las solicitudes de enlaces usan la acción de IA disponible o muestran texto para copiar. La página no contacta en secreto con tiendas ni con una IA.
+- [Ejemplo de baja tensión](../skills/build-with-ai-mcu/references/uno-led/README.md): imagen, conexiones, firmware y diagrama coherentes, con un [registro real de simulación MCU](../skills/build-with-ai-mcu/references/uno-led/simulation-result.json) ligado a los archivos probados. Arranque y salida digital se comprobaron en Wokwi; no se probó hardware físico ni se demostró seguridad eléctrica. Es evidencia de esos escenarios, no un primer producto obligatorio.
+- [Flujo opcional de REA](../skills/build-with-ai-mcu/references/rea.md): al reproducir una función, reutiliza una conexión pertinente de [REA](https://github.com/morluto/rea) y solo propone configurarlo si es necesario y falta. Rechazarlo no impide proyectos normales. Antes de comercializar o publicar se aclaran los derechos; el acceso a una herramienta no autoriza a distribuir código o recursos propietarios.
 
-## Panel y ejemplo de conexiones
+## Alcance mecánico y límites prácticos
 
-- [Panel reutilizable](../skills/build-with-ai-mcu/assets/parts-checklist.html): la IA lo prepara con tus materiales. Puede mostrarse en un chat compatible o abrirse como un archivo HTML independiente. Guarda el progreso cuando la plataforma o el navegador lo permiten; los cambios de cantidad o especificación requieren otra revisión.
-- [Notas de integración](../skills/build-with-ai-mcu/references/checklist.md): el botón envía una solicitud a la IA cuando la plataforma lo permite; si no, muestra un texto para copiar. La página independiente no contacta en secreto con una IA ni con tiendas.
-- [Ejemplo de conexión de baja tensión](../skills/build-with-ai-mcu/references/uno-led/README.md): imagen revisada, tabla de conexiones y asignación de pines coherente. Muestra el nivel de entrega, no un primer proyecto obligatorio.
+Esta versión no incluye normalmente CAD automático, diseño mecánico listo para imprimir ni impresión directa. Para una carcasa se prefieren piezas comerciales, estructuras existentes o modelos aportados por el usuario. La experiencia en CAD y las impresoras o CNC siguen siendo contexto útil. Una futura etapa automática de CAD/impresión requiere una actualización explícita de la habilidad; no se activa por la confianza del propio modelo.
 
-## Herramientas y límites
-
-Las dos habilidades cubren primeros proyectos y experiencia básica, no un curso avanzado ni un servicio de programación de dispositivos. La IA necesita acceso real a las herramientas para compilar, depurar o conectar con tu placa. La carga desde el navegador requiere hardware compatible, firmware y acceso local; no se garantiza funcionar siempre sin instalaciones.
-
-Las descargas necesarias se explican antes. Se protegen tu trabajo y tus credenciales. Compilar o cargar correctamente no demuestra que el dispositivo funcione físicamente. Se comprueban hardware y permisos, sin pedir una y otra vez autorización para la misma operación. La memoria personal y los registros privados no se publican con el proyecto.
+La IA necesita conexiones reales para compilar, depurar, simular o acceder al hardware. Las descargas, cuentas y costes necesarios se explican antes. La carga desde el navegador necesita hardware compatible y acceso local; no se promete funcionar siempre sin instalaciones. Credenciales, memoria y registros privados no se publican. Es un flujo para crear productos, no un curso fijo de microcontroladores.
 
 ## Comprobar el código fuente
 
-Ejecuta `node --test tests/*.test.mjs` para comprobar la lógica del panel y la coherencia del ejemplo. El formato de la habilidad puede revisarse con el [validador oficial de skill-creator](https://github.com/openai/skills/tree/main/skills/.system/skill-creator). Las simulaciones y pruebas de software no sustituyen las pruebas físicas.
+Ejecuta `node --test tests/*.test.mjs` para comprobar panel, paquetes, conexiones y coherencia del registro. El formato puede revisarse con el [validador oficial de skill-creator](https://github.com/openai/skills/tree/main/skills/.system/skill-creator). Las pruebas unitarias son distintas de la ejecución MCU registrada y no sustituyen pruebas físicas.
 
 ## Licencia
 
-[MIT](../LICENSE). Puedes usar, compartir y modificar esta habilidad. Cada persona decide la publicación y la licencia de su propio proyecto.
+[MIT](../LICENSE). Puedes usar, compartir y modificar estas habilidades. Cada persona decide la publicación y licencia de su producto.
