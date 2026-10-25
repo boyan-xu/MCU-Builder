@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "testedAt": "2026-10-25",
+  "timezone": "America/New_York",
+  "simulator": "Wokwi web, wokwi-arduino-uno model",
+  "simulatorVersion": "Not exposed by the web UI",
+  "simulatorEntryUrl": "https://wokwi.com/projects/new/arduino-uno",
+  "hostedProjectSaved": false,
+  "sketchEntry": "uno-led.ino loaded as sketch.ino",
+  "sourceSha256": "6461a5511e488778e8a0a984a1f07d2dd6b31d9ee9c98eaace7682e8782c938b",
+  "diagramSha256": "3eba190c09c04170a093e51d6dca0408337df5eeefbc867be83e43657a8e9b45",
+  "firmwareBinarySha256": null,
+  "simulatedTimeAtPauseMs": 3900,
+  "observations": [
+    "The web service compiled the supplied sketch and started an emulated UNO; the startup marker was visible.",
+    "Eight alternating D8 digitalRead results were visible in the serial monitor before pausing at 3.9 seconds of simulated time.",
+    "The displayed virtual circuit contained the UNO, 330-ohm resistor and red LED with the supplied connections."
+  ],
+  "serialObserved": [
+    "SIM_START UNO_R3 D8",
+    "LED=1", "LED=0", "LED=1", "LED=0",
+    "LED=1", "LED=0", "LED=1", "LED=0"
+  ],
+  "limits": [
+    "This pass covers startup and observed digital output toggling only, not every possible firmware fault.",
+    "The compiled binary digest and hosted build/toolchain versions were not exposed or exported.",
+    "Timing tolerance, analog/power/current behavior and physical wiring were not independently measured.",
+    "The guest project was not saved to a hosted account; the sketch and diagram are preserved beside this record for reproduction."
+  ],
+  "physicalHardwareTested": false,
+  "electricalSafetyProven": false
+}
