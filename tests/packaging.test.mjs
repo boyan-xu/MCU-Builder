@@ -10,7 +10,7 @@ const toolNames = ['test-mcu-in-background', 'flash-mcu-firmware'];
 const shared = ['assets/parts-checklist.html', 'references/checklist.md', 'references/working-style.md', 'references/rea.md',
   'references/verification.md', 'references/uno-led/README.md', 'references/uno-led/connections.json', 'references/uno-led/uno-led.ino', 'references/uno-led/wiring.svg',
   'references/uno-led/diagram.json', 'references/uno-led/simulation-result.json'];
-shared.push('scripts/mcu_project.py', 'references/project-tools.md',
+shared.push('scripts/mcu_project.py', 'references/project-tools.md', 'references/replication.md',
   ...['mcu-project.json', 'main.c', 'test_logic.py', 'materials.md', 'use-guide.md', 'limits.md'].map(f => 'assets/project-example/' + f));
 
 test('both skills carry identical shared resources for independent installation', () => {
@@ -23,7 +23,7 @@ test('Markdown references stay inside each standalone skill package and exist', 
   function visit(dir) {
     return readdirSync(dir, {withFileTypes:true}).flatMap(entry => entry.isDirectory() ? visit(join(dir, entry.name)) : [join(dir,entry.name)]);
   }
-  for (const name of [...names, ...toolNames, 'select-products-to-cart']) {
+  for (const name of [...names, ...toolNames, 'select-products-to-cart', 'design-pcb-with-ai']) {
     const base=resolve(root,name);
     assert.ok(existsSync(join(base,'SKILL.md')),name);
     assert.ok(existsSync(join(base,'agents/openai.yaml')),name);

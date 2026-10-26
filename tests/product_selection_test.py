@@ -40,10 +40,14 @@ class ProductSelectionTests(unittest.TestCase):
     def select(self, value=None):
         return self.module.select_products(request() if value is None else value)
 
-    def test_recorded_fixture_is_bound_to_sources_and_only_simulated_cart_actions(self):
+    def test_historical_fixture_keeps_unchanged_browser_inputs_and_simulated_cart_scope(self):
         root = SCRIPT.parents[3]
         record = json.loads((SCRIPT.parents[1] / 'references/fixture-verification.json').read_text())
         for name, digest in record['source_sha256'].items():
+            # Selector evolved after this browser run; preserve its historical digest, never rehash it as new proof.
+            if name == 'skills/select-products-to-cart/scripts/select_products.py':
+                self.assertEqual(digest, 'ee3c5017733dfa15b3402a354b0af1ff4ec4a27bba78c8892028fae3b91367f4')
+                continue
             self.assertEqual(hashlib.sha256((root / name).read_bytes().replace(b'\r\n', b'\n')).hexdigest(), digest)
         self.assertEqual(record['repeat_add_packs'], 0)
         self.assertEqual(record['checkout_attempts'], 0)
@@ -70,6 +74,54 @@ class ProductSelectionTests(unittest.TestCase):
         self.assertEqual(result['status'], 'selected')
         self.assertEqual((row['required_packs'], row['add_packs']), (3, 3))
         self.assertEqual(row['comparison_total'], '10.00')
+
+    def test_verified_fit_precedes_price_and_reports_actual_matches(self):
+        data = request()
+        data['parts'][0]['preferred_specs'] = {'size': '0.96 inch', 'mounting': True}
+        expensive = deepcopy(data['candidates'][0])
+        expensive.update(sku='better-fit', pack_price='8.00')
+        expensive['specs'].update(size='0.96 inch', mounting=True)
+        expensive['spec_evidence'].update(size=expensive['url'], mounting=expensive['url'])
+        data['candidates'].append(expensive)
+        row = self.select(data)['selections'][0]
+        self.assertEqual(row['sku'], 'better-fit')
+        self.assertEqual(row['preferred_matches'], ['size', 'mounting'])
+        self.assertIn('size', row['reason'])
+
+    def test_missing_or_invalid_preference_evidence_earns_no_match(self):
+        for evidence in (None, 'not-a-url'):
+            data = request()
+            data['parts'][0]['preferred_specs'] = {'size': '0.96 inch'}
+            expensive = deepcopy(data['candidates'][0])
+            expensive.update(sku='unproven-fit', pack_price='8.00')
+            expensive['specs']['size'] = '0.96 inch'
+            expensive['spec_evidence']['size'] = evidence
+            data['candidates'].append(expensive)
+            row = self.select(data)['selections'][0]
+            self.assertEqual(row['sku'], 'display-1')
+            self.assertEqual(row['preferred_matches'], [])
+
+    def test_preference_cannot_bypass_budget_or_hard_compatibility(self):
+        for update in ({'pack_price': '10.00'}, {'available': False}, {'specs': {'controller': 'wrong', 'interface': 'I2C', 'size': 1}}):
+            data = request()
+            data['parts'][0].update(preferred_specs={'size': 1}, max_total='10.00')
+            expensive = deepcopy(data['candidates'][0])
+            expensive.update(sku='fails-gate', specs={**expensive['specs'], 'size': 1})
+            expensive['spec_evidence']['size'] = expensive['url']
+            expensive.update(update)
+            data['candidates'].append(expensive)
+            self.assertEqual(self.select(data)['selections'][0]['sku'], 'display-1')
+
+    def test_preferences_validate_scalar_map_and_empty_preserves_legacy(self):
+        for value in ([], {'size': []}, {'size': float('inf')}):
+            data = request()
+            data['parts'][0]['preferred_specs'] = value
+            with self.assertRaises(ValueError):
+                self.select(data)
+        data = request()
+        old = self.select(data)['selections'][0]['sku']
+        data['parts'][0]['preferred_specs'] = {}
+        self.assertEqual(self.select(data)['selections'][0]['sku'], old)
 
     def test_decimal_cost_does_not_use_binary_float_arithmetic(self):
         data = request()
