@@ -94,6 +94,12 @@ def validate(data):
         for key, value in specs.items():
             text(key, 'specification key')
             normalized(value)
+        preferred = part.get('preferred_specs', {})
+        if not isinstance(preferred, dict):
+            raise ValueError('part.preferred_specs must be a scalar map')
+        for key, value in preferred.items():
+            text(key, 'preferred specification key')
+            normalized(value)
         if 'max_delivery_days' in part:
             quantity(part['max_delivery_days'], 'part.max_delivery_days', zero=True)
         if 'max_total' in part:
@@ -153,6 +159,16 @@ def comparable(candidate, part, currency, site_origin, cart):
     if not isinstance(official, bool):
         raise ValueError('official_seller must be true or false when supplied')
     existing = cart[(sku, variant)]
+    matches = []
+    for key, expected in part.get('preferred_specs', {}).items():
+        if key in specs and evidence.get(key):
+            try:
+                if normalized(specs[key]) != normalized(expected):
+                    continue
+                origin(evidence[key], 'spec_evidence.' + key)
+                matches.append(key)
+            except ValueError:
+                pass  # An unevidenced preference earns no match; hard gates still apply.
     row = {
         'part_id': part['id'], 'sku': sku, 'variant': variant, 'url': url, 'title': title,
         'observed_at': observed, 'required_quantity': part['quantity'], 'pack_quantity': pack,
@@ -161,9 +177,10 @@ def comparable(candidate, part, currency, site_origin, cart):
         'pack_price': format(price, 'f'), 'listed_total': format(listed, 'f'),
         'shipping_cost': format(shipping, 'f'), 'comparison_total': format(total, 'f'),
         'delivery_days': days, 'official_seller': official,
-        'reason': 'Required specifications, selected variant, stock, delivery and seller were verified; lowest observed listed-price-plus-shipping total among eligible candidates, with arrival and official-seller tie breaks.',
+        'preferred_matches': matches,
+        'reason': 'Hard requirements verified; ranked by evidenced preferred-spec matches (' + ', '.join(matches) + '), then listed price plus shipping, arrival and official seller. No missing evidence earns a preference match.',
     }
-    return (total, days if days is not None else math.inf, not official, sku, variant), row
+    return (-len(matches), total, days if days is not None else math.inf, not official, sku, variant), row
 
 
 def select_products(data):
