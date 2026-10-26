@@ -1,6 +1,6 @@
 [English](../README.md) · [简体中文](README.zh-CN.md) · [Español](README.es.md)
 
-# MCU Builder
+# 让你的想法成真
 
 **带着想法来，做出可以使用的东西。**
 
