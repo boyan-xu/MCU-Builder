@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-26",
+  "environment": "Local fictional shop in ChatGPT in-app browser",
+  "source_hash_encoding": "UTF-8 with LF-normalized line endings",
+  "source_sha256": {
+    "skills/select-products-to-cart/scripts/select_products.py": "ee3c5017733dfa15b3402a354b0af1ff4ec4a27bba78c8892028fae3b91367f4",
+    "tests/fixtures/mock-shop.html": "1601e3789a665939e63eb270bcc9659c99c636781bd5f2224360fb732f7e3736",
+    "skills/build-with-ai-mcu/assets/parts-checklist.html": "71b637c0380fc10085ed7ba73284c194bfbe39565d32281e31b616d8d8a66363"
+  },
+  "request": {
+    "part": "SSD1306 I2C display",
+    "units": 2,
+    "currency": "USD"
+  },
+  "selected": {
+    "sku": "oled-good",
+    "variant": "0.96 I2C 3.3V",
+    "comparison_total": "9.00",
+    "initial_add_packs": 2
+  },
+  "verified_cart": [
+    {
+      "sku": "unrelated-cable",
+      "variant": "USB C",
+      "quantity": 2
+    },
+    {
+      "sku": "oled-good",
+      "variant": "0.96 I2C 3.3V",
+      "quantity": 2
+    }
+  ],
+  "repeat_add_packs": 0,
+  "checkout_attempts": 0,
+  "host_panel": {
+    "explicit_cart_request_sent_to_mock_host": true,
+    "missing_only_despite_all_link_scope": true,
+    "site_persisted": true,
+    "offer_hidden_after_acceptance_and_reload": true,
+    "link_only_action_preserved": true
+  },
+  "standalone_panel": {
+    "language": "zh",
+    "copyable_cart_request": true
+  },
+  "real_store_accessed": false,
+  "real_orders_placed": false,
+  "limits": [
+    "Browser workflow verified only against the local fixture.",
+    "Candidate evidence and fresh cart data must still be checked on each actual shopping website.",
+    "Tax and checkout fees were not included in the listed-price-plus-shipping comparison."
+  ]
+}
