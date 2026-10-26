@@ -1,0 +1,4 @@
+interface:
+  display_name: "Select Products and Add to Cart"
+  short_description: "Compare matching products and fill a cart without ordering"
+  default_prompt: "Use $select-products-to-cart to choose products for my requirements on my selected website and add only the missing quantities to my cart, without checking out or ordering."
