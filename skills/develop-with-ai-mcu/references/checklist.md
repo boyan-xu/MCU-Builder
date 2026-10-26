@@ -8,6 +8,7 @@ The AI prepares the panel, not the learner. Copy `assets/parts-checklist.html` i
 - `projectName`, `language` (`en`, `zh`, `es`), ISO currency such as `USD`/`CNY`/`EUR`, and optional broad `region`. Label any assumed currency in the surrounding answer; do not infer region from currency/language.
 - `parts`: stable `id`, localized `name`, exact `specification`, positive integer `quantity`, localized `purpose`, boolean `owned`, optional `unitPrice` and optional `url`.
 - Set `owned: true` only when the required quantity/specification is confirmed available. A price is a per-piece estimate in the project's currency; use `null` for unknown costs instead of zero. Include separate shipping/consumable rows when known, or explain unknown extra costs.
+- Split partial stock into separate stable rows: needing five while owning three means an owned row of three and a missing row of two. The cart request contains only the two still needed, not five. Do not lose this distinction when regenerating the list.
 - URLs must be current checked http/https product references, without affiliate tracking. No example fake shop links. Escape `<` as `\u003c` when serializing JSON into the script tag so supplied text cannot terminate it. Insert user text via data, not executable code.
 
 ## Chat and standalone delivery
@@ -18,8 +19,16 @@ If a browser requires a full document, wrap the unchanged fragment in `<!doctype
 
 Checkboxes and the optional region are stored per project in browser storage when available. Inline hosts may also support `window.openai.widgetState`, `setWidgetState` and `openai:set_globals`; these are optional. Blocked storage leaves the panel usable for the current visit. Store no secrets, account details or addresses. Same item IDs with unchanged specification/quantity keep their checks when display names, prices or links change. Keep technical specifications stable when only translating display names. Changed specifications or quantities reset only affected checks. Preserve the project ID and storage context when regenerating; across another browser or moved local files, carry the known checklist state with the generated file or ask only for missing status, never claim automatic cross-device sync.
 
+Optional `site` is a user-chosen shopping website/name, never inferred from language or currency. It is saved alongside the region without changing item signatures. The panel question is the single optional offer to let AI choose missing parts and add them to a cart. The new button always uses missing items regardless of the link-search scope, and is disabled when all parts are ready.
+
+Set optional `offerCart: false` when the user has declined or already accepted the offer; it hides the offer and cart button, while keeping buying-link controls. The accepted button also saves this state. It survives reload/regeneration for the same project. A new explicit user choice can set `offerCart: true` with a new stable `cartOfferId`; acceptance consumes that offer so its unchanged ID cannot reopen on reload or host echoes. Preserve the ID when updating prices or translating; never generate a new ID simply to repeat the offer.
+
 ## Buying-link action
 
 When supported, the clearly labeled button sends an explicit follow-up request through `window.openai.sendFollowUpMessage`. The request includes the selected all/missing parts, quantities, broad region and response language. No browsing occurs inside the panel. The AI uses its available search tools, verifies actual product variants/delivery and returns optional links or an updated panel. If region is absent, ask for country/region at that point.
 
 Without that host API, or if it fails, the panel displays a request the learner can copy to their AI. Clipboard failure leaves selectable text. Do not pretend this fallback sends a message. A check means the learner marked materials ready, not proof of safe wiring or permission to operate hardware.
+
+## Selection-and-cart action
+
+The distinct cart button sends an explicit `$select-products-to-cart` request through the same optional host action, or shows copyable text in the standalone fallback. It includes the selected website or asks AI to obtain one, broad region, required missing quantities and localized instructions to preserve unrelated cart items and stop before checkout, orders, payment or subscriptions. It neither searches nor accesses a store itself. Showing the panel does not authorize shopping; pressing/sending the cart request or a clear chat opt-in does. A link-only request remains link-only. Do not repeat the offer if the person already chose or declined it.
