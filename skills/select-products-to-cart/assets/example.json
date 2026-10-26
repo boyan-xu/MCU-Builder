@@ -4,7 +4,7 @@
   "site": "https://shop.example",
   "region": "Fictional delivery region",
   "currency": "USD",
-  "parts": [{"id":"oled","quantity":2,"required_specs":{"controller":"SSD1306","interface":"I2C"}}],
+  "parts": [{"id":"oled","quantity":2,"required_specs":{"controller":"SSD1306","interface":"I2C"},"preferred_specs":{"controller":"SSD1306"}}],
   "candidates": [
     {"part_id":"oled","sku":"oled-good","variant":"0.96 I2C 3.3V","variant_verified":true,"url":"https://shop.example/product/oled-good","title":"Fictional matching display","observed_at":"2026-10-25T12:00:00Z","specs":{"controller":"SSD1306","interface":"I2C"},"spec_evidence":{"controller":"https://shop.example/product/oled-good","interface":"https://shop.example/product/oled-good"},"pack_quantity":1,"pack_price":"4.00","shipping_cost":"1.00","currency":"USD","available":true,"deliverable":true,"seller_acceptable":true,"seller_evidence":"https://shop.example/seller/demo","delivery_days":4,"official_seller":true},
     {"part_id":"oled","sku":"oled-other","variant":"0.96 I2C 3.3V","variant_verified":true,"url":"https://shop.example/product/oled-other","title":"Fictional incompatible display","observed_at":"2026-10-25T12:00:00Z","specs":{"controller":"SH1106","interface":"I2C"},"spec_evidence":{"controller":"https://shop.example/product/oled-other","interface":"https://shop.example/product/oled-other"},"pack_quantity":1,"pack_price":"2.00","shipping_cost":"1.00","currency":"USD","available":true,"deliverable":true,"seller_acceptable":true,"seller_evidence":"https://shop.example/seller/demo","delivery_days":4,"official_seller":true}
