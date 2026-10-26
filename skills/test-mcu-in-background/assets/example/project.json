@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "project": ".",
+  "test": {
+    "backend": "arm-c",
+    "cpu": "cortex-m3",
+    "sources": ["logic.c"],
+    "harness": "test_logic.c",
+    "entry": "test_main",
+    "timeout": 5,
+    "instructions": 1000000,
+    "captures": [
+      {"symbol": "oled_framebuffer", "bytes": 1024, "output": "oled-frame.bin", "format": "ssd1306", "width": 128, "height": 64}
+    ]
+  }
+}
