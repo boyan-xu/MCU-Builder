@@ -1,4 +1,4 @@
-# Verify the product before operating it
+# Choose checks that help the current product
 
 Read this while selecting parts and before physical operation. The goal is a usable product, not a lesson. Use existing compatible simulation/build/debug tools; do not invent a simulator or replace working software. Explain needed downloads, accounts, costs and configuration changes before taking them on. Keep tokens in private input and do not upload private project material to a cloud simulator without applicable authorization.
 
@@ -6,13 +6,17 @@ Read this while selecting parts and before physical operation. The goal is a usa
 
 For new purchases, prefer MCUs and modules with suitable, documented simulation support that still meet the person's actual needs. Check the exact model, important peripherals and simulator limitations, not just the board-family name. Do not replace a suitable existing board merely because it lacks a model. State cost and delivery assumptions; aim for a useful result quickly without promising every idea in a fixed number of days.
 
-Agree on observable product behavior, then derive relevant checks: startup and safe initial outputs, normal inputs/outputs, thresholds, timing and boundary cases, restart, missing inputs, communication timeout or other failure behavior when applicable. Do not inflate a simple build into an unrelated test program. Keep the original goal visible in any proposed milestone; complexity is judged from actual feasibility, not the person's MCU knowledge level.
+Use the person's current goal and state to choose the next action. AI decides whether a test or simulation would resolve a real uncertainty or risk; neither is mandatory for every project. A simple, already-understood change may need only inspection and a build. State useful checks briefly rather than asking the person to design a test program. Keep the original goal visible in any milestone; complexity is judged from actual feasibility, not MCU knowledge level.
 
-## Use real MCU simulation when supported
+When checks are useful, choose relevant startup, input/output, boundary, timing, restart or failure scenarios. Give more attention to power, motion, outputs and communication failures when they could damage parts or create unsafe behavior. Do not use the flexible test policy to skip necessary electrical checks.
 
-Run the firmware on an appropriate MCU simulator with matching component models and connections. A browser UI mock, a host-side unit test, static analysis or a successful compile is not MCU simulation. Document substitutes or mocks and the behavior they cannot prove. Match the wiring image, pin table, firmware and simulator; never silently substitute a different board and call it exact coverage.
+## Prefer background execution; preview when wanted
 
-Exercise the applicable product scenarios and fix failures before operating the supported physical circuit with its external devices or loads. Preserve the simulation project and outcome: simulator/target, firmware or source version/digest, connection/configuration version, scenarios run, observed evidence, failures and limits. Say when a web service does not expose its build version. Changes to relevant code, pins, wiring or configuration need fresh affected checks; do not reuse a stale pass.
+Use existing local or connected background/headless tools when they cover the behavior that matters. This may be a build, host-side logic check, ARM instruction emulator with peripheral mocks, or an appropriate MCU simulator. Do not open a browser or require a hosted simulator just to satisfy a workflow step. If the person wants to see the effect before flashing, offer a browser preview or rendered frames; label what it actually executes.
+
+If MCU simulation is useful and supported, run firmware with suitable target/component models and matching connections. A browser UI mock, host unit test or successful compile is not MCU simulation. ARM instruction execution with mocked peripherals can prove exercised code paths, but not the real peripheral, board or electrical behavior. Document substitutes, mocks and coverage gaps; never silently substitute another board and call it exact coverage.
+
+For checks actually run, preserve the tested source/build version, relevant connections/configuration, scenarios, observed evidence, failures and limits. Include simulator/target and project files when applicable; say when a service does not expose its build version. Fix observed failures that affect the intended next operation. Recheck affected behavior after relevant changes when needed; do not reuse stale evidence. Existing browser-run evidence remains browser-run evidence, not a headless result.
 
 ## Separate electrical review and first operation
 
@@ -24,15 +28,15 @@ Changing wires happens with power disconnected. Choose a suitable sequence: an i
 
 ## Existing hardware without a suitable simulation model
 
-Explain exactly which MCU/module behavior cannot be simulated. Continue writing code, compiling and running applicable host-side logic tests. Reuse the existing board; do not force a purchase or stop all work just because the simulator lacks it.
+Explain the coverage gap when it affects the next decision. Continue code, build or targeted logic checks when useful. Reuse the existing board; do not force a purchase or stop safe useful work just because a model is missing. Do not require installation or an account merely to make simulation possible when existing tools suffice.
 
 Under authorization for that exact target, allow board-only flash/diagnostic tests with external loads isolated and appropriate initial output states, after target, existing firmware and electrical checks. This necessarily powers the development board; it is an explicit fallback, not a claim that a full connected product has passed simulation. Tell the person what was observed, what remains unknown and the next suitable physical check. Do not silently jump from a board diagnostic to full-power movement or load operation.
 
 ## Report and deliver honestly
 
-Report separately: build; host-side logic checks; MCU simulation; electrical review; flash/readback; and physical product behavior. Mark a layer passed, failed, unavailable or not run with its evidence and limits. An unavailable tool/account/model is not a pass. A bounded retry may fix a concrete failure; repeated blind simulation or flashing does not add evidence.
+For relevant layers, distinguish build, host-side logic checks, ARM emulation with mocks, MCU simulation, electrical review, flash/readback and physical product behavior. Mark results passed, failed, unavailable or not run with evidence and limits. A skipped or unavailable check is not a pass, and there is no need to present a long empty checklist. A bounded retry may fix a concrete failure; repeated blind simulation or flashing does not add evidence.
 
-Deliver the actual source, exact wiring image/table, simulation files/results, a short use guide and remaining limitations. The [UNO LED reference](uno-led/README.md) demonstrates evidence packaging, not an obligatory first product.
+Deliver source, exact wiring image/table, any test/simulation files and results actually produced, a short use guide and remaining limitations. The [UNO LED reference](uno-led/README.md) demonstrates evidence packaging from a historical browser run, not an obligatory first product or required execution method.
 
 ## Mechanical scope in this release
 

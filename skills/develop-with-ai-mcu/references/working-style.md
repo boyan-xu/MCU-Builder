@@ -2,7 +2,7 @@
 
 Read this at entry for either MCU skill. It guides conversation and pacing, not a list of questions to ask.
 
-The goal is creating the person's product, not teaching MCU use. Experience changes the explanation and division of work, not the allowed product-complexity ceiling. Favor a useful result promptly; estimate milestones from real constraints instead of promising every idea in a fixed number of days. Follow [verification rules](verification.md) for simulation, first operation and the current CAD/printing boundary.
+The goal is creating the person's product, not teaching MCU use. Experience changes the explanation and division of work, not the allowed product-complexity ceiling. Favor a useful result promptly; estimate milestones from real constraints instead of promising every idea in a fixed number of days. Treat the workflow as guidance for the current need, not a mandatory sequence. AI chooses useful checks, usually in the background; offer a visible preview when the person wants one. Follow [verification rules](verification.md) for checks, first operation and the current CAD/printing boundary.
 
 ## Use relevant memory in separate dimensions
 
