@@ -11,13 +11,15 @@ import re
 import sys
 import tempfile
 import zipfile
+from urllib.parse import urlsplit
+from xml.etree import ElementTree
 
 TOOL_VERSION = '1.0'
 MAX_LOG_BYTES = 256 * 1024
 MAX_FILE_BYTES = 64 * 1024 * 1024
 PRIVATE = {'.git', '.env', '.ssh', '.aws', '__pycache__', 'node_modules', 'codexrecords',
            'records.sqlite', 'project_state.json', 'memory.md', 'ai_rules.md', '.codex',
-           '.netrc', '.npmrc', '.pypirc', 'id_rsa', 'id_ed25519', '.cache', 'cache', 'caches'}
+           '.netrc', '.npmrc', '.pypirc', 'id_rsa', 'id_ed25519', '.cache', 'cache', 'caches', 'backup', 'backups'}
 SECRET = re.compile(rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|(?:password|passwd|api[_-]?key|access[_-]?token|wifi[_-]?(?:password|pass|ssid))["\x27]?\s*[=:]\s*["\x27]?[^\s"\x27,;}]{3,}', re.I)
 
 
@@ -171,6 +173,58 @@ def finite(value, name):
     return value
 
 
+def parts(project):
+    lines = []
+    materials = array(project['data'].get('materials'), 'materials')
+    if not materials:
+        raise ValueError('complete nonempty materials list required')
+    for index, part in enumerate(materials, 1):
+        obj(part, 'material')
+        model = text(part.get('model'), 'material.model')
+        purpose = text(part.get('purpose'), 'material.purpose')
+        specs = obj(part.get('required_specs'), 'required_specs')
+        if not specs:
+            raise ValueError('exact material specifications required')
+        for key, value in specs.items():
+            text(key, 'specification key')
+            if isinstance(value, str):
+                text(value, 'specification')
+            elif type(value) in (int, float):
+                finite(value, 'specification')
+            elif type(value) is not bool:
+                raise ValueError('material specifications must be scalar values')
+        for field in ('required', 'available'):
+            if type(part.get(field)) is not int or not 0 <= part[field] <= 1000000000:
+                raise ValueError('known physical quantities required')
+        search = text(part.get('search_text'), 'material.search_text (include specs and pack quantity)')
+        estimate = part.get('price')
+        cost = 'Unknown estimate; no price evidence yet'
+        if estimate is not None:
+            obj(estimate, 'material.price')
+            amount = finite(estimate.get('estimated_missing_total'), 'estimated missing total')
+            if amount < 0:
+                raise ValueError('estimated cost must be nonnegative')
+            cost = str(amount) + ' ' + text(estimate.get('currency'), 'price currency')
+            cost += '; evidence: ' + text(estimate.get('source'), 'price source') + '; observed: ' + text(estimate.get('observed_at'), 'price observation date')
+        lines.extend([f'{index}. {model}; ' + ', '.join(f'{k}={v}' for k, v in specs.items()),
+                      f'   Purpose: {purpose}. Required: {part["required"]}; owned: {part["available"]}; missing: {max(0, part["required"] - part["available"])}. Estimated missing cost: {cost}.',
+                      '   Search (copy): ' + search])
+    artifact_text = '<!-- ' + marker(project) + ' -->\n' + '\n'.join(lines) + '\n'
+    shopping = obj(project['data'].get('shopping', {}), 'shopping')
+    state = shopping.get('cart_offer', 'not-offered')
+    if state not in {'not-offered', 'offered', 'accepted', 'declined'}:
+        raise ValueError('unsupported cart_offer state')
+    if state == 'not-offered':
+        lines.extend(['', 'Would you like help choosing missing parts and adding them to your cart?'])
+    if state == 'accepted':
+        lines.extend(['', 'Cart only: no checkout, order, payment or subscription.'])
+        if not shopping.get('site'):
+            lines.append('Which shopping website should I use?')
+    return {'text': '\n'.join(lines), 'artifact_text': artifact_text,
+            'cart_offer': 'offered' if state == 'not-offered' else state,
+            'site': shopping.get('site'), 'cart_mutated': False}
+
+
 def checked_wiring(project):
     wiring = obj(project['data'].get('wiring'), 'wiring')
     if 'simulatorPins' in wiring or 'ledPin' in wiring:
@@ -266,10 +320,8 @@ def marker(project):
             ' mcu-source-sha256:' + digest(canonical(source_snapshot(project))))
 
 
-def wiring(project, output):
+def wiring_artifacts(project):
     data, pins, pending = checked_wiring(project)
-    directory = Path(output)
-    targets = [fresh_output(directory / name, project) for name in ('wiring.svg', 'connections.md', 'pins.generated.json')]
     # One wire list drives all three artifacts; positions express logical order only.
     width = 1400
     height = 160 + 88 * len(data['connections'])
@@ -312,7 +364,14 @@ def wiring(project, output):
     record = {'version': 1, **provenance(project, True), 'diagram_kind': 'logical',
               'components': data['components'], 'connections': data['connections'],
               'bindings': data.get('bindings', []), 'electrical_status': 'needs-confirmation', 'pending': pending}
-    for target, content in zip(targets, ['\n'.join(svg).encode('utf-8'), '\n'.join(table).encode('utf-8'), json_bytes(record)]):
+    contents = ['\n'.join(svg).encode('utf-8'), '\n'.join(table).encode('utf-8'), json_bytes(record)]
+    return list(zip(('wiring.svg', 'connections.md', 'pins.generated.json'), contents)), pending
+
+
+def wiring(project, output):
+    artifacts, pending = wiring_artifacts(project)
+    targets = [fresh_output(Path(output) / name, project) for name, _ in artifacts]
+    for target, (_, content) in zip(targets, artifacts):
         write_new(target, content)
     return {'files': [str(p) for p in targets], 'pending': pending}
 
@@ -393,7 +452,187 @@ def diagnostics(project):
             'hypotheses': [], 'limits': ['No command execution, device scan, connect, reset or readback. First 256 KiB and 20 matches per file; root cause is not established. Keep this report private unless reviewed.']}
 
 
-def package(project, output):
+FINAL_ROLES = {'materials', 'wiring-image', 'wiring-text', 'source', 'build-config',
+               'dependencies', 'build-guide', 'flash-guide', 'power-assembly', 'use-guide',
+               'acceptance-guide', 'license', 'evidence', 'limits'}
+RESOURCE_ROLES = {
+    'pcb': {'pcb-source', 'schematic', 'pcb-layout', 'pcb-bom', 'pcb-nets', 'pcb-checks', 'pcb-manufacture'},
+    'mechanical': {'mechanical-source', 'mechanical-export'},
+    'print': {'print-source', 'print-export'},
+}
+GUIDE_SECTIONS = {
+    'build-guide': ('tools', 'build', 'expected', 'failure'),
+    'flash-guide': ('target', 'steps', 'expected', 'failure'),
+    'power-assembly': ('power', 'assembly', 'safety'),
+    'use-guide': ('steps', 'expected', 'failure'),
+    'acceptance-guide': ('steps', 'expected', 'proof'),
+    'dependencies': ('bundled', 'external'),
+    'license': ('license', 'attribution'),
+    'limits': ('proof', 'limits'),
+}
+
+
+def final_content(project, files, payloads):
+    """Bind exact BOM/wires and require substantive versioned guide sections."""
+    expected_bom = parts(project)['artifact_text'].encode('utf-8')
+    artifacts, _ = wiring_artifacts(project)
+    wiring_bytes = dict(artifacts)
+    if not any(row['role'] == 'dependencies' and Path(row['path']).suffix.lower() == '.md' for row in files):
+        raise ValueError('dependencies requires a versioned Markdown inventory/setup guide')
+    for row in files:
+        content = payloads[row['path']]
+        role = row['role']
+        if role == 'materials' and content != expected_bom:
+            raise ValueError('final materials must match current parts artifact_text: ' + row['path'])
+        if role in ('wiring-image', 'wiring-text'):
+            expected = wiring_bytes['wiring.svg' if role == 'wiring-image' else 'connections.md']
+            if content != expected:
+                raise ValueError('final wiring must match current generated data/provenance: ' + row['path'])
+            if role == 'wiring-image':
+                try:
+                    image = ElementTree.fromstring(content)
+                except ElementTree.ParseError as exc:
+                    raise ValueError('final wiring image must be a valid generated SVG') from exc
+                if image.tag != '{http://www.w3.org/2000/svg}svg':
+                    raise ValueError('final wiring image must be SVG')
+        if role in GUIDE_SECTIONS and (role != 'dependencies' or Path(row['path']).suffix.lower() == '.md'):
+            try:
+                guide = content.decode('utf-8')
+            except UnicodeDecodeError as exc:
+                raise ValueError('final guide must be UTF-8: ' + row['path']) from exc
+            if '<!-- ' + marker(project) + ' -->' not in guide:
+                raise ValueError('final guide needs current config/source provenance: ' + row['path'])
+            sections = re.findall(r'<!-- mcu-section:([a-z-]+) -->\s*(.*?)(?=<!-- mcu-section:|\Z)', guide, re.S)
+            values = dict(sections)
+            if len(values) != len(sections):
+                raise ValueError('duplicate final guide section: ' + row['path'])
+            for key in GUIDE_SECTIONS[role]:
+                body = re.sub(r'<!--.*?-->', '', values.get(key, ''), flags=re.S)
+                body = re.sub(r'^\s*#.*$', '', body, flags=re.M).strip()
+                if (len(re.sub(r'\W', '', body)) < 32 or
+                        re.search(r'(?im)^\s*(?:[-*]\s*)?(?:TODO|TBD|FIXME|PLACEHOLDER)\b', body)):
+                    raise ValueError('missing or non-substantive final guide section ' + key + ': ' + row['path'])
+
+
+def reproducibility(project, files, contents):
+    """Check a reviewed dependency inventory and build witness, never execute supplied code."""
+    data = project['data']
+    spec = obj(data['deliverables'].get('reproducibility'), 'deliverables.reproducibility')
+    if SECRET.search(canonical(spec)):
+        raise ValueError('possible credential detected in reproducibility metadata')
+    if spec.get('revision') != data['revision']:
+        raise ValueError('reproducibility revision mismatch')
+    if array(spec.get('critical_unknowns'), 'critical_unknowns'):
+        raise ValueError('unresolved critical facts block reproducible delivery')
+    if type(spec.get('firmware_required')) is not bool:
+        raise ValueError('firmware_required must be an explicit boolean')
+    resources = array(spec.get('used_resources'), 'used_resources')
+    if any(not isinstance(r, str) or r not in RESOURCE_ROLES for r in resources):
+        raise ValueError('unsupported used resource')
+    required_roles = set(FINAL_ROLES)
+    if spec['firmware_required']:
+        required_roles.add('firmware')
+    for resource in resources:
+        required_roles.update(RESOURCE_ROLES[resource])
+    roles = {row['role'] for row in files}
+    if required_roles - roles:
+        raise ValueError('missing final artifact roles: ' + ', '.join(sorted(required_roles - roles)))
+    parts(project)  # Require exact BOM quantities/specs/search text; unknown estimates remain visible.
+    wiring_data, pins, pending = checked_wiring(project)
+    if len(pending) != 1:
+        raise ValueError('essential pin/orientation/electrical facts remain unknown')
+    payloads = dict(contents)
+    final_content(project, files, payloads)
+    inventory = {row['path']: row['sha256'] for row in files}
+
+    def included(value, name):
+        path = local(project, text(value, name))
+        relative = path.relative_to(project['root']).as_posix()
+        if relative not in inventory:
+            raise ValueError(name + ' must be an allowlisted packaged file: ' + relative)
+        return relative
+
+    inputs = array(spec.get('required_inputs'), 'required_inputs')
+    if not inputs:
+        raise ValueError('required_inputs must list all project-specific build inputs')
+    input_paths = {included(p, 'required input') for p in inputs}
+    build_roles = {'source', 'build-config', 'dependencies'}
+    if {f['path'] for f in files if f['role'] in build_roles} - input_paths:
+        raise ValueError('source/build/dependency artifacts missing from required_inputs')
+    # Quoted C/C++ includes must resolve inside the declared package inventory.
+    include_dirs = array(spec.get('include_dirs', []), 'include_dirs')
+    for directory in include_dirs:
+        text(directory, 'include directory')
+        if PureWindowsPath(directory).drive or '..' in PureWindowsPath(directory).parts or directory.startswith(('/', '\\')):
+            raise ValueError('include directory must be project-relative')
+    for name in input_paths:
+        if Path(name).suffix.lower() not in {'.c', '.h', '.cpp', '.hpp', '.cc', '.ino'}:
+            continue
+        for header in re.findall(rb'^\s*#\s*include\s*"([^"\r\n]+)"', payloads[name], re.M):
+            reference = header.decode('utf-8')
+            candidates = [str(Path(name).parent / reference), *[str(Path(d) / reference) for d in include_dirs]]
+            resolved = []
+            for candidate in candidates:
+                try:
+                    resolved.append(included(candidate, 'quoted include'))
+                except (ValueError, OSError):
+                    pass
+            if not any(p in input_paths for p in resolved):
+                raise ValueError('missing packaged quoted include: ' + name + ': ' + reference)
+    for name in input_paths:
+        if re.search(rb'(?:[A-Za-z]:[\\/](?:Users|home)[\\/]|/(?:home|Users)/[^\s/]+/)', payloads[name]):
+            raise ValueError('private absolute path in build inputs: ' + name)
+    tools = array(spec.get('toolchain'), 'toolchain')
+    if not tools:
+        raise ValueError('exact toolchain required')
+    prerequisites = array(spec.get('external_prerequisites'), 'external_prerequisites')
+    for tool in tools + prerequisites:
+        obj(tool, 'tool/prerequisite')
+        text(tool.get('name'), 'tool name')
+        text(tool.get('version'), 'tool exact version')
+        url = urlsplit(text(tool.get('official_url'), 'official URL'))
+        if url.scheme != 'https' or not url.hostname or url.username or url.password:
+            raise ValueError('official acquisition URL must be HTTPS without credentials')
+        included(tool.get('setup'), 'tool setup instructions')
+    facts = obj(spec.get('essential_facts'), 'essential_facts')
+    for key in ('parts', 'pins', 'power', 'build', 'assembly'):
+        evidence = array(facts.get(key), 'essential_facts.' + key)
+        if not evidence:
+            raise ValueError('missing essential fact evidence: ' + key)
+        for name in evidence:
+            included(name, 'essential fact evidence')
+    for resource in resources:
+        if not array(facts.get(resource), 'essential_facts.' + resource):
+            raise ValueError('missing resource facts: ' + resource)
+        for name in facts[resource]:
+            included(name, 'resource fact evidence')
+    proof_name = included(spec.get('build_evidence'), 'build evidence')
+    proof = obj(json.loads(payloads[proof_name]), 'build evidence')
+    expected = {p: inventory[p] for p in input_paths}
+    firmware = {f['path']: f['sha256'] for f in files if f['role'] == 'firmware'}
+    if (proof.get('status') != 'passed' or proof.get('revision') != data['revision'] or
+            proof.get('config_sha256') != project['config_sha256'] or proof.get('input_sha256') != expected or
+            proof.get('firmware_sha256') != firmware or proof.get('toolchain') != tools):
+        raise ValueError('build evidence must bind successful build, exact inputs/firmware/toolchain and current revision/config')
+    text(proof.get('command'), 'observed build command')
+    proof_status = obj(spec.get('proof_status'), 'proof_status')
+    for key in ('build', 'logic', 'simulation', 'electrical', 'flash', 'physical'):
+        if proof_status.get(key) not in {'passed', 'failed', 'not-run', 'not-applicable', 'limited'}:
+            raise ValueError('explicit proof status required: ' + key)
+    if proof_status['build'] != 'passed':
+        raise ValueError('final build proof must be passed')
+    # Only the reviewed contract is exported; unknown extra metadata is not public package content.
+    keys = ('revision', 'critical_unknowns', 'firmware_required', 'used_resources', 'required_inputs',
+            'include_dirs', 'toolchain', 'external_prerequisites', 'essential_facts', 'build_evidence', 'proof_status')
+    result = {key: deepcopy(spec[key]) for key in keys if key in spec}
+    for key in ('toolchain', 'external_prerequisites'):
+        result[key] = [{field: item[field] for field in ('name', 'version', 'official_url', 'setup')} for item in result[key]]
+    result['essential_facts'] = {key: result['essential_facts'][key] for key in ('parts', 'pins', 'power', 'build', 'assembly', *resources)}
+    result['proof_status'] = {key: result['proof_status'][key] for key in ('build', 'logic', 'simulation', 'electrical', 'flash', 'physical')}
+    return result
+
+
+def package(project, output, reproducible=False):
     delivery = obj(project['data'].get('deliverables'), 'deliverables')
     revision = text(project['data'].get('revision'), 'revision')
     if delivery.get('revision') != revision:
@@ -405,7 +644,7 @@ def package(project, output):
     if output.suffix.casefold() != '.zip':
         raise ValueError('package output must be a new .zip file')
     files, contents, seen = [], [], set()
-    allowed_roles = {'source', 'firmware', 'wiring', 'materials', 'use-guide', 'limits', 'test', 'evidence'}
+    allowed_roles = FINAL_ROLES | {'firmware', 'wiring', 'test'} | set().union(*RESOURCE_ROLES.values())
     for entry in rows:
         obj(entry, 'deliverable')
         name = text(entry.get('path'), 'deliverable.path')
@@ -418,12 +657,16 @@ def package(project, output):
         if path == project['path'] or path == output.resolve():
             raise ValueError('package cannot overwrite or include its input config/output')
         archive_name = '/'.join(parts)
-        if archive_name.casefold() in seen or archive_name.casefold() == 'manifest.json':
+        if archive_name.casefold() in seen or archive_name.casefold() in {'manifest.json', 'start-here.md'}:
             raise ValueError('duplicate or reserved package name')
         seen.add(archive_name.casefold())
         if entry.get('role') not in allowed_roles:
             raise ValueError('deliverable needs a supported role')
         content = read_file(path)
+        if reproducible and not content.strip():
+            raise ValueError('empty final artifact: ' + name)
+        if reproducible and content.strip().upper() in {b'TODO', b'TBD', b'FIXME', b'PLACEHOLDER'}:
+            raise ValueError('placeholder final artifact: ' + name)
         hashed = digest(content)
         if entry.get('sha256') != hashed:
             raise ValueError('missing or stale expected hash: ' + name)
@@ -455,8 +698,26 @@ def package(project, output):
                             raise ValueError('stale generated artifact evidence: ' + evidence['path'])
         files.append({'path': archive_name, 'role': entry['role'], 'bytes': len(content), 'sha256': hashed})
         contents.append((archive_name, content))
+    final = reproducibility(project, files, contents) if reproducible else None
+    if final is not None:
+        start = ['# Start here — ' + revision, '', 'Use the exact specified parts and packaged guides. Hardware proof is separate.',
+                 'External tools/dependencies below require acquisition/setup; this package is not a zero-download promise.', '']
+        for item in final['toolchain'] + final['external_prerequisites']:
+            start.append('- ' + item['name'] + ' ' + item['version'] + ': ' + item['official_url'] + '; setup: ' + item['setup'])
+        start.extend(['', '## Packaged guides and files'] + ['- ' + f['role'] + ': ' + f['path'] for f in files] +
+                     ['', 'Proof status: ' + json.dumps(final['proof_status']), '', 'Reviewed dependency inventory and build witness; transitive completeness and identical physical behavior are not mechanically proven.'])
+        content = ('\n'.join(start) + '\n').encode('utf-8')
+        files.append({'path': 'START-HERE.md', 'role': 'package-guide', 'bytes': len(content), 'sha256': digest(content)})
+        contents.append(('START-HERE.md', content))
     report = {'version': 1, **provenance(project, True), 'files': files,
+              'status': 'reproducible_artifacts' if reproducible else 'draft_unverified',
+              'reproducibility': final,
+              'limits': ['Checks validate supplied files, dependency inventory and build witness; they do not prove witness truth, all transitive dependencies, electrical safety or identical physical behavior. Review the complete application build and packaged instructions.'],
               'review_required': 'Caller must review all selected content for secrets and rights; detection is incomplete. Local ZIP creation grants no publication permission.'}
+    manifest = json_bytes(report)
+    for name, content in [*contents, ('manifest.json', manifest)]:
+        if SECRET.search(content):
+            raise ValueError('possible credential detected in final package content: ' + name)
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = None
     try:
@@ -465,7 +726,7 @@ def package(project, output):
         with zipfile.ZipFile(temporary, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
             for name, content in contents:
                 archive.writestr(name, content)
-            archive.writestr('manifest.json', json_bytes(report))
+            archive.writestr('manifest.json', manifest)
         # Atomic no-overwrite publication. Refuse filesystems without hard-link support.
         os.link(temporary, output)
     finally:
@@ -512,16 +773,23 @@ def validate(project, stage='project'):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['validate', 'export', 'wiring', 'acceptance', 'diagnostics', 'package'])
+    parser.add_argument('command', choices=['validate', 'export', 'parts', 'wiring', 'acceptance', 'diagnostics', 'package'])
     parser.add_argument('config', type=Path)
     parser.add_argument('--for', dest='kind', choices=['test', 'flash', 'shopping'])
     parser.add_argument('--stage', default='project', choices=['project', 'test', 'flash', 'shopping', 'wiring', 'acceptance', 'diagnostics'])
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--reproducible', action='store_true', help='require the final replication contract; default package is draft/unverified')
     args = parser.parse_args(argv)
     try:
         project = load(args.config)
+        if args.reproducible and args.command != 'package':
+            raise ValueError('--reproducible is only valid with package')
         if args.command == 'validate':
             result = validate(project, args.stage)
+        elif args.command == 'parts':
+            result = parts(project)
+            if args.output:
+                write_new(fresh_output(args.output, project), result['artifact_text'].encode('utf-8'))
         elif args.command == 'export':
             if not args.kind or not args.output:
                 raise ValueError('export needs --for and --output')
@@ -538,7 +806,7 @@ def main(argv=None):
         else:
             if not args.output:
                 raise ValueError('package needs --output ZIP path')
-            result = package(project, args.output)
+            result = package(project, args.output, args.reproducible)
         print(json.dumps(result, ensure_ascii=True, allow_nan=False))
         return 1 if result.get('errors') else 0
     except (ValueError, OSError, TypeError, KeyError) as exc:
