@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-25",
+  "source_hash_encoding": "UTF-8 with LF-normalized line endings",
+  "target": "Cortex-M3 synthetic C test",
+  "compiler": "GNU Tools for STM32 14.3.rel1 / GCC 14.3.1",
+  "unicorn": "2.1.4",
+  "pyelftools": "0.33",
+  "status": "passed",
+  "return_value": 0,
+  "returned": true,
+  "source_sha256": {
+    "logic.c": "eee6dc2445229b6753818ff004d60f9beced34a1f4b18e113cd252d608042487",
+    "test_logic.c": "30d586f72d42bd34e47b5024a9887fdf55b5d94de4cf33bdcf227e7bbb58142f",
+    "project.json": "b939886aa0edc415ca50760ce6e3dc2a4183f9e5db46180a3d31cd224e2d33e9"
+  },
+  "runner_sha256": "930c8c35c7e4fa03cd8cc4e76477687d87e38d8d3f0a7ac2a8c802ca96045d1b",
+  "common_sha256": "a14d5f228abf1a2dd8211cb9537141a55c303492a45c4f6d013fe3f5d1c2436e",
+  "frame_sha256": "cc3489f34a563b69101c9f367d19bb519dac08d6aa2c071962db9890ca20303e",
+  "repeat_runtime_descriptor_unchanged": true,
+  "negative_cases": {
+    "explicit_return_9": "failed",
+    "1000_instruction_infinite_loop": "timed_out"
+  },
+  "flash_preview": {
+    "backend": "stm32_programmer",
+    "status": "preview",
+    "hardware_accessed": false,
+    "vendor_process_started": false
+  },
+  "physical_hardware_tested": false,
+  "limits": [
+    "Synthetic ARM instruction execution; peripherals only as supplied by the harness.",
+    "No whole-board or electrical simulation, flashing, device reset or physical game verification."
+  ]
+}
