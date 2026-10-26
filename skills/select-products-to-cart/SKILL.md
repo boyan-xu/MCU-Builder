@@ -9,6 +9,8 @@ AI handles research, structured input and browser actions. The user supplies an 
 
 ## Scope and one-time offer
 
+Use the bundled script first for standard comparison/pack arithmetic. If agents are available, a capable coding child can handle script/config work and report only outcome, checks/evidence paths, limits/blocker and next user action; the main agent owns product choices and cart authorization. Reuse one child/environment, one writer per scope and at most two concurrent children. A selectable lightweight child may do simple bulk standard work; otherwise inherit honestly. Without agents, continue with bounded summaries. Existing inputs stay valid; a product-helper shopping export is optional and adds no dependency or buying rights.
+
 - After displaying a materials list, offer once: “Would you like me to choose the missing parts on your selected website and add them to your cart?” The panel question/button can serve as this offer; do not repeat it in chat. Declining or requesting links alone keeps the link-only workflow.
 - An explicit request to select and add these items authorizes those cart additions; reuse it for that list/site. Do not ask again for each product. A larger list, different site or materially changed requirement needs a new choice. Do not infer cart permission from “find links” or a checked materials box.
 - Default to missing parts, existing quantities and known preferences. Only ask for the website and broad delivery region when still needed; do not infer region from language/timezone or request a full address. Reuse a stated budget without making budget a new intake gate.
