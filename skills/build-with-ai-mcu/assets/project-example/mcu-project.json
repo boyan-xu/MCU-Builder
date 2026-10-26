@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "project": ".",
+  "project_id": "fictional-lamp",
+  "revision": "demo-r1",
+  "requirements": [
+    "A lamp input is high only when light is requested."
+  ],
+  "materials": [
+    {
+      "id": "indicator",
+      "required": 5,
+      "available": 3,
+      "required_specs": {
+        "input_max_v": 3.6,
+        "color": "red"
+      },
+      "purpose": "Show the requested state",
+      "price": null
+    }
+  ],
+  "wiring": {
+    "components": [
+      {
+        "id": "control",
+        "model": "Fictional controller, not a real MCU",
+        "orientation": "Logical label order only",
+        "pins": [
+          {
+            "id": "OUT",
+            "label": "Request output",
+            "role": "output",
+            "voltage_v": 3.3
+          },
+          {
+            "id": "GND",
+            "label": "Ground",
+            "role": "ground",
+            "voltage_v": 0
+          }
+        ]
+      },
+      {
+        "id": "indicator",
+        "model": "Fictional indicator input module",
+        "orientation": null,
+        "pins": [
+          {
+            "id": "IN",
+            "label": "Request input",
+            "role": "input",
+            "accepts_v": [
+              0,
+              3.6
+            ]
+          },
+          {
+            "id": "GND",
+            "label": "Ground",
+            "role": "ground",
+            "voltage_v": 0
+          }
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "id": "W1",
+        "from": "control:OUT",
+        "to": "indicator:IN"
+      },
+      {
+        "id": "W2",
+        "from": "control:GND",
+        "to": "indicator:GND"
+      }
+    ],
+    "bindings": [
+      {
+        "symbol": "LAMP_REQUEST",
+        "endpoint": "control:OUT"
+      }
+    ]
+  },
+  "test": {
+    "backend": "command",
+    "command": [
+      "python",
+      "test_logic.py"
+    ],
+    "inputs": [
+      "test_logic.py"
+    ],
+    "timeout": 10
+  },
+  "flash": {
+    "backend": "stm32_programmer",
+    "target": null,
+    "probe_serial": null,
+    "device_id": null,
+    "firmware": null
+  },
+  "shopping": {
+    "site": "https://shop.example",
+    "region": null,
+    "currency": "USD",
+    "candidates": [],
+    "cart": []
+  },
+  "acceptance": [
+    {
+      "id": "request-on",
+      "behavior": "Request light",
+      "steps": [
+        "On a later checked real build, request light"
+      ],
+      "expected": "The indicator lights",
+      "status": "not-run"
+    },
+    {
+      "id": "request-off",
+      "behavior": "Release light",
+      "steps": [
+        "On a later checked real build, release the request"
+      ],
+      "expected": "The indicator turns off",
+      "status": "not-run"
+    }
+  ],
+  "progress": [
+    "Fictional source/example prepared; physical behavior has not been tested."
+  ],
+  "diagnostics": {
+    "files": [
+      "existing-build.log"
+    ]
+  },
+  "deliverables": {
+    "revision": "demo-r1",
+    "files": [
+      {
+        "path": "main.c",
+        "role": "source",
+        "sha256": "098ecf46b60669c654a356ad6e05a1a1e0fa6ed7d6f922ccc6a08cd29a9a84c6"
+      },
+      {
+        "path": "test_logic.py",
+        "role": "test",
+        "sha256": "a2f970a80f23566ad3ca119713d87842aa48cf088a1d3afdb76879261de4af15"
+      },
+      {
+        "path": "materials.md",
+        "role": "materials",
+        "sha256": "8285d29c27945f88780b6ba0c1fd51ca07b473ece9692a2e8badae3c195c7f1d"
+      },
+      {
+        "path": "use-guide.md",
+        "role": "use-guide",
+        "sha256": "defbceaeb46b2f8184483dda49e9bd9be0d1b0af2f3a77363fee14dfc93d071b"
+      },
+      {
+        "path": "limits.md",
+        "role": "limits",
+        "sha256": "831f5f47706c6f0504fa1ed06a409b282819139e8ff89386eaac089030179324"
+      }
+    ]
+  }
+}
