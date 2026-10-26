@@ -1,0 +1,38 @@
+{
+  "snapshot": "STMGames V1",
+  "exportedOn": "2026-10-25",
+  "projectDirectories": [
+    "000 OLEDGames",
+    "001 OLEDSnake",
+    "002 OLEDTetris",
+    "003 OLEDSpaceInvaders",
+    "004 OLEDDino",
+    "005 OLED2048",
+    "006 OLEDMinesweeper",
+    "007 OLEDBreakout",
+    "008 OLEDTimberman",
+    "009 OLEDStack"
+  ],
+  "sourceFiles": 1102,
+  "sourceBytes": 40736710,
+  "files": {
+    "firmware-source.zip": {
+      "bytes": 5932345,
+      "sha256": "6290dd4d7db642fe4821457d70e3d3bcbc81729d17f0c486ff6a24265fbd9c4a"
+    },
+    "OLEDGames.3mf": {
+      "bytes": 124709,
+      "sha256": "492540bd7c940a4c3b6bc779dae9851f765891da59c4d3d44a5f5666699a9244"
+    },
+    "photos/front.jpg": {
+      "bytes": 147242,
+      "sha256": "85a5402049d50496c2337a3b876399577773b12349b2eb3772ad8f586f1c64dd"
+    },
+    "photos/inside.jpg": {
+      "bytes": 173291,
+      "sha256": "43d70c58c5206a9bc44d9682bd412579932a8802bb7b23cf201bf19a91a8681c"
+    }
+  },
+  "hardwareRunThisExport": false,
+  "rebuiltThisExport": false
+}

@@ -1,0 +1,21 @@
+{
+  "board": "STM32F103C8T6",
+  "display": "0.96-inch I2C SSD1306 OLED",
+  "signalEvidence": "Exported firmware: Core/Inc/main.h, Core/Src/main.c, Core/Src/stm32f1xx_hal_msp.c",
+  "connections": [
+    {"id":"W1","from":"PB6","to":"OLED SCL","status":"firmware-confirmed"},
+    {"id":"W2","from":"PB7","to":"OLED SDA","status":"firmware-confirmed"},
+    {"id":"W3","from":"GND","to":"OLED GND","status":"required-common-ground"},
+    {"id":"W4","from":"PB10","to":"UP contact 1","status":"firmware-confirmed"},
+    {"id":"W5","from":"PB11","to":"DOWN contact 1","status":"firmware-confirmed"},
+    {"id":"W6","from":"PB12","to":"LEFT contact 1","status":"firmware-confirmed"},
+    {"id":"W7","from":"PB13","to":"RIGHT contact 1","status":"firmware-confirmed"},
+    {"id":"W8","from":"PB14","to":"OK contact 1","status":"firmware-confirmed"},
+    {"id":"W9","from":"GND","to":"All five buttons contact 2","status":"derived-from-input-pullups"},
+    {"id":"P1","from":"Battery positive","to":"Board 3.3V","status":"user-reported-not-electrically-verified"},
+    {"id":"P2","from":"Battery negative","to":"Board GND","status":"user-reported-not-electrically-verified"}
+  ],
+  "unconfirmed": ["OLED VCC source and actual voltage", "Battery regulation, switch, actual voltage and power-path details"],
+  "physicalPinPositionVerified": false,
+  "readyToPowerFromThisDocumentAlone": false
+}

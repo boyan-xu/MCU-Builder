@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="980" viewBox="0 0 1160 980" role="img" aria-labelledby="title desc">
+<title id="title">STMGames V1 signal wiring and reported power connections</title>
+<desc id="desc">Logical pin labels, not physical board positions. PB6 to OLED SCL, PB7 to OLED SDA, OLED GND to board GND. PB10 through PB14 to UP, DOWN, LEFT, RIGHT and OK switches; opposite contacts to GND. OLED VCC remains unconfirmed. Battery positive to board 3.3V and negative to GND are user reported and not electrically verified.</desc>
+<style>text{font:20px sans-serif;fill:#172434}.small{font-size:17px}.heading{font-size:26px;font-weight:bold}.pin{font:20px monospace}.wire{stroke:#2469a0;stroke-width:3;fill:none}.ground{stroke:#354555;stroke-width:3;fill:none}.unknown{stroke:#ac6412;stroke-width:3;stroke-dasharray:8 6;fill:none}.box{fill:#f2f6fa;stroke:#7890a5;stroke-width:2}.note{fill:#fff4da;stroke:#ba7724;stroke-width:2}</style>
+<rect width="1160" height="980" fill="white"/>
+<text x="40" y="44" class="heading">STMGames V1 — signal wiring</text>
+<text x="40" y="75" class="small">Read the printed pin labels. Boxes show logical groups, not pin positions or button placement.</text>
+<rect x="40" y="110" width="350" height="590" rx="14" class="box"/>
+<text x="65" y="148" class="heading">STM32F103C8T6</text>
+<rect x="800" y="110" width="315" height="235" rx="14" class="box"/>
+<text x="825" y="148" class="heading">SSD1306 OLED</text>
+<text x="300" y="190" class="pin">PB6</text><path d="M390 183H800" class="wire"/><text x="520" y="173">W1</text><text x="825" y="190" class="pin">SCL</text>
+<text x="300" y="240" class="pin">PB7</text><path d="M390 233H800" class="wire"/><text x="520" y="223">W2</text><text x="825" y="240" class="pin">SDA</text>
+<text x="300" y="290" class="pin">GND</text><path d="M390 283H800" class="ground"/><text x="520" y="273">W3</text><text x="825" y="290" class="pin">GND</text>
+<text x="825" y="325" class="pin">VCC: UNCONFIRMED</text>
+<rect x="430" y="355" width="685" height="52" class="note" rx="6"/><text x="447" y="387" class="small">Do not infer OLED supply from the signal connections or photos.</text>
+<text x="270" y="450" class="pin">PB10</text><path d="M390 443H885" class="wire"/><text x="515" y="433">W4</text><text x="755" y="433">UP</text><path d="M885 443l28-14m5 14h35" class="ground"/><text x="970" y="450" class="pin">GND</text>
+<text x="270" y="500" class="pin">PB11</text><path d="M390 493H885" class="wire"/><text x="515" y="483">W5</text><text x="755" y="483">DOWN</text><path d="M885 493l28-14m5 14h35" class="ground"/><text x="970" y="500" class="pin">GND</text>
+<text x="270" y="550" class="pin">PB12</text><path d="M390 543H885" class="wire"/><text x="515" y="533">W6</text><text x="755" y="533">LEFT</text><path d="M885 543l28-14m5 14h35" class="ground"/><text x="970" y="550" class="pin">GND</text>
+<text x="270" y="600" class="pin">PB13</text><path d="M390 593H885" class="wire"/><text x="515" y="583">W7</text><text x="755" y="583">RIGHT</text><path d="M885 593l28-14m5 14h35" class="ground"/><text x="970" y="600" class="pin">GND</text>
+<text x="270" y="650" class="pin">PB14</text><path d="M390 643H885" class="wire"/><text x="515" y="633">W8</text><text x="755" y="633">OK</text><path d="M885 643l28-14m5 14h35" class="ground"/><text x="970" y="650" class="pin">GND</text>
+<text x="430" y="695" class="small">W9: opposite switch contacts share board GND. Pressed = low.</text>
+<rect x="40" y="730" width="1075" height="210" rx="10" class="note"/>
+<text x="62" y="766" class="heading">Power — user report, not electrical verification</text>
+<text x="65" y="810">Battery positive</text><path d="M285 804H720" class="unknown"/><text x="470" y="793">P1</text><text x="740" y="810" class="pin">Board 3.3V pin</text>
+<text x="65" y="855">Battery negative</text><path d="M285 849H720" class="unknown"/><text x="470" y="838">P2</text><text x="740" y="855" class="pin">Board GND pin</text>
+<text x="65" y="895" class="small">Pin name does not mean the batteries supply regulated 3.3 V. Regulation and power path are unconfirmed.</text>
+<text x="65" y="924" class="small">Not ready to power from this image alone. Disconnect power before changing wires.</text>
+</svg>
