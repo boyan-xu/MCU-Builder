@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>本地模拟商店</title>
+<style>body{font:17px/1.5 system-ui,sans-serif;max-width:1040px;margin:30px auto;padding:0 18px;color:#183039;background:#f5f8f8}header,section,article{background:white;border:1px solid #c8d4d5;padding:18px;border-radius:10px;margin:14px 0}a{color:#076754}label{display:block;margin:12px 0}input,select,button{font:inherit;padding:9px;border:1px solid #76918b;border-radius:6px}button{cursor:pointer}table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid #c8d4d5;padding:12px;text-align:left}[hidden]{display:none}strong{color:#115b49}</style></head>
+<body>
+<header><h1>本地模拟商店</h1><p>虚构商品与价格，仅测试选规格和加购物车；不连接真实商店。</p><nav><a href="mock-shop.html">商品搜索</a> · <a href="mock-shop.html?view=cart">查看购物车</a></nav></header>
+<section id="search-page"><h2>搜索商品</h2><form id="search-form"><label>商品关键词 <input id="query" value="OLED"></label><button type="submit">搜索</button></form><div id="results"></div></section>
+<section id="product-page" hidden><h2 id="product-title"></h2><p id="seller"></p><p id="controller"></p><label>规格 <select id="variant"></select></label><p id="specification"></p><p id="price"></p><p id="shipping"></p><p id="availability"></p><label>包装数量（每包 1 件） <input id="packs" type="number" min="1" max="99" value="1"></label><button id="add" type="button">加入购物车</button><p id="message" role="status"></p></section>
+<section id="cart-page" hidden><h2>购物车</h2><table><thead><tr><th>商品编号</th><th>规格</th><th>包装数量</th></tr></thead><tbody id="cart-rows"></tbody></table><p id="summary"></p><button id="checkout" type="button">前往结算（仅测试计数）</button><p id="checkout-count"></p></section>
+<section><button id="reset" type="button">重置模拟购物车</button><p>仅重置本页面的测试状态，不影响其他网站。</p></section>
+<script>
+const products = [
+ {sku:'oled-other',title:'OLED 便宜显示屏',controller:'SH1106',price:'2.00',available:true,days:4},
+ {sku:'oled-good',title:'OLED 匹配显示屏',controller:'SSD1306',price:'4.00',available:true,days:4},
+ {sku:'oled-premium',title:'OLED 较贵显示屏',controller:'SSD1306',price:'8.00',available:true,days:2},
+ {sku:'oled-sold-out',title:'OLED 缺货显示屏',controller:'SSD1306',price:'1.00',available:false,days:4}
+];
+const key='mcu-shopping-fixture-v1';
+const initial=()=>({cart:[{sku:'unrelated-cable',variant:'USB C',quantity:2}],checkoutAttempts:0});
+let state;
+try{state=JSON.parse(sessionStorage.getItem(key))||initial();}catch{state=initial();}
+const el=id=>document.getElementById(id);
+const save=()=>sessionStorage.setItem(key,JSON.stringify(state));
+const params=new URLSearchParams(location.search), product=products.find(p=>p.sku===params.get('product'));
+function renderResults(){
+ el('results').replaceChildren();
+ for(const item of products.filter(p=>p.title.toLowerCase().includes(el('query').value.trim().toLowerCase()))){
+  const article=document.createElement('article'),link=document.createElement('a');link.href='mock-shop.html?product='+item.sku;link.textContent=item.title;
+  const p=document.createElement('p');p.textContent=`${item.controller} · USD ${item.price} / 包 · ${item.available?'有货':'缺货'}`;article.append(link,p);el('results').append(article);
+ }
+}
+function variantInfo(){
+ const i2c=el('variant').value==='0.96 I2C 3.3V';
+ el('specification').textContent=`接口：${i2c?'I2C':'SPI'}；已确认支持 3.3V；每包 1 件`;
+ el('price').textContent='商品价格：USD '+(i2c?product.price:'3.00')+' / 包';
+ el('shipping').textContent='模拟配送区域：运费 USD 1.00（所需 1–99 包）；预计 '+product.days+' 天；结算税费未计入';
+ el('availability').textContent=product.available?'库存：99 包；可配送':'库存：缺货';el('add').disabled=!product.available;
+}
+function renderCart(){
+ el('cart-rows').replaceChildren();
+ for(const item of state.cart){const row=document.createElement('tr');for(const value of [item.sku,item.variant,item.quantity]){const cell=document.createElement('td');cell.textContent=value;row.append(cell);}el('cart-rows').append(row);}
+ el('summary').textContent='购物车共 '+state.cart.length+' 种商品';el('checkout-count').textContent='结算次数：'+state.checkoutAttempts;
+}
+el('search-form').addEventListener('submit',e=>{e.preventDefault();renderResults();});
+if(params.get('view')==='cart'){
+ el('search-page').hidden=true;el('cart-page').hidden=false;renderCart();
+}else if(product){
+ el('search-page').hidden=true;el('product-page').hidden=false;el('product-title').textContent=product.title;
+ el('seller').textContent='店铺：本地模拟官方店；本例商家可信度已确认；商品编号：'+product.sku;
+ el('controller').textContent='控制器：'+product.controller;
+ for(const value of ['0.96 SPI 3.3V','0.96 I2C 3.3V']){const option=document.createElement('option');option.value=value;option.textContent=value;el('variant').append(option);}
+ el('variant').addEventListener('change',variantInfo);variantInfo();
+ el('add').addEventListener('click',()=>{
+  const quantity=Number(el('packs').value);if(!product.available||!Number.isInteger(quantity)||quantity<1||quantity>99){el('message').textContent='无法加入，请核对数量或库存';return;}
+  const variant=el('variant').value,existing=state.cart.find(p=>p.sku===product.sku&&p.variant===variant);
+  if(existing)existing.quantity+=quantity;else state.cart.push({sku:product.sku,variant,quantity});save();el('message').textContent='已加入，请查看购物车核实规格和数量';
+ });
+}else renderResults();
+el('checkout').addEventListener('click',()=>{state.checkoutAttempts++;save();renderCart();});
+el('reset').addEventListener('click',()=>{state=initial();save();location.href='mock-shop.html';});
+</script></body></html>
