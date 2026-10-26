@@ -26,8 +26,10 @@ The collection includes Snake, Tetris, Space Invaders, Dino, 2048, Minesweeper, 
 | --- | --- | --- |
 | [Make Your MCU Ideas Real](skills/build-with-ai-mcu/SKILL.md) | AI handles the technical path from idea to product | AI by default |
 | [Develop with AI MCU](skills/develop-with-ai-mcu/SKILL.md) | Collaborate on a new product or continue an existing project | You or AI; change the choice when needed |
+| [Background MCU checks](skills/test-mcu-in-background/SKILL.md) | Reuse bundled scripts and a cached runtime to test code | AI prepares and runs focused checks |
+| [Firmware flashing](skills/flash-mcu-firmware/SKILL.md) | Reuse installed flashing tools through a bundled runner | AI checks the target and handles authorized uploads |
 
-Each entry works on its own. Both adapt to your actual experience and preferred way of working. A clear request skips unrelated intake; no level test determines what you are allowed to create. The public title changed, but the repository address, folders and `$build-with-ai-mcu` / `$develop-with-ai-mcu` calls remain compatible.
+Each entry works on its own. The two product entries adapt to your actual experience and preferred way of working. A clear request skips unrelated intake; no level test determines what you are allowed to create. The repository address, folders and `$build-with-ai-mcu` / `$develop-with-ai-mcu` calls remain compatible. `$test-mcu-in-background` and `$flash-mcu-firmware` add executable tools for direct use.
 
 ## From idea to product
 
@@ -58,7 +60,7 @@ Download with **Code → Download ZIP** or clone:
 git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 ```
 
-Copy the whole folder for either or both entries (`skills/build-with-ai-mcu`, `skills/develop-with-ai-mcu`) into your tool's supported skills directory. For Codex, use `$CODEX_HOME/skills` when set, otherwise `~/.codex/skills`. Check an existing same-name skill before replacing it; refresh discovery or start a new session if needed. Each entry carries its own resources and one instruction set for all three languages. Available tools vary by platform.
+Copy any complete Skill folders you need from `skills/` into your tool's supported skills directory. The product entries are `build-with-ai-mcu` and `develop-with-ai-mcu`; the executable tools are `test-mcu-in-background` and `flash-mcu-firmware`. For Codex, use `$CODEX_HOME/skills` when set, otherwise `~/.codex/skills`. Check an existing same-name skill before replacing it; refresh discovery or start a new session if needed. Each entry carries its own resources and one instruction set for all three languages. Available tools vary by platform.
 
 ```text
 Use $build-with-ai-mcu. Make a reminder that sounds when my door stays open
@@ -76,6 +78,8 @@ No idea yet? Ask for five suitable possibilities. Already have parts or a partly
 
 ## Included tools and evidence
 
+- **Reusable executable tools:** the [background test runner](skills/test-mcu-in-background/references/workflow.md) reuses existing software commands or compiles and runs Cortex-M C checks, with optional OLED framebuffer images. The [flash runner](skills/flash-mcu-firmware/references/workflow.md) defaults to an offline preview and uses existing STM32, ESP or Arduino tools for authorized writes. AI prepares the small project config; users need not edit scripts or JSON. Python 3.10+ is required. ARM dependencies are prepared once in a private cache and reused; a compiler and compatible flash backend must already be available or be installed as an explained separate step. The runners do not emulate every peripheral or promise support for arbitrary boards without adaptation.
+
 - [Parts panel](skills/build-with-ai-mcu/assets/parts-checklist.html) and [integration notes](skills/build-with-ai-mcu/references/checklist.md): check items and retain valid progress in supported chat panels or standalone HTML. Link requests use the host's AI action when available; otherwise selectable request text is shown. The page does not secretly contact shops or an AI.
 - [Low-voltage example](skills/build-with-ai-mcu/references/uno-led/README.md): matching image, connection definition, firmware and simulator diagram, with a [real MCU simulation record](skills/build-with-ai-mcu/references/uno-led/simulation-result.json) bound to the tested files. Its startup and digital-output checks passed in Wokwi; no physical device or electrical safety was tested. It is evidence of these scenarios, not a required first product.
 - [Optional REA workflow](skills/build-with-ai-mcu/references/rea.md): when reproducing a product function, reuse an applicable existing [REA](https://github.com/morluto/rea) connection; only offer setup if needed and missing. Declining it does not stop ordinary work. Clarify rights before commercialization/public release; tool access does not grant rights to proprietary code or assets.
@@ -90,8 +94,8 @@ AI needs working tool connections to build, debug, simulate or access hardware. 
 
 Run `node --test tests/*.test.mjs` for panel, package, connection and simulation-record consistency checks. Skill format can be checked with the official [skill-creator validator](https://github.com/openai/skills/tree/main/skills/.system/skill-creator). Unit checks are separate from the recorded MCU run and do not replace physical tests.
 
+Run `python -B -m unittest discover -s tests -p "*_test.py"` for runtime reuse, runner failures, offline flash adapters and OLED export checks. The adapter tests use fake vendor processes, not connected hardware; the separate real ARM sample evidence is linked in the background runner workflow.
+
 ## License
 
-Run `python tests/showcase_test.py` to check the OLED export, file hashes, wiring/source mapping, links and photo metadata without hardware access.
-
-[MIT](LICENSE). You may use, share and change these skills. Each person chooses their own product's publication and license.
+[MIT](LICENSE). You may use, share and change these skills and their original runner code. Downloaded dependencies retain their own licenses. Each person chooses their own product's publication and license.
