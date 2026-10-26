@@ -1,125 +1,91 @@
 [English](README.md) · [简体中文](docs/README.zh-CN.md) · [Español](docs/README.es.md)
 
-# Make Your MCU Ideas Real
+# MCU Builder
 
 **Bring an idea. Make something you can use.**
 
-Make Your MCU Ideas Real helps turn your ideas into practical MCU products. Describe what you want it to do; AI works out the requirements and handles design, parts, firmware, simulation, setup and debugging with the tools it can actually use. You do not need to learn MCU programming or manage the code to begin.
+Describe the product you want. AI helps with requirements, design, parts, firmware, useful checks, setup and debugging using tools it can actually access. Start with your existing hardware and software. You need not take a programming course or manage code to begin; you can also choose to write the code yourself. A clear goal skips unrelated intake, and experience does not set an artificial complexity ceiling.
 
-Start with the hardware and software you already have. Get a checkable materials list with optional buying links for your region, a clear wiring image and short steps for the physical work. AI chooses useful checks for the current project, usually running them in the background, and reviews the electrical design before guiding physical operation.
+## Choose an entry
 
-A reminder, a controller, a sensor device: your desired behavior sets the direction. The path follows your idea and actual feasibility rather than an imposed experience tier. Work toward a usable result in clear milestones, with the files and instructions to keep using and improving it.
-
-## Talk about the product; let a coding agent handle the code
-
-Keep the main chat on what your product should do, key choices and the next useful result. When the platform has child agents, one capable coding child stays with the project and reads/writes source, builds, tests and debugs. The main agent gets a short outcome, check results and evidence paths, limits and your next action. It does not need to carry source files, diffs or raw logs in the product conversation. Ask for a code explanation whenever you want one; AI can bring back the small relevant part.
-
-Standard work uses packaged scripts first. Both product entries now include an identical, standalone Python standard-library helper, `scripts/mcu_project.py`. AI can keep an optional local `mcu-project.json` up to date from your conversation and checked facts: requirements, counts/specs for parts, wiring/pin bindings, existing test/flash settings, shopping observations, behavior checks, progress and selected deliverables. You do not fill forms, edit JSON or manage a new project registry. Native Projects and project records keep their usual role; the five Skill entries and their installation choices stay the same.
-
-| Command | Useful result |
+| Skill | What it does |
 | --- | --- |
-| `validate` | Check supplied data or just the next stage; missing unrelated facts do not block useful work. |
-| `export --for test\|flash\|shopping` | Reuse existing runner inputs; shopping subtracts available physical stock (need five, own three, buy two), while retaining exact variant/cart data and unknowns. |
-| `wiring` | One explicit connection list generates a readable SVG, numbered table and `pins.generated.json`; unknown electrical facts stay pending. |
-| `acceptance` | A practical behavior checklist with unrun/pass/fail/needs-confirmation status; pass/fail needs supplied evidence. |
-| `diagnostics` | A bounded summary of only allowlisted existing logs/reports; no device access or commands from log text. |
-| `package` | A local ZIP of only selected files, with hashes and project/version linkage; stale, missing and recognizable private inputs are refused. |
+| [MCU Builder](skills/build-with-ai-mcu/SKILL.md) — `$build-with-ai-mcu` | AI manages the technical work from idea to product. |
+| [Code collaboration](skills/develop-with-ai-mcu/SKILL.md) — `$develop-with-ai-mcu` | Start or continue a project; choose who writes the code. |
+| [Background checks](skills/test-mcu-in-background/SKILL.md) — `$test-mcu-in-background` | Reuse installed software and cached runtimes for focused checks. |
+| [Firmware flashing](skills/flash-mcu-firmware/SKILL.md) — `$flash-mcu-firmware` | Preview and perform authorized uploads with existing tools. |
+| [Product selection](skills/select-products-to-cart/SKILL.md) — `$select-products-to-cart` | Compare verified variants and top up a cart; never order. |
+| [Optional PCB design](skills/design-pcb-with-ai/SKILL.md) — `$design-pcb-with-ai` | Design/check a requested PCB in existing usable EDA software. |
 
-The coding child uses the current tool caches and runner APIs, and keeps hardware, cart, installation and publication authorization in the main agent's hands. At most two children run by default, with one writer per file scope. Simple bulk work may use a lightweight child only when the platform offers an actual model choice; otherwise it inherits the default honestly. Without child agents, the main agent continues with compact tool summaries.
-
-See the [tool contract and safe limits](skills/build-with-ai-mcu/references/project-tools.md) and [fictional runnable example](skills/build-with-ai-mcu/assets/project-example/mcu-project.json). AI still checks actual C/C++ against generated pin bindings and inspects the wiring image. A logical diagram or passing host test does not prove electrical or physical success. ZIP secret checks are incomplete, so selected content still needs review. A local package does not grant permission to publish.
-
-## Built with AI: STMGames V1
-
-A real STM32 OLED game device, made through **many rounds of discussion, building and revision**. The maker designed the 3D enclosure and did the physical work; **GPT-6.1 Sol completed the application code**, with third-party credits preserved. This was not a one-prompt build or automatic CAD output.
-
-| Front | Inside |
-| --- | --- |
-| ![OLED game device in a yellow printed case](showcases/stm-games-v1/photos/front.jpg) | ![STM32 board and batteries inside the case](showcases/stm-games-v1/photos/inside.jpg) |
-
-The collection includes Snake, Tetris, Space Invaders, Dino, 2048, Minesweeper, Breakout, Tower Defense, Stack and Timberman, plus nine standalone game projects. [Read the case and parts list](showcases/stm-games-v1/README.md), [download all firmware source](showcases/stm-games-v1/firmware-source.zip), see [the wiring image](showcases/stm-games-v1/wiring.svg) and [connection table](showcases/stm-games-v1/README.md#wiring-and-power-status), or get [the maker's original 3MF model and slicer project](showcases/stm-games-v1/OLEDGames.3mf). Photos show the real build; power details remain partly unverified, and this release did not rerun all games or operate hardware.
-
-## Choose how to work
-
-| Entry | What it does | Who writes code |
-| --- | --- | --- |
-| [Make Your MCU Ideas Real](skills/build-with-ai-mcu/SKILL.md) | AI handles the technical path from idea to product | AI by default |
-| [Develop with AI MCU](skills/develop-with-ai-mcu/SKILL.md) | Collaborate on a new product or continue an existing project | You or AI; change the choice when needed |
-| [Background MCU checks](skills/test-mcu-in-background/SKILL.md) | Reuse bundled scripts and a cached runtime to test code | AI prepares and runs focused checks |
-| [Firmware flashing](skills/flash-mcu-firmware/SKILL.md) | Reuse installed flashing tools through a bundled runner | AI checks the target and handles authorized uploads |
-| [Choose products and fill a cart](skills/select-products-to-cart/SKILL.md) | Compare verified products on your chosen website and add missing quantities | AI researches and adds to cart; never orders |
-
-All five entries work independently. The two product entries adapt to your experience and preferred way of working. A clear request skips unrelated intake; no level test determines what you are allowed to create. Existing calls remain compatible. The three tool entries provide reusable background checks, flashing and product selection without forcing companion installations.
-
-## From idea to product
-
-1. **Make the goal clear.** Discuss what it should do and how to check success. Relevant memory can include tools, experience, chat preferences, learning style and small habits. Your current request takes priority; no budget or style questionnaire is required.
-2. **Use what fits.** Check existing code, settings, interfaces and hardware first. For new parts, prefer suitable MCU/module combinations with documented simulation support. A workable existing board is not replaced merely for convenience.
-3. **See what to get.** Use the parts panel for specifications, quantities, available materials, missing items and estimated extra cost. Regional buying links are examples; equivalent sellers and parts are welcome.
-4. **Let AI implement and verify.** AI writes, compiles and fixes firmware using available tools, choosing tests or simulation when useful. Choose your own coding role in the collaborative entry if wanted. You do not have to complete a course or manage code changes.
-5. **Connect and try it.** Receive a checked wiring image and matching text. The order of unpowered wiring and board flashing follows the setup. Get one short action, expected result and feedback point at a time; existing authorization is reused for the same target.
-6. **Keep your product.** Receive source, wiring, any test or simulation files/results produced, a short use guide and known limits. You decide whether your own project stays private or becomes open source.
-
-Conversation follows your pace without repeated probing or drifting away from the goal. Once the next step is clear, start doing it. A useful result within days is a goal when scope, tools and parts allow it, not a promise for every idea; product difficulty is assessed from real constraints rather than a fixed beginner catalog.
-
-## Checks, previews and first operation
-
-Not every project needs tests or simulation. AI chooses checks that resolve a real uncertainty or risk, using existing background/headless tools by default. If you want to see the effect before flashing, ask for a browser preview or rendered frames. The workflow adapts to your current need; it is not a fixed sequence.
-
-Keep evidence for checks actually run, tied to the tested code and connections. A compile, a host unit test or a browser mock is not MCU simulation. ARM instruction execution with mocked peripherals covers exercised code paths, not the complete board or electrical behavior. Recheck affected behavior when relevant changes require it.
-
-Simulation cannot prove zero bugs or that hardware cannot be damaged. Separately check actual supply, polarity, logic levels, current, resistors/drivers and load limits. Report build, logic tests, MCU simulation, electrical review, flash/readback and physical behavior separately.
-
-Already own a board or module without a suitable simulation model? Keep it when it fits the goal. AI explains relevant coverage gaps and continues safe useful work with available tools. With authorization for the exact target, isolated-board flashing/diagnostics can proceed after target and electrical checks. That powers the board; it does not prove the complete connected product or justify full-load operation. See [the verification rules](skills/build-with-ai-mcu/references/verification.md).
-
-## Install and start
-
-Download with **Code → Download ZIP** or clone:
+All six folders install independently. The existing five call names and repository path remain compatible. Optional companion Skills are never forced installations. Copy complete selected folders from `skills/` into your tool's supported Skill directory; for Codex use `$CODEX_HOME/skills`, or `~/.codex/skills` if unset. Check existing copies before replacing them and refresh discovery as needed. Available tools vary by platform.
 
 ```sh
 git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 ```
 
-Copy any complete Skill folders you need from `skills/` into your tool's supported skills directory. The product entries are `build-with-ai-mcu` and `develop-with-ai-mcu`; the tool entries are `test-mcu-in-background`, `flash-mcu-firmware` and `select-products-to-cart`. For Codex, use `$CODEX_HOME/skills` when set, otherwise `~/.codex/skills`. Check an existing same-name skill before replacing it; refresh discovery or start a new session if needed. Each entry carries its own resources and one instruction set for all three languages. Available tools vary by platform.
-
-`select-products-to-cart` is also independently installable. After the parts list, AI offers once to choose missing items and add them to a cart on your selected site. You can keep asking for links only. The panel's separate cart button sends that explicit request; it never contacts a store itself.
-
 ```text
 Use $build-with-ai-mcu. Make a reminder that sounds when my door stays open
-for more than 30 seconds. Handle the technical work; I have an ESP32
-and Arduino IDE already. Help me get a working result.
+for more than 30 seconds. I have an ESP32 and Arduino IDE. Handle the code.
 ```
 
 ```text
-Use $develop-with-ai-mcu. Continue my working STM32 project and add PWM control.
-I want to write the code. Inspect the existing timer setup and help me
-choose the next small implementation step.
+Use $develop-with-ai-mcu. Continue my STM32 project and add PWM control.
+I want to write the code. Inspect the timer setup and guide the next step.
 ```
 
-No idea yet? Ask for five suitable possibilities. Already have parts or a partly working product? Start there. A milestone should lead toward your own goal, not replace it with an unrelated exercise.
+## Parts first, with words you can copy
 
-## Included tools and evidence
+The default is a complete plain numbered list. Each item gives exact model/specification, purpose, required/owned/missing quantities and estimated missing cost with source/date, or an explicit unknown. A separate copyable search phrase includes critical specs and pack quantity. Include cables, power and necessary consumables. An unknown shopping platform or region never delays the list; verified links may supplement the words. Legacy interactive panels remain optional only on request.
 
-- **Product selection without ordering:** [the shopping Skill](skills/select-products-to-cart/SKILL.md) combines browser evidence with a [standard-library comparison script](skills/select-products-to-cart/references/workflow.md). AI checks exact variants, pack quantities, delivery and listed price plus shipping, then tops up only matching missing quantities in the current cart. It preserves unrelated goods and stops before checkout, orders, payment or subscriptions. Missing shipping/specification evidence is held for review; the choice is among compared candidates, not a claim of the cheapest price everywhere. Login and website support can limit automation. Development checks use a local fictional shop, not real shopping accounts.
+After the COMPLETE list, AI offers cart help once. If accepted, it asks the platform only if unknown and explains cart only: no checkout, order, payment or subscription. Prior list/site opt-in is reused; links-only requests and refusals keep their scope. Selection first gates hard specs, compatibility, stock, delivery, seller and explicit budget, then ranks by evidenced preferred-spec matches before price. Missing evidence earns no preference match. Optional scalar-map `preferred_specs` uses candidate `specs` plus per-field `spec_evidence`; omitting it keeps the old total/arrival/official-seller order. Exact variant, pack arithmetic and a fresh cart readback remain required. [Selection contract](skills/select-products-to-cart/references/workflow.md).
 
-- **Reusable executable tools:** the [background test runner](skills/test-mcu-in-background/references/workflow.md) reuses existing software commands or compiles and runs Cortex-M C checks, with optional OLED framebuffer images. The [flash runner](skills/flash-mcu-firmware/references/workflow.md) defaults to an offline preview and uses existing STM32, ESP or Arduino tools for authorized writes. AI prepares the small project config; users need not edit scripts or JSON. Python 3.10+ is required. ARM dependencies are prepared once in a private cache and reused; a compiler and compatible flash backend must already be available or be installed as an explained separate step. The runners do not emulate every peripheral or promise support for arbitrary boards without adaptation.
+## Main chat for the product, children for technical work
 
-- [Parts panel](skills/build-with-ai-mcu/assets/parts-checklist.html) and [integration notes](skills/build-with-ai-mcu/references/checklist.md): check items and retain valid progress in supported chat panels or standalone HTML. Link requests use the host's AI action when available; otherwise selectable request text is shown. The page does not secretly contact shops or an AI.
-- [Low-voltage example](skills/build-with-ai-mcu/references/uno-led/README.md): matching image, connection definition, firmware and simulator diagram, with a [real MCU simulation record](skills/build-with-ai-mcu/references/uno-led/simulation-result.json) bound to the tested files. Its startup and digital-output checks passed in Wokwi; no physical device or electrical safety was tested. It is evidence of these scenarios, not a required first product.
-- [Optional REA workflow](skills/build-with-ai-mcu/references/rea.md): when reproducing a product function, reuse an applicable existing [REA](https://github.com/morluto/rea) connection; only offer setup if needed and missing. Declining it does not stop ordinary work. Clarify rights before commercialization/public release; tool access does not grant rights to proprietary code or assets.
+When agents are available, one persistent capable firmware child handles source, builds, tests and debugging. A separate PCB child is used only for a PCB request. At most two children run concurrently, with one writer per scope. The main AI owns product choices and authorization, receiving short outcomes, checks/evidence paths, limits and next action. In user-written-code mode it does not silently rewrite source. Without agents it continues bounded work and states capability limits. No delegation grants hardware, shopping, installation or publishing permission.
 
-## Mechanical scope and practical limits
+Both product entries carry the identical standalone standard-library `scripts/mcu_project.py`; no sibling imports or new registry. AI maintains optional project data, never asks users to fill JSON forms. Python 3.10+ is required. Reuse installed tools and current caches; explain necessary downloads first.
 
-This release does not normally deliver automatic CAD, print-ready mechanical design or direct printing. For an enclosure, prefer ready-made cases/structures or a user-supplied model. Existing CAD skills, printers or CNC machines remain context. A future automatic CAD/print stage requires an explicit skill update; it is not enabled by a model's own confidence.
+| Helper command | Result |
+| --- | --- |
+| `validate` / `export --for test\|flash\|shopping` | Stage checks and compatible existing runner inputs; shopping subtracts owned physical stock. |
+| `parts` | Numbered exact parts/search text and one-offer/site-reuse state. |
+| `wiring` | Matching SVG, per-wire text and pin bindings from one explicit connection list. |
+| `acceptance` / `diagnostics` | Honest behavior status/evidence and bounded summaries of allowlisted local reports. |
+| `package` | Allowlisted hashed ZIP marked draft/unverified. |
+| `package --reproducible` | Final artifact contract with required categories, input/build/version checks and extracted start guide. |
 
-AI needs working tool connections to build, debug, simulate or access hardware. Necessary downloads, accounts and costs are explained first. Browser flashing needs compatible hardware and local access; universal zero-install support is not promised. Private credentials, memory and project records stay out of public files. This is a product workflow, not a fixed MCU course.
+[Project tool contract](skills/build-with-ai-mcu/references/project-tools.md) · [Final replication contract](skills/build-with-ai-mcu/references/replication.md) · [Fictional draft example](skills/build-with-ai-mcu/assets/project-example/mcu-project.json).
 
-## Check the source
+## PCB when requested
 
-Run `node --test tests/*.test.mjs` for panel, package, connection and simulation-record consistency checks. Skill format can be checked with the official [skill-creator validator](https://github.com/openai/skills/tree/main/skills/.system/skill-creator). Unit checks are separate from the recorded MCU run and do not replace physical tests.
+The main AI prepares `pcb-brief.json` from checked exact parts, nets/pins, supply, footprint sources, outline dimensions/shape/units, connectors, holes, keepouts and fabrication constraints. It asks only blocking facts. The persistent PCB child does actual schematic, placement and routing in your existing usable EDA software, separately from firmware work. No usable software connection or no agents means an honest brief/draft fallback, never a finished PCB claim or forced install.
 
-Run `python -B -m unittest discover -s tests -p "*_test.py"` for runtime reuse, runner failures, offline flash adapters and OLED export checks. The adapter tests use fake vendor processes, not connected hardware; the separate real ARM sample evidence is linked in the background runner workflow.
+Checks cover schematic/ERC, actual part-to-footprint pad/polarity mapping, layout/routing/DRC and virtual part/3D assembly clearance, orientation, dimensions and connector access. Missing models remain unknown. Circuit simulation is selective when useful models exist. Keep each proof type separate; there is no zero-error guarantee.
 
-## License
+Deliver editable EDA sources, schematic, PCB, BOM, nets and check reports/limits. Fabricator outputs include Gerber/drill and needed assembly data; DIY outputs are process-specific 1:1 copper/outline/drill guides. No generic G-code without exact machine/tool/process setup. Reopen final manufacturing files and bind them to the revision. Critical unknown parts, nets, power, footprints or fabrication facts mean draft. PCB is electronic design; automatic mechanical CAD and direct printing remain outside this release. [PCB workflow](skills/design-pcb-with-ai/references/workflow.md).
 
-[MIT](LICENSE). You may use, share and change these skills and their original runner code. Downloaded dependencies retain their own licenses. Each person chooses their own product's publication and license.
+## Keep a package someone else can build
+
+Final handoff is a selected-project replication package: wiring image AND per-wire pins; exact BOM/specs/counts/search text; complete buildable application source/config/libraries/assets; matching compiled firmware when needed; exact tool/environment versions and build/flash steps; power/assembly/use/acceptance instructions; generated PCB/mechanical/print files if used; licenses/third-party credits; evidence/version checksums and known limits. Include every project-specific input, without private paths, missing includes/assets, hidden AI fixes or a further AI session to finish the design.
+
+Tools or dependencies that cannot legally be bundled need exact versions, official acquisition/setup instructions and visible external prerequisites. `START-HERE.md` lists them after extraction; do not silently claim zero-download/offline completeness. Credentials belong to each replication user's local provisioning. `--reproducible` checks files, categories, quoted includes and a successful version/input/firmware/toolchain-bound build witness without executing code. AI still reviews the actual clean build and full dependency inventory: the helper cannot prove arbitrary transitive dependency completeness or report truth from labels. Basic packages remain draft/unverified.
+
+The goal is the same specified design, configuration and behavior with exact parts and the supplied steps, without further coding/redesign. Artifact completeness is distinct from real-hardware proof. Physical tolerances and untested behavior cannot be guaranteed identical. Resolve critical power/pin/design facts before final status; unresolved blockers stay explicit.
+
+## Checks and physical operation
+
+Choose checks for the actual project, change and risk; every project need not run every test or simulator. Prefer existing background/headless tools, and browser previews when wanted. Report build, host logic, MCU simulation, electrical review, flash/readback and physical outcome separately. Keep actual evidence tied to the tested version. A host test or browser mock is not MCU simulation; neither proves electrical safety.
+
+Verify exact models, pin labels, supply, polarity, current and drivers before wiring/power. Inspect the wiring image and match all pins with firmware. Disconnect power before wiring changes; movement needs limits and stop behavior. Build-only never authorizes flashing. Reuse clear same-target flash authorization during ordinary debugging, preserving existing work and checking target/current firmware/debugger. Downloads, installation and publication retain their own scope. Private records and secrets stay private; local ZIP creation does not publish it.
+
+## Real example and historical evidence
+
+[STMGames V1](showcases/stm-games-v1/README.md) is a real STM32 OLED game device made through many discussions and revisions. The maker designed its enclosure and did physical work; GPT-6.1 Sol completed the application code with third-party credits preserved. [Source archive](showcases/stm-games-v1/firmware-source.zip), [wiring image](showcases/stm-games-v1/wiring.svg), [original 3MF](showcases/stm-games-v1/OLEDGames.3mf). Power/electrical facts remain unresolved: this showcase is **not fully reproducible**, and this release did not operate it or rerun all games.
+
+![STMGames V1 in its yellow enclosure](showcases/stm-games-v1/photos/front.jpg)
+
+The [UNO low-voltage example](skills/build-with-ai-mcu/references/uno-led/README.md) and [fictional shopping browser record](skills/select-products-to-cart/references/fixture-verification.json) are historical evidence for their recorded sources/scenarios. Later source edits do not imply a new browser or MCU run. REA analysis remains [optional](skills/build-with-ai-mcu/references/rea.md); existing hardware/software comes first.
+
+## Check the source and license
+
+Run `python -B -m unittest discover -s tests -p "*_test.py"` and `node --test tests/*.test.mjs`. Tests use local fictional targets/vendor processes, not real hardware/shopping accounts. Validate each Skill with the skill-creator validator. [MIT license](LICENSE) covers original code/Skills; third-party files keep their own terms. Each user chooses whether to publish their project.
