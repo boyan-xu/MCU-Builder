@@ -1,0 +1,4 @@
+interface:
+  display_name: "MCU Builder — PCB design"
+  short_description: "Design and check PCBs with your existing EDA tools"
+  default_prompt: "Use $design-pcb-with-ai to prepare and check my requested PCB with my existing usable EDA software, keeping unknown facts and proof limits clear."
