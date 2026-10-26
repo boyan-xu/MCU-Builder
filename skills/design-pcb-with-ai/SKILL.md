@@ -1,0 +1,18 @@
+---
+name: design-pcb-with-ai
+description: Design a PCB when explicitly requested, using checked MCU project facts and the user's existing usable EDA software. Prepare schematic, placement, routing, electrical/layout/assembly checks and versioned fabrication or DIY files; missing software access or agents means an honest brief/draft fallback, never a finished PCB claim. Electronic design only, not mechanical CAD or automatic printing.
+---
+
+# MCU Builder — PCB design
+
+Use only for a PCB request. This optional sixth Skill installs independently; it does not require another Skill or force an EDA installation. Read [the workflow](references/workflow.md) and use [the fictional brief](assets/pcb-brief.json) as a shape, never as real pin/footprint evidence.
+
+The main AI maintains `pcb-brief.json` from the known project: exact parts and quantities, checked nets/pins and supply, footprint/pad/polarity sources, board outline shape/dimensions/units, connectors/holes/keepouts and fabrication constraints. Reuse reliable facts; ask only what blocks safe design. Do not give the user a JSON form. `python scripts/pcb_brief.py pcb-brief.json` performs an offline capability/brief/evidence check without controlling EDA or inventing passes.
+
+Keep one persistent capable PCB child for actual schematic, placement and routing in the user's existing usable EDA software, separate from the firmware child; max two concurrent children and one writer per scope. Main AI handles product choices/rights and receives only outcome, check/evidence paths, limits/blocker and next action. If usable connection OR child agents are unavailable, explain the missing capability and provide a brief/draft. Never call that a finished PCB or force software installation. AI can continue bounded draft work with existing tools.
+
+Check schematic/ERC, actual-part-to-footprint dimensions/pad map/polarity, layout/routing/DRC, and virtual part/3D assembly clearances, orientation, dimensions and connector access. Missing models stay unknown; no fabricated clearance proof. Use selective circuit simulation only when useful and models exist. Keep ERC, DRC, circuit simulation, virtual assembly and real hardware proof separate; no zero-error guarantee. Recheck changed parts/nets/footprints/outline against affected reports.
+
+Deliver editable EDA sources, schematic, PCB, exact BOM, nets/connections, and version-bound check reports/limits. Fabricator route: Gerber/drill plus needed assembly data. DIY route: process-specific 1:1 copper/outline/drill guides with units/scale. No generic G-code without exact machine/tool/process setup. Reopen final exported manufacturing files and check scale/layers/holes against the exact revision; unresolved critical part/net/power/footprint/fabrication facts mean draft, never manufacture-ready. This workflow does not itself authorize fabrication, hardware operation, purchases or publication. Automatic mechanical CAD and direct printing remain outside scope.
+
+Final project handoff includes these files in the complete replication package alongside buildable firmware sources/config/libraries/assets, matching compiled firmware, wiring image and per-wire pins, exact parts/search text, build/flash/tool versions, assembly/use/acceptance steps, licenses/credits, checksums and honest proof states. Another AI session must not be needed to finish design. Nonredistributable prerequisites need exact versions and official acquisition/setup instructions; secrets remain local to the replication user. Complete artifacts do not prove identical physical behavior.
