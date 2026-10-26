@@ -29,6 +29,8 @@ At entry, read [working style and pacing](references/working-style.md). Use rele
 
 ## Let AI handle code and available tools
 
+When installed, use `$test-mcu-in-background` and its bundled runner for repeated software checks, and `$flash-mcu-firmware` for authorized flashing. Reuse the prepared machine cache and each project's configuration instead of writing another runtime or rediscovering tools on every run. These optional entries are independently packaged; if absent, keep using suitable existing tools without forcing another Skill installation. Missing project-specific assertions or peripheral substitutes still need deliberate preparation.
+
 - By default in this managed-creation entry, AI writes and fixes code, builds firmware, chooses useful checks and operates available programming/debugging/flashing tools. Deliver code as files; do not assign coding homework or ask the person to manage source changes. They describe behavior, connect parts and report physical results. If they explicitly want to write code themselves, respect that choice: guide, review and debug instead of taking over the implementation.
 - Prefer the person's existing IDE, debugger, compiler or flashing tool. Do not build a replacement IDE, serial console or custom flashing platform when an existing tool works. Tool availability is not proof of device access; say what AI can actually operate.
 - Use working interfaces or compatible browser flashing where useful. Browser flashing still needs compiled firmware, a compatible device/browser and local access. Never promise universal zero-install support or claim that cloud AI can reach USB without a bridge.
