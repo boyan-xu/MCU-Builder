@@ -1,6 +1,6 @@
 [English](README.md) · [简体中文](docs/README.zh-CN.md) · [Español](docs/README.es.md)
 
-# MCU Builder
+# Make Your MCU Ideas Real
 
 **Bring an idea. Make something you can use.**
 
