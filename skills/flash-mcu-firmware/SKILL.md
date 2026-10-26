@@ -5,6 +5,8 @@ description: Use when firmware or an MCU project needs repeatable device flashin
 
 # Flash MCU firmware with reusable tools
 
+When agents are available, one persistent capable coding child handles source, build/debug and runner work; the main agent retains target/product decisions and authorization. Return only outcome, checks/evidence paths, limits/blocker and next user action. Prefer scripts, one writer per scope and at most two concurrent children. Lightweight models are for simple bulk tasks only when actually selectable; otherwise inherit honestly. Without agents, continue with bounded summaries. Existing version 1 configs and an optional product-helper flash export use the same API; neither delegation nor export grants hardware, installation or publication rights.
+
 Use the bundled `python scripts/mcu_flash.py` runner, not a newly written uploader script. Keep the person's working project, existing tools and previous target authorization. This Skill is independently installable; it does not require another Skill or invent a programming protocol.
 
 Read [the execution workflow](references/workflow.md) for configuration, commands and result boundaries. AI discovers the existing environment, prepares one project configuration, and reuses it. Do not ask the person to edit JSON or type tool commands.
