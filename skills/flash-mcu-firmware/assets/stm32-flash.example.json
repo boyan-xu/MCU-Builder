@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "project": ".",
+  "tools": {},
+  "flash": {
+    "backend": "stm32_programmer",
+    "target": "Replace with the actual STM32F103C8T6 board identity",
+    "probe_serial": "REPLACE_WITH_VERIFIED_PROBE_SERIAL",
+    "device_id": "0x410",
+    "firmware": "build/application.bin",
+    "address": "0x08000000",
+    "flash_start": "0x08000000",
+    "flash_size": 65536,
+    "erase_size": 1024,
+    "frequency_khz": 1000,
+    "backup": true,
+    "reset_after": false,
+    "protected_ranges": [
+      {"address": "0x0800F800", "size": 2048}
+    ]
+  }
+}
