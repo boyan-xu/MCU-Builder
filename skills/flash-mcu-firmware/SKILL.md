@@ -1,0 +1,19 @@
+---
+name: flash-mcu-firmware
+description: Use when firmware or an MCU project needs repeatable device flashing with an existing STM32, ESP or Arduino uploader. Includes an executable runner that reuses cached tools and project configuration rather than rebuilding the flashing setup each time.
+---
+
+# Flash MCU firmware with reusable tools
+
+Use the bundled `python scripts/mcu_flash.py` runner, not a newly written uploader script. Keep the person's working project, existing tools and previous target authorization. This Skill is independently installable; it does not require another Skill or invent a programming protocol.
+
+Read [the execution workflow](references/workflow.md) for configuration, commands and result boundaries. AI discovers the existing environment, prepares one project configuration, and reuses it. Do not ask the person to edit JSON or type tool commands.
+
+- Start from the supplied code, engineering project or built firmware. Reuse its compiler, linker configuration, uploader and debug setup. Build source with existing tools; the built-in STM32/ESP adapters consume raw BIN files and the Arduino adapter consumes a built BIN/HEX image.
+- Run the default preview first. It reads local files and resolves tool paths; it does not execute build tools, list ports, connect, reset, read or write a device. Check the printed target, firmware hashes, addresses, erase blocks, protected ranges and backup plan. Preview is not permission or proof of the connected device.
+- Before execution, identify the exact board/port/probe, current firmware and any active debug session. Reuse applicable authorization for this same target and overwrite scope. Build-only is not flashing permission. A new target or newly discovered overwrite risk requires a choice; routine retries do not require repeated approval.
+- Verify actual power, logic levels and wiring as needed. Isolate loads when the next operation calls for board-only diagnostics. Keep outputs and movement in safe states; a passing software test does not establish electrical safety.
+- Execute with both `--execute --authorized` only when those conditions are met. The flags record the caller's decision; they are not authentication or a substitute for user authorization. STM32 checks device ID; ESP fixes chip type and can check a known MAC. Device IDs identify families, not a unique board; probe serial or serial port and the physical target still need review.
+- Preserve current firmware where supported. STM32 and ESP default to backing up the configured readable range before writing; failed or incomplete backups stop the operation. A range backup does not capture option bytes, EEPROM, eFuses, credentials elsewhere or the whole device state. Arduino has no generic backup in this runner: preserve existing firmware with a suitable tool or resolve the new overwrite risk before execution.
+- Keep repeatable settings with the project and tool discovery in the machine cache. Missing dependencies are a concrete blocker, not a reason to rewrite the uploader. Explain any necessary official download before setup; do not silently install drivers, board packages or account permissions.
+- Inspect the actual JSON result and logs. Distinguish preview, failed execution, upload, tool-reported verification and observed physical behavior. Never report a usable device merely because an uploader exited successfully. Deliver the firmware/configuration and concise results in the person's chosen language. Keep secrets and private machine paths out of public project files.
