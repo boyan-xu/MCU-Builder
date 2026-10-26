@@ -26,8 +26,10 @@
 | --- | --- | --- |
 | [把创意做成单片机小产品](../skills/build-with-ai-mcu/SKILL.md) | AI 承担从想法到作品的技术工作 | 默认 AI 写 |
 | [协作开发](../skills/develop-with-ai-mcu/SKILL.md) | 一起做新产品，或继续现有工程 | 自己写或 AI 写，可随时调整 |
+| [后台测试工具](../skills/test-mcu-in-background/SKILL.md) | 直接调用随包脚本，复用缓存环境运行代码检查 | AI 准备并运行必要测试 |
+| [固件烧录工具](../skills/flash-mcu-firmware/SKILL.md) | 通过随包脚本复用已有烧录软件 | AI 核对目标并执行已授权的烧录 |
 
-两者都能独立使用，并按实际经验和做事方式提供帮助。需求明确就跳过无关问答，不用水平测试决定你能做什么。对外标题已更新，仓库地址、文件夹和 `$build-with-ai-mcu`、`$develop-with-ai-mcu` 调用名称保持兼容。
+四个入口都能独立使用，其中两个制作入口按实际经验和做事方式提供帮助。需求明确就跳过无关问答，不用水平测试决定你能做什么。仓库地址、文件夹和 `$build-with-ai-mcu`、`$develop-with-ai-mcu` 保持兼容；新增 `$test-mcu-in-background` 和 `$flash-mcu-firmware` 可直接调用可执行工具。
 
 ## 从想法到作品
 
@@ -58,7 +60,7 @@
 git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 ```
 
-把需要的完整技能文件夹（`skills/build-with-ai-mcu`、`skills/develop-with-ai-mcu`，可一个或两个）放入所用工具支持的技能目录。Codex 优先使用已设置的 `$CODEX_HOME/skills`，否则使用 `~/.codex/skills`。已有同名技能时先检查再替换；必要时刷新发现或开启新会话。每个入口自带资源，各有一份适用于三语的指令；可用工具随平台变化。
+从 `skills/` 中选择需要的完整技能文件夹，放入所用工具支持的技能目录。两个制作入口是 `build-with-ai-mcu`、`develop-with-ai-mcu`，两个可执行工具是 `test-mcu-in-background`、`flash-mcu-firmware`。Codex 优先使用已设置的 `$CODEX_HOME/skills`，否则使用 `~/.codex/skills`。已有同名技能时先检查再替换；必要时刷新发现或开启新会话。每个入口自带资源，各有一份适用于三语的指令；可用工具随平台变化。
 
 ```text
 用 $build-with-ai-mcu。做一个门打开超过 30 秒就响的提醒器。
@@ -74,6 +76,8 @@ git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 
 ## 随包工具与证据
 
+- **可复用的执行工具：**[后台测试脚本](../skills/test-mcu-in-background/references/workflow.md)可运行已有软件检查，或编译并执行 Cortex-M 的 C 测试，还能按需导出 OLED 缓冲区图片。[烧录脚本](../skills/flash-mcu-firmware/references/workflow.md)默认只做离线预检查，实际写入时使用已有 STM32、ESP 或 Arduino 工具。项目配置由 AI 准备，用户不必编辑脚本或 JSON。需要 Python 3.10 及以上；ARM 依赖首次准备后复用私有缓存，不再每次搭环境。编译器与兼容烧录软件仍需实际可用，必要安装提前说明；脚本不承诺无需适配就能模拟所有外设或支持任意板子。
+
 - [材料面板](../skills/build-with-ai-mcu/assets/parts-checklist.html)及[集成说明](../skills/build-with-ai-mcu/references/checklist.md)：可在支持的聊天面板或独立网页中勾选并保存有效进度。购买请求优先使用聊天接口，否则显示可复制文字；页面不会暗中联系商店或 AI。
 - [低压示例](../skills/build-with-ai-mcu/references/uno-led/README.md)：图片、连接定义、代码与仿真图一致，并附绑定测试文件版本的[真实 MCU 仿真记录](../skills/build-with-ai-mcu/references/uno-led/simulation-result.json)。启动与数字输出检查已在 Wokwi 通过，没有测试真实硬件或证明电气安全。这是对应场景的证据，不是必做的入门作品。
 - [REA 可选流程](../skills/build-with-ai-mcu/references/rea.md)：复现产品功能时按需复用可用的 [REA](https://github.com/morluto/rea)，确有需要且缺少时才询问接入；不安装不妨碍普通项目。商用或发布前查清权利，工具可用不代表有权分发专有代码或素材。
@@ -88,8 +92,8 @@ AI 需要实际可用的工具连接才能编译、调试、仿真或访问硬�
 
 运行 `node --test tests/*.test.mjs` 检查面板、打包、连接及仿真记录一致性。技能格式可用官方 [skill-creator 校验器](https://github.com/openai/skills/tree/main/skills/.system/skill-creator)检查。自动测试与记录的 MCU 运行分开，也不能代替实物测试。
 
+运行 `python -B -m unittest discover -s tests -p "*_test.py"` 检查环境复用、运行失败处理、离线烧录适配及 OLED 导出资料。烧录测试使用模拟的厂商进程，不访问实物；真实 ARM 样例的独立运行证据见后台工具说明。
+
 ## 许可证
 
-运行 `python tests/showcase_test.py` 检查 OLED 导出资料、文件校验值、接线与源码对应、链接及照片元数据，不访问硬件。
-
-[MIT](../LICENSE)。允许使用、分享和修改这两份技能；每个人自行决定作品是否公开及其许可证。
+[MIT](../LICENSE)。允许使用、分享和修改这些技能及其原创脚本；下载依赖保留各自许可证。每个人自行决定作品是否公开及其许可证。

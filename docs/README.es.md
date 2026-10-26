@@ -26,8 +26,10 @@ La colección incluye Snake, Tetris, Space Invaders, Dino, 2048, Minesweeper, Br
 | --- | --- | --- |
 | [Haz realidad tus ideas con microcontroladores](../skills/build-with-ai-mcu/SKILL.md) | La IA lleva la parte técnica desde la idea hasta el producto | La IA por defecto |
 | [Desarrollo colaborativo](../skills/develop-with-ai-mcu/SKILL.md) | Colabora en un producto nuevo o continúa un proyecto existente | Tú o la IA; puedes cambiar de elección |
+| [Pruebas en segundo plano](../skills/test-mcu-in-background/SKILL.md) | Ejecuta comprobaciones con scripts incluidos y entorno reutilizable | La IA prepara y ejecuta las pruebas útiles |
+| [Carga de firmware](../skills/flash-mcu-firmware/SKILL.md) | Reutiliza programas de carga mediante un script incluido | La IA comprueba el destino y realiza cargas autorizadas |
 
-Cada entrada funciona por separado y se adapta a tu experiencia y preferencias. Una petición clara evita preguntas ajenas a la tarea; no hay una prueba de nivel que decida qué puedes crear. Cambia el título público, pero se mantienen la dirección del repositorio, las carpetas y las llamadas `$build-with-ai-mcu` y `$develop-with-ai-mcu`.
+Las cuatro entradas funcionan por separado. Las dos entradas de creación se adaptan a tu experiencia y preferencias. Una petición clara evita preguntas ajenas a la tarea; no hay una prueba de nivel que decida qué puedes crear. Se mantienen la dirección del repositorio, las carpetas y las llamadas `$build-with-ai-mcu` y `$develop-with-ai-mcu`. Se añaden `$test-mcu-in-background` y `$flash-mcu-firmware` como herramientas ejecutables.
 
 ## De la idea al producto
 
@@ -58,7 +60,7 @@ Descarga con **Code → Download ZIP** en GitHub o ejecuta:
 git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 ```
 
-Copia la carpeta completa de una o ambas entradas (`skills/build-with-ai-mcu`, `skills/develop-with-ai-mcu`) al directorio de habilidades admitido por tu herramienta. En Codex, usa `$CODEX_HOME/skills` si está definido; si no, `~/.codex/skills`. Revisa una habilidad del mismo nombre antes de sustituirla; actualiza la detección o abre otra sesión si hace falta. Cada entrada incluye sus recursos y unas instrucciones para los tres idiomas. Las herramientas disponibles varían según la plataforma.
+Copia las carpetas completas que necesites de `skills/` al directorio de habilidades admitido por tu herramienta. Las entradas de creación son `build-with-ai-mcu` y `develop-with-ai-mcu`; las herramientas ejecutables son `test-mcu-in-background` y `flash-mcu-firmware`. En Codex, usa `$CODEX_HOME/skills` si está definido; si no, `~/.codex/skills`. Revisa una habilidad del mismo nombre antes de sustituirla; actualiza la detección o abre otra sesión si hace falta. Cada entrada incluye sus recursos y unas instrucciones para los tres idiomas. Las herramientas disponibles varían según la plataforma.
 
 ```text
 Usa $build-with-ai-mcu. Crea un avisador que suene si dejo la puerta abierta
@@ -76,6 +78,8 @@ Si no tienes una idea, pide cinco posibilidades adecuadas. Si ya hay materiales 
 
 ## Herramientas y evidencias incluidas
 
+- **Herramientas ejecutables reutilizables:** el [script de pruebas](../skills/test-mcu-in-background/references/workflow.md) ejecuta comprobaciones existentes o compila y ejecuta C para Cortex-M, con imágenes opcionales del búfer OLED. El [script de carga](../skills/flash-mcu-firmware/references/workflow.md) muestra una vista previa sin hardware por defecto y reutiliza programas STM32, ESP o Arduino para escrituras autorizadas. La IA prepara la configuración del proyecto; no necesitas editar scripts ni JSON. Requiere Python 3.10 o posterior. Las dependencias ARM se preparan una vez en una caché privada y se reutilizan. El compilador y una herramienta de carga compatible deben estar disponibles; cualquier instalación necesaria se explica primero. Los scripts no simulan todos los periféricos ni garantizan cualquier placa sin adaptación.
+
 - [Panel de materiales](../skills/build-with-ai-mcu/assets/parts-checklist.html) y [notas de integración](../skills/build-with-ai-mcu/references/checklist.md): marca materiales y conserva el progreso válido en chats compatibles o HTML independiente. Las solicitudes de enlaces usan la acción de IA disponible o muestran texto para copiar. La página no contacta en secreto con tiendas ni con una IA.
 - [Ejemplo de baja tensión](../skills/build-with-ai-mcu/references/uno-led/README.md): imagen, conexiones, firmware y diagrama coherentes, con un [registro real de simulación MCU](../skills/build-with-ai-mcu/references/uno-led/simulation-result.json) ligado a los archivos probados. Arranque y salida digital se comprobaron en Wokwi; no se probó hardware físico ni se demostró seguridad eléctrica. Es evidencia de esos escenarios, no un primer producto obligatorio.
 - [Flujo opcional de REA](../skills/build-with-ai-mcu/references/rea.md): al reproducir una función, reutiliza una conexión pertinente de [REA](https://github.com/morluto/rea) y solo propone configurarlo si es necesario y falta. Rechazarlo no impide proyectos normales. Antes de comercializar o publicar se aclaran los derechos; el acceso a una herramienta no autoriza a distribuir código o recursos propietarios.
@@ -90,8 +94,8 @@ La IA necesita conexiones reales para compilar, depurar, simular o acceder al ha
 
 Ejecuta `node --test tests/*.test.mjs` para comprobar panel, paquetes, conexiones y coherencia del registro. El formato puede revisarse con el [validador oficial de skill-creator](https://github.com/openai/skills/tree/main/skills/.system/skill-creator). Las pruebas unitarias son distintas de la ejecución MCU registrada y no sustituyen pruebas físicas.
 
+Ejecuta `python -B -m unittest discover -s tests -p "*_test.py"` para comprobar reutilización, fallos, adaptadores de carga sin hardware y exportación OLED. Las pruebas de carga usan procesos de proveedor simulados; la ejecución ARM real del ejemplo tiene evidencias separadas en la guía de pruebas.
+
 ## Licencia
 
-Ejecuta `python tests/showcase_test.py` para comprobar la exportación OLED, sumas de archivos, correspondencia entre conexiones y código, enlaces y metadatos de fotos, sin acceder a hardware.
-
-[MIT](../LICENSE). Puedes usar, compartir y modificar estas habilidades. Cada persona decide la publicación y licencia de su producto.
+[MIT](../LICENSE). Puedes usar, compartir y modificar estas habilidades y sus scripts originales. Las dependencias descargadas conservan sus propias licencias. Cada persona decide la publicación y licencia de su producto.
