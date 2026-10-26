@@ -38,10 +38,13 @@
   </div>
   <p id="parts-summary" aria-live="polite"></p>
   <p id="parts-cost-note"></p>
+  <p id="parts-cart-question"></p>
   <div class="controls">
     <label><span id="parts-region-label"></span><br><input id="parts-region" type="text" autocomplete="off" maxlength="120"></label>
+    <label><span id="parts-site-label"></span><br><input id="parts-site" type="text" autocomplete="off" maxlength="200"></label>
     <label><span id="parts-scope-label"></span><br><select id="parts-scope"><option value="missing"></option><option value="all"></option></select></label>
     <button id="parts-ask" class="primary" type="button"></button>
+    <button id="parts-cart" type="button"></button>
   </div>
   <p id="parts-notice" role="status"></p>
   <div id="parts-request-box" hidden>
@@ -77,7 +80,10 @@ const CHECKLIST_TEXT = {
     ask: 'Ask AI for buying links', prepare: 'Prepare buying-link request', request: 'Copy this request to your AI', copy: 'Copy request', copied: 'Request copied.', select: 'Select the request above and copy it.',
     sent: 'Request sent to your AI.', volatile: 'Progress could not be saved here; keep this page open.', saved: 'Progress saved.', empty: 'All items are ready. Choose all items if you still want links.',
     prompt: 'Find current optional buying links for these parts. Match the specifications, quantities and delivery region; state uncertain stock, prices and shipping. Equivalent sellers are fine. Do not place an order.',
-    noRegion: 'Ask for the country or region before choosing sellers.', project: 'Project', ship: 'Delivery region', language: 'Reply in English.'
+    noRegion: 'Ask for the country or region before choosing sellers.', project: 'Project', ship: 'Delivery region', language: 'Reply in English.',
+    site: 'Shopping website (optional)', noSite: 'Ask which website to use before choosing or adding products.', cartQuestion: 'Would you like AI to choose missing parts on your selected website and add them to your cart?',
+    cart: 'Ask AI to choose and add to cart', cartPrepare: 'Prepare selection and cart request', cartEmpty: 'All required parts are ready; there are no missing items to add.',
+    cartPrompt: 'Use $select-products-to-cart for only the missing parts below. Compare verified matching variants, pack quantities, delivery and listed price plus shipping on my chosen website. Check the current cart and only top up the exact matching quantity; preserve unrelated items and avoid duplicate additions. Add the chosen missing parts to the cart and verify the result. Do not check out, place an order, pay or accept subscriptions.'
   },
   zh: {
     title: '材料检查清单', intro: '确认所需数量已备齐后再勾选。购买链接仅供参考，也可以买其他店铺的同规格材料。',
@@ -87,7 +93,10 @@ const CHECKLIST_TEXT = {
     ask: '让 AI 找购买链接', prepare: '生成购买链接请求', request: '把这段请求复制给你的 AI', copy: '复制请求', copied: '已复制请求。', select: '请选中上方请求文字并复制。',
     sent: '已把请求发给 AI。', volatile: '此处无法保存进度，请暂时保留页面。', saved: '进度已保存。', empty: '材料已备齐；如仍需链接，请选择全部材料。',
     prompt: '请为这些材料查找当前可购买的参考链接，核对规格、数量和配送地区，说明未核实的库存、价格与运费。不限指定店铺，同规格替代可以。不代我下单。',
-    noRegion: '选择店铺前，请先问我所在的国家或地区。', project: '项目', ship: '配送地区', language: '请用中文回复。'
+    noRegion: '选择店铺前，请先问我所在的国家或地区。', project: '项目', ship: '配送地区', language: '请用中文回复。',
+    site: '购买网站（可选）', noSite: '选商品或加购前，请先问我使用哪个网站。', cartQuestion: '需要 AI 在你指定的网站选好缺件，并加入购物车吗？',
+    cart: '让 AI 选购并加入购物车', cartPrepare: '生成代选加购物车请求', cartEmpty: '材料已备齐，没有需要加购的缺件。',
+    cartPrompt: '请用 $select-products-to-cart 只处理下方缺件。在我指定的网站核对规格、包装数量、配送及商品加运费的费用，比较合格候选。先检查当前购物车，只补齐同一商品和规格的数量差额，保留其他商品，避免重复添加。选好后加入购物车并核实结果；不进入结算、不下单、不支付、不接受订阅。'
   },
   es: {
     title: 'Lista de materiales', intro: 'Marca un material cuando tengas la cantidad necesaria. Los enlaces son ejemplos; puedes comprar piezas equivalentes en otras tiendas.',
@@ -97,12 +106,17 @@ const CHECKLIST_TEXT = {
     ask: 'Pedir enlaces de compra a la IA', prepare: 'Preparar solicitud de enlaces', request: 'Copia esta solicitud a tu IA', copy: 'Copiar solicitud', copied: 'Solicitud copiada.', select: 'Selecciona y copia el texto de arriba.',
     sent: 'Solicitud enviada a tu IA.', volatile: 'No se pudo guardar el progreso; mantén esta página abierta.', saved: 'Progreso guardado.', empty: 'Todo está listo. Elige todos los materiales si aún quieres enlaces.',
     prompt: 'Busca enlaces de compra actuales y opcionales para estos materiales. Comprueba especificaciones, cantidades y región de entrega; indica dudas sobre existencias, precios y envío. Se aceptan tiendas equivalentes. No hagas ningún pedido.',
-    noRegion: 'Pregunta primero por el país o la región antes de elegir tiendas.', project: 'Proyecto', ship: 'Región de entrega', language: 'Responde en español.'
+    noRegion: 'Pregunta primero por el país o la región antes de elegir tiendas.', project: 'Proyecto', ship: 'Región de entrega', language: 'Responde en español.',
+    site: 'Sitio de compra (opcional)', noSite: 'Pregunta qué sitio usar antes de elegir productos o añadirlos.', cartQuestion: '¿Quieres que la IA elija lo que falta en tu sitio y lo añada al carrito?',
+    cart: 'Pedir selección y añadir al carrito', cartPrepare: 'Preparar solicitud de selección y carrito', cartEmpty: 'Todos los materiales están listos; no hay faltantes que añadir.',
+    cartPrompt: 'Usa $select-products-to-cart solo para los materiales que faltan abajo. Compara variantes verificadas, cantidades por paquete, entrega y precio publicado más envío en mi sitio elegido. Revisa el carrito actual y completa solo la cantidad de la misma variante; conserva otros productos y evita duplicados. Añade lo elegido y verifica el carrito. No pases al pago, no hagas pedidos, no pagues ni aceptes suscripciones.'
   }
 };
 
 function validateChecklist(data) {
   if (!data || typeof data.projectId !== 'string' || !data.projectId.trim() || typeof data.projectName !== 'string' || !['en','zh','es'].includes(data.language) || !Array.isArray(data.parts)) throw new Error('Invalid checklist data');
+  if (data.offerCart != null && typeof data.offerCart !== 'boolean') throw new Error('Invalid cart offer flag');
+  if (data.cartOfferId != null && (typeof data.cartOfferId !== 'string' || !data.cartOfferId.trim() || data.cartOfferId.length > 120)) throw new Error('Invalid cart offer id');
   new Intl.NumberFormat(data.language, {style:'currency', currency:data.currency}).format(0);
   const ids = new Set();
   for (const part of data.parts) {
@@ -125,7 +139,10 @@ function restoreChecklist(data, saved) {
     const previous = old?.rows?.[part.id];
     rows[part.id] = {signature: partSignature(part), ready: previous ? previous.signature === partSignature(part) && previous.ready === true : part.owned};
   }
-  return {version:1, projectId:data.projectId, region: typeof old?.region === 'string' ? old.region : (typeof data.region === 'string' ? data.region : ''), rows};
+  const oldOfferId=typeof old?.cartOfferId==='string' ? old.cartOfferId : 'initial';
+  const cartOfferId=typeof data.cartOfferId==='string' ? data.cartOfferId : oldOfferId;
+  const offerCart=data.offerCart===false ? false : old && oldOfferId===cartOfferId && typeof old.offerCart==='boolean' ? old.offerCart : true;
+  return {version:1, projectId:data.projectId, region: typeof old?.region === 'string' ? old.region : (typeof data.region === 'string' ? data.region : ''), site: typeof old?.site === 'string' ? old.site : (typeof data.site === 'string' ? data.site : ''), cartOfferId, offerCart, rows};
 }
 
 function checklistSummary(data, state) {
@@ -137,6 +154,16 @@ function shoppingRequest(data, state, scope) {
   const t = CHECKLIST_TEXT[data.language];
   const parts = data.parts.filter(p => scope === 'all' || !state.rows[p.id].ready);
   return [t.prompt, `${t.project}: ${data.projectName}`, state.region.trim() ? `${t.ship}: ${state.region.trim()}` : t.noRegion,
+    ...(state.site.trim() ? [`${t.site}: ${state.site.trim()}`] : []),
+    ...parts.map(p=>`- ${p.name} | ${p.specification} | ${p.quantity}`), t.language].join('\n');
+}
+
+function cartRequest(data, state) {
+  if (state.offerCart === false) return '';
+  const t = CHECKLIST_TEXT[data.language], parts = data.parts.filter(p => !state.rows[p.id].ready);
+  if (!parts.length) return t.cartEmpty;
+  return [t.cartPrompt, `${t.project}: ${data.projectName}`, state.site.trim() ? `${t.site}: ${state.site.trim()}` : t.noSite,
+    state.region.trim() ? `${t.ship}: ${state.region.trim()}` : t.noRegion,
     ...parts.map(p=>`- ${p.name} | ${p.specification} | ${p.quantity}`), t.language].join('\n');
 }
 
@@ -162,6 +189,9 @@ if (typeof document !== 'undefined') {
     el('parts-intro').textContent=t.intro; el('parts-caption').textContent=data.projectName;
     for (const label of t.columns) { const th=node('th',label); th.scope='col'; el('parts-columns').append(th); }
     el('parts-region-label').textContent=t.region; el('parts-region').value=state.region;
+    el('parts-site-label').textContent=t.site; el('parts-site').value=state.site;
+    el('parts-cart-question').textContent=t.cartQuestion;
+    el('parts-cart').textContent=typeof host?.sendFollowUpMessage==='function' ? t.cart : t.cartPrepare;
     el('parts-scope-label').textContent=t.scope;
     [...el('parts-scope').options].forEach((o,i)=>o.textContent=t.scopes[i]);
     el('parts-ask').textContent=typeof host?.sendFollowUpMessage==='function' ? t.ask : t.prepare;
@@ -185,26 +215,36 @@ if (typeof document !== 'undefined') {
       const total=checklistSummary(data,state);
       el('parts-summary').textContent=`${t.summary(total.ready,data.parts.length)} · ${t.cost(money(total.knownCost),total.unknownCostCount)}`;
       el('parts-ask').disabled=total.missingCount===0 && el('parts-scope').value==='missing';
+      el('parts-cart').disabled=total.missingCount===0;
+      el('parts-cart-question').hidden=!state.offerCart;
+      el('parts-cart').hidden=!state.offerCart;
       el('parts-request-box').hidden=true;
     }
     function save() {
       let localSaved=false;
       try { localStorage.setItem(key,JSON.stringify(state)); localSaved=true; } catch {}
       el('parts-notice').textContent=localSaved?t.saved:t.volatile;
-      const snapshot={modelContent:{projectId:data.projectId,region:state.region,missingIds:data.parts.filter(p=>!state.rows[p.id].ready).map(p=>p.id)},privateContent:{checklist:state}};
+      const snapshot={modelContent:{projectId:data.projectId,region:state.region,site:state.site,missingIds:data.parts.filter(p=>!state.rows[p.id].ready).map(p=>p.id)},privateContent:{checklist:state}};
       if(typeof host?.setWidgetState==='function' && new TextEncoder().encode(JSON.stringify(snapshot)).length < 16384) {
         try { Promise.resolve(host.setWidgetState(snapshot)).then(()=>{el('parts-notice').textContent=t.saved;}).catch(()=>{}); } catch {}
       }
     }
     el('parts-region').addEventListener('input',()=>{state.region=el('parts-region').value; el('parts-request-box').hidden=true; save();});
+    el('parts-site').addEventListener('input',()=>{state.site=el('parts-site').value; el('parts-request-box').hidden=true; save();});
     el('parts-scope').addEventListener('change',render);
-    el('parts-ask').addEventListener('click',async()=>{
-      const prompt=shoppingRequest(data,state,el('parts-scope').value);
+    async function requestAI(prompt, title) {
       el('parts-request').value=prompt;
       if(typeof host?.sendFollowUpMessage==='function') {
-        try { await host.sendFollowUpMessage({prompt,title:t.ask}); el('parts-notice').textContent=t.sent; return; } catch {}
+        try { await host.sendFollowUpMessage({prompt,title}); el('parts-notice').textContent=t.sent; return; } catch {}
       }
       el('parts-request-box').hidden=false;
+    }
+    el('parts-ask').addEventListener('click',()=>requestAI(shoppingRequest(data,state,el('parts-scope').value),t.ask));
+    el('parts-cart').addEventListener('click',()=>{
+      if (!state.offerCart) return;
+      const prompt=cartRequest(data,state);
+      state.offerCart=false; el('parts-cart-question').hidden=true; el('parts-cart').hidden=true; save();
+      return requestAI(prompt,t.cart);
     });
     el('parts-copy').addEventListener('click',async()=>{
       try { await navigator.clipboard.writeText(el('parts-request').value); el('parts-notice').textContent=t.copied; }
@@ -212,12 +252,18 @@ if (typeof document !== 'undefined') {
     });
     window.addEventListener('openai:set_globals',event=>{
       const incoming=event.detail?.globals?.widgetState?.privateContent?.checklist;
-      if(incoming?.projectId===data.projectId) {state=restoreChecklist(data,incoming);el('parts-region').value=state.region;render();}
+      if(incoming?.projectId===data.projectId) {
+        const next=restoreChecklist(data,incoming);
+        if (state.cartOfferId===next.cartOfferId && state.offerCart===false) next.offerCart=false;
+        state=next;el('parts-region').value=state.region;el('parts-site').value=state.site;render();
+      }
     });
     render();
+    if (typeof data.offerCart === 'boolean') save();
   } catch (error) {
     el('parts-notice').textContent=`Checklist error: ${error.message}`;
     el('parts-ask').disabled=true;
+    el('parts-cart').disabled=true;
   }
 }
 </script>
