@@ -9,6 +9,8 @@ AI saves pasted code or inspects the existing project, chooses useful checks and
 
 ## Use the bundled implementation
 
+When agents are available, reuse one capable coding child for source inspection, runner calls, builds/tests and debugging; keep the main agent on product decisions and authorization. Return only outcome, checks/evidence paths, limits/blocker and next user action, without raw source/diffs/logs. Use deterministic scripts first, one writer per scope and at most two concurrent children. Simple bulk work may use an actually selectable lightweight model; otherwise inherit/default honestly. Without agents, continue with bounded summaries. Existing version 1 configs work directly; a product Skill's optional project-helper export also works without adding a dependency or changing hardware rights.
+
 Read [the executable workflow](references/workflow.md) for commands and the small project configuration. Invoke `python scripts/mcu_test.py CONFIG` by absolute script path from any working directory. Reuse a suitable Python and installed compiler; use `--prepare` once when the ARM runtime needs preparation, then keep its cache. Explain actual downloads first. Ordinary runs never install dependencies. Each Skill copy is independent; no companion installation is required.
 
 - If a working test/build command already exists, use the `command` backend to execute that software command with logging and timeout. Inspect it first: it must not flash, reset or operate hardware. The runner executes trusted project code; it is not a security sandbox.
