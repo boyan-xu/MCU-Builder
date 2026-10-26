@@ -1,4 +1,4 @@
 interface:
-  display_name: "Make Your MCU Ideas Real"
+  display_name: "MCU Builder"
   short_description: "Turn an idea into a working MCU product with AI"
   default_prompt: "Use $build-with-ai-mcu to turn my idea into a working MCU product, handling design, parts, code, simulation and setup with my available tools."
