@@ -28,8 +28,9 @@ La colección incluye Snake, Tetris, Space Invaders, Dino, 2048, Minesweeper, Br
 | [Desarrollo colaborativo](../skills/develop-with-ai-mcu/SKILL.md) | Colabora en un producto nuevo o continúa un proyecto existente | Tú o la IA; puedes cambiar de elección |
 | [Pruebas en segundo plano](../skills/test-mcu-in-background/SKILL.md) | Ejecuta comprobaciones con scripts incluidos y entorno reutilizable | La IA prepara y ejecuta las pruebas útiles |
 | [Carga de firmware](../skills/flash-mcu-firmware/SKILL.md) | Reutiliza programas de carga mediante un script incluido | La IA comprueba el destino y realiza cargas autorizadas |
+| [Elegir productos y llenar el carrito](../skills/select-products-to-cart/SKILL.md) | Compara productos adecuados en tu sitio y completa faltantes | La IA elige variantes y añade; no hace pedidos |
 
-Las cuatro entradas funcionan por separado. Las dos entradas de creación se adaptan a tu experiencia y preferencias. Una petición clara evita preguntas ajenas a la tarea; no hay una prueba de nivel que decida qué puedes crear. Se mantienen la dirección del repositorio, las carpetas y las llamadas `$build-with-ai-mcu` y `$develop-with-ai-mcu`. Se añaden `$test-mcu-in-background` y `$flash-mcu-firmware` como herramientas ejecutables.
+Las cinco entradas funcionan por separado. Las dos entradas de creación se adaptan a tu experiencia y preferencias. Una petición clara evita preguntas ajenas a la tarea; no hay una prueba de nivel que decida qué puedes crear. Las llamadas existentes siguen siendo compatibles. Las tres herramientas permiten reutilizar pruebas, carga de firmware y selección de productos sin exigir otras instalaciones.
 
 ## De la idea al producto
 
@@ -60,7 +61,9 @@ Descarga con **Code → Download ZIP** en GitHub o ejecuta:
 git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 ```
 
-Copia las carpetas completas que necesites de `skills/` al directorio de habilidades admitido por tu herramienta. Las entradas de creación son `build-with-ai-mcu` y `develop-with-ai-mcu`; las herramientas ejecutables son `test-mcu-in-background` y `flash-mcu-firmware`. En Codex, usa `$CODEX_HOME/skills` si está definido; si no, `~/.codex/skills`. Revisa una habilidad del mismo nombre antes de sustituirla; actualiza la detección o abre otra sesión si hace falta. Cada entrada incluye sus recursos y unas instrucciones para los tres idiomas. Las herramientas disponibles varían según la plataforma.
+Copia las carpetas completas que necesites de `skills/` al directorio de habilidades admitido por tu herramienta. Las entradas de creación son `build-with-ai-mcu` y `develop-with-ai-mcu`; las herramientas son `test-mcu-in-background`, `flash-mcu-firmware` y `select-products-to-cart`. En Codex, usa `$CODEX_HOME/skills` si está definido; si no, `~/.codex/skills`. Revisa una habilidad del mismo nombre antes de sustituirla; actualiza la detección o abre otra sesión si hace falta. Cada entrada incluye sus recursos y unas instrucciones para los tres idiomas. Las herramientas disponibles varían según la plataforma.
+
+`select-products-to-cart` también se instala por separado. Tras mostrar la lista, la IA ofrece una sola vez elegir faltantes en tu sitio y añadirlos al carrito. Puedes seguir pidiendo solo enlaces. El botón separado del panel envía esa petición explícita; la página no accede a tiendas por sí misma.
 
 ```text
 Usa $build-with-ai-mcu. Crea un avisador que suene si dejo la puerta abierta
@@ -77,6 +80,8 @@ el siguiente cambio pequeño.
 Si no tienes una idea, pide cinco posibilidades adecuadas. Si ya hay materiales o un producto a medias, empieza desde ahí. Los pasos deben llevar a tu objetivo, no sustituirlo por un ejercicio ajeno.
 
 ## Herramientas y evidencias incluidas
+
+- **Elegir y añadir sin hacer pedidos:** la [habilidad de selección](../skills/select-products-to-cart/SKILL.md) combina información del navegador con un [script sin dependencias externas](../skills/select-products-to-cart/references/workflow.md). La IA comprueba variantes, paquetes, entrega y precio publicado más envío, elige entre candidatos adecuados y completa solo la cantidad de la misma variante que falta en el carrito. Conserva otros productos. No abre el pago, no hace pedidos, no paga ni acepta suscripciones. Envío o especificaciones desconocidos quedan pendientes; no se promete el menor precio de todo el mercado. El acceso y las capacidades del sitio pueden limitar el flujo. La validación usa una tienda local ficticia, no cuentas reales.
 
 - **Herramientas ejecutables reutilizables:** el [script de pruebas](../skills/test-mcu-in-background/references/workflow.md) ejecuta comprobaciones existentes o compila y ejecuta C para Cortex-M, con imágenes opcionales del búfer OLED. El [script de carga](../skills/flash-mcu-firmware/references/workflow.md) muestra una vista previa sin hardware por defecto y reutiliza programas STM32, ESP o Arduino para escrituras autorizadas. La IA prepara la configuración del proyecto; no necesitas editar scripts ni JSON. Requiere Python 3.10 o posterior. Las dependencias ARM se preparan una vez en una caché privada y se reutilizan. El compilador y una herramienta de carga compatible deben estar disponibles; cualquier instalación necesaria se explica primero. Los scripts no simulan todos los periféricos ni garantizan cualquier placa sin adaptación.
 

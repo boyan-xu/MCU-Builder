@@ -28,8 +28,9 @@
 | [协作开发](../skills/develop-with-ai-mcu/SKILL.md) | 一起做新产品，或继续现有工程 | 自己写或 AI 写，可随时调整 |
 | [后台测试工具](../skills/test-mcu-in-background/SKILL.md) | 直接调用随包脚本，复用缓存环境运行代码检查 | AI 准备并运行必要测试 |
 | [固件烧录工具](../skills/flash-mcu-firmware/SKILL.md) | 通过随包脚本复用已有烧录软件 | AI 核对目标并执行已授权的烧录 |
+| [选购并加入购物车](../skills/select-products-to-cart/SKILL.md) | 在指定网站比较合格商品，只补齐缺件 | AI 选规格并加购，不下单 |
 
-四个入口都能独立使用，其中两个制作入口按实际经验和做事方式提供帮助。需求明确就跳过无关问答，不用水平测试决定你能做什么。仓库地址、文件夹和 `$build-with-ai-mcu`、`$develop-with-ai-mcu` 保持兼容；新增 `$test-mcu-in-background` 和 `$flash-mcu-firmware` 可直接调用可执行工具。
+五个入口都能独立使用，其中两个制作入口按实际经验和做事方式提供帮助。需求明确就跳过无关问答，不用水平测试决定你能做什么。原有调用名称保持兼容；三个工具入口分别提供可复用的后台测试、烧录和商品筛选，不强制安装其他入口。
 
 ## 从想法到作品
 
@@ -60,7 +61,9 @@
 git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 ```
 
-从 `skills/` 中选择需要的完整技能文件夹，放入所用工具支持的技能目录。两个制作入口是 `build-with-ai-mcu`、`develop-with-ai-mcu`，两个可执行工具是 `test-mcu-in-background`、`flash-mcu-firmware`。Codex 优先使用已设置的 `$CODEX_HOME/skills`，否则使用 `~/.codex/skills`。已有同名技能时先检查再替换；必要时刷新发现或开启新会话。每个入口自带资源，各有一份适用于三语的指令；可用工具随平台变化。
+从 `skills/` 中选择需要的完整技能文件夹，放入所用工具支持的技能目录。两个制作入口是 `build-with-ai-mcu`、`develop-with-ai-mcu`，三个工具入口是 `test-mcu-in-background`、`flash-mcu-firmware`、`select-products-to-cart`。Codex 优先使用已设置的 `$CODEX_HOME/skills`，否则使用 `~/.codex/skills`。已有同名技能时先检查再替换；必要时刷新发现或开启新会话。每个入口自带资源，各有一份适用于三语的指令；可用工具随平台变化。
+
+`select-products-to-cart` 也可单独安装。材料清单列好后，AI 只问一次是否需要在指定网站代选缺件并加入购物车，你仍可只要购买链接。面板里的独立加购按钮会发送这项明确请求，页面本身不会访问商店。
 
 ```text
 用 $build-with-ai-mcu。做一个门打开超过 30 秒就响的提醒器。
@@ -75,6 +78,8 @@ git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 没方向时可要五个合适的候选；已有材料或半成品就从那里继续。阶段任务应通向自己的目标，不把它换成无关练习。
 
 ## 随包工具与证据
+
+- **代选加购，不下单：**[选购 Skill](../skills/select-products-to-cart/SKILL.md)结合浏览器实查与[无需额外依赖的比价脚本](../skills/select-products-to-cart/references/workflow.md)。AI 核对具体规格、包装数量、配送及商品加运费的费用，在合格候选里选合适的一款，再按购物车现状只补齐相同规格的缺口。保留其他商品，止于购物车，不结算、不下单、不支付、不接受订阅。运费或关键规格未知时保留待确认，不冒充全网最低价；登录状态与网站能力可能限制自动化。开发验证使用本地虚构商店，不涉及真实购物账户。
 
 - **可复用的执行工具：**[后台测试脚本](../skills/test-mcu-in-background/references/workflow.md)可运行已有软件检查，或编译并执行 Cortex-M 的 C 测试，还能按需导出 OLED 缓冲区图片。[烧录脚本](../skills/flash-mcu-firmware/references/workflow.md)默认只做离线预检查，实际写入时使用已有 STM32、ESP 或 Arduino 工具。项目配置由 AI 准备，用户不必编辑脚本或 JSON。需要 Python 3.10 及以上；ARM 依赖首次准备后复用私有缓存，不再每次搭环境。编译器与兼容烧录软件仍需实际可用，必要安装提前说明；脚本不承诺无需适配就能模拟所有外设或支持任意板子。
 
