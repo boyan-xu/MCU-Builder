@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "revision": "fictional-draft-r1",
+  "critical_unknowns": ["Exact real part and footprint are not selected"],
+  "software": {"name": "Existing EDA not yet identified", "version": "unknown", "connection_usable": false},
+  "agents_available": false,
+  "supply": {"voltage_v": 3.3, "current_limit_ma": 10, "source": "Fictional design assumption; verify real source before design"},
+  "outline": {"shape": "rectangle", "width": 30, "height": 20, "units": "mm"},
+  "parts": [{"ref": "J1", "model": "Fictional two-pin connector", "quantity": 1, "pins": ["VCC", "GND"], "footprint": null, "footprint_source": null}],
+  "nets": [{"name": "VCC", "endpoints": ["J1:VCC"], "source": "Fictional only"}, {"name": "GND", "endpoints": ["J1:GND"], "source": "Fictional only"}],
+  "connectors": [{"ref": "J1", "orientation": "top access; fictional"}],
+  "holes": [],
+  "keepouts": [],
+  "fabrication": {"route": "fabricator", "process": "two-layer PCB", "constraints": "Fictional only; confirm actual fabricator clearance/drill/stackup"},
+  "model_gaps": ["No exact part 3D model"],
+  "checks": []
+}
