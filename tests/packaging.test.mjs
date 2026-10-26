@@ -10,6 +10,8 @@ const toolNames = ['test-mcu-in-background', 'flash-mcu-firmware'];
 const shared = ['assets/parts-checklist.html', 'references/checklist.md', 'references/working-style.md', 'references/rea.md',
   'references/verification.md', 'references/uno-led/README.md', 'references/uno-led/connections.json', 'references/uno-led/uno-led.ino', 'references/uno-led/wiring.svg',
   'references/uno-led/diagram.json', 'references/uno-led/simulation-result.json'];
+shared.push('scripts/mcu_project.py', 'references/project-tools.md',
+  ...['mcu-project.json', 'main.c', 'test_logic.py', 'materials.md', 'use-guide.md', 'limits.md'].map(f => 'assets/project-example/' + f));
 
 test('both skills carry identical shared resources for independent installation', () => {
   for (const file of shared) {
