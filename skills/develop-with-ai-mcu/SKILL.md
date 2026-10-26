@@ -29,6 +29,8 @@ No code exercise, budget interview or prerequisite quiz is required. Honor a kno
 
 ## Implement with existing software and suitable hardware
 
+When available, call the executable `$test-mcu-in-background` and `$flash-mcu-firmware` entries instead of creating another test runtime or flashing wrapper. Reuse their machine cache and project configuration. They remain optional independent installations; existing project tools continue to work without them. Own-code mode still respects the person's chosen role when adding tests or changing source.
+
 - Check existing code, settings, protocols and interfaces before adding or replacing hardware. Software may solve the requirement; it cannot create a missing sensor, radio or electrical power stage. Once a genuine gap is known, explain it and choose the minimum compatible addition. Do not replace a workable board just because another would be easier for AI.
 - Prefer suitable, documented simulator-supported MCUs and modules for new purchases. Existing hardware without a model is retained: explain coverage gaps, continue code/build/logic checks, and allow authorized isolated-board flash diagnostics. Do not mislabel a different board model or a host test as full MCU simulation.
 - Use installed compilers, IDEs, debuggers, serial tools and flash software when suitable and accessible. Do not invent replacement platforms. Before any necessary download, explain the package, purpose and official source; respect no-install requests. Available software does not prove USB/debug access.
