@@ -1,4 +1,6 @@
-# Use the parts checklist
+# Legacy parts panel — explicit request only
+
+Use this reference only when the person explicitly asks for the legacy interactive panel. MCU Builder defaults to the complete plain numbered list and one-time cart offer described in SKILL.md and [the replication contract](replication.md). Reading this page alone does not enable a default panel route. Keep the optional chat/standalone fallback below when a panel is requested.
 
 The AI prepares the panel, not the learner. Copy `assets/parts-checklist.html` into the current project, then replace only the `parts-data` JSON with the real parts and the learner's language. The sample is clearly an example, not a recommendation to replace their board. Keep the script and styles self-contained; no build system, service or network request is needed.
 
