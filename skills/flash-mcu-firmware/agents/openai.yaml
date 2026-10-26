@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flash MCU Firmware"
+  short_description: "Reuse existing tools to preview and flash MCU firmware"
+  default_prompt: "Use $flash-mcu-firmware to prepare and preview flashing my firmware with existing tools, then execute within my authorization for the exact target."
