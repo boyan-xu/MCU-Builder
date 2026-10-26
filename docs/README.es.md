@@ -1,125 +1,91 @@
 [English](../README.md) · [简体中文](README.zh-CN.md) · [Español](README.es.md)
 
-# Haz realidad tus ideas con microcontroladores
+# MCU Builder
 
 **Trae una idea. Crea algo que puedas usar.**
 
-Explica qué quieres que haga tu producto. La IA concreta los requisitos y se encarga del diseño, materiales, firmware, simulación, configuración y depuración con las herramientas a las que realmente tiene acceso. No necesitas aprender a programar microcontroladores ni gestionar el código para empezar.
+Describe tu producto. La IA ayuda con requisitos, diseño, piezas, firmware, comprobaciones útiles, configuración y depuración mediante herramientas que realmente puede usar. Aprovecha tu hardware y software actuales. No necesitas hacer un curso ni gestionar código; también puedes elegir escribirlo. Un objetivo claro evita preguntas ajenas y la experiencia no impone un límite artificial de complejidad.
 
-Aprovecha el hardware y los programas que ya tienes. Recibe una lista de materiales que puedes marcar, enlaces de compra opcionales para tu región, un diagrama claro y pasos breves para el trabajo físico. La IA elige comprobaciones útiles para el proyecto, normalmente en segundo plano, y revisa el diseño eléctrico antes de guiar el funcionamiento físico.
+## Elige una entrada
 
-Un avisador, un controlador, un dispositivo con sensores: el comportamiento que buscas marca el rumbo. El proceso sigue tu idea y su viabilidad real, sin imponer un límite por tu nivel de experiencia. Avanza mediante resultados concretos hasta obtener algo útil, con los archivos e indicaciones para seguir usándolo y mejorándolo.
-
-## Habla del producto; un agente de código se encarga del código
-
-El chat principal se centra en lo que debe hacer tu producto, las decisiones clave y el próximo resultado útil. Cuando la plataforma admite agentes secundarios, un mismo agente de código capaz lee y modifica los archivos, compila, prueba y depura. El agente principal recibe un resultado breve, comprobaciones y rutas de evidencia, límites y tu siguiente acción. No necesita acumular archivos fuente, diferencias ni registros completos en la conversación del producto. Si quieres una explicación del código, la IA puede recuperar el fragmento pequeño que importa.
-
-El trabajo estándar usa primero los scripts incluidos. Las dos entradas de producto incorporan el mismo ayudante independiente, `scripts/mcu_project.py`, que solo usa la biblioteca estándar de Python. La IA puede mantener un `mcu-project.json` local y opcional a partir de la conversación y los hechos comprobados: requisitos, cantidades/especificaciones, conexiones y pines, ajustes existentes de pruebas y grabación, observaciones de compra, comprobaciones de comportamiento, progreso y archivos de entrega. No tienes que rellenar formularios, editar JSON ni gestionar un registro nuevo. Los Projects y registros del proyecto conservan su función; siguen existiendo las mismas cinco entradas Skill.
-
-| Comando | Resultado útil |
+| Skill | Función |
 | --- | --- |
-| `validate` | Comprueba los datos disponibles o solo la etapa actual; la información ajena no bloquea el trabajo útil. |
-| `export --for test\|flash\|shopping` | Reutiliza las entradas actuales; resta existencias físicas (necesitas cinco, tienes tres, faltan dos) y conserva variantes, carrito e incógnitas. |
-| `wiring` | Una lista explícita genera SVG, tabla numerada y `pins.generated.json`; los datos eléctricos desconocidos quedan pendientes. |
-| `acceptance` | Lista práctica de comportamiento con estado sin ejecutar, aprobado, fallido o pendiente; aprobar/fallar exige evidencia aportada. |
-| `diagnostics` | Resume de forma limitada solo los registros e informes existentes autorizados, sin acceder a dispositivos ni ejecutar texto de los registros. |
-| `package` | Crea un ZIP local solo con los archivos elegidos, hashes y vínculo a proyecto/versión; rechaza entradas obsoletas, ausentes o privadas reconocibles. |
+| [MCU Builder](../skills/build-with-ai-mcu/SKILL.md) — `$build-with-ai-mcu` | La IA gestiona el trabajo técnico de idea a producto. |
+| [Colaboración de código](../skills/develop-with-ai-mcu/SKILL.md) — `$develop-with-ai-mcu` | Inicia o continúa un proyecto y elige quién escribe el código. |
+| [Comprobaciones en segundo plano](../skills/test-mcu-in-background/SKILL.md) — `$test-mcu-in-background` | Reutiliza programas y entornos existentes para pruebas concretas. |
+| [Grabación de firmware](../skills/flash-mcu-firmware/SKILL.md) — `$flash-mcu-firmware` | Previsualiza y realiza cargas autorizadas con herramientas existentes. |
+| [Selección de productos](../skills/select-products-to-cart/SKILL.md) — `$select-products-to-cart` | Compara variantes verificadas y completa el carrito; nunca compra. |
+| [Diseño PCB opcional](../skills/design-pcb-with-ai/SKILL.md) — `$design-pcb-with-ai` | Diseña y revisa una PCB solicitada con tu software EDA utilizable. |
 
-El agente de código reutiliza las cachés y las interfaces actuales. La autorización para hardware, carrito, instalaciones y publicación sigue en manos del agente principal. Por defecto hay como máximo dos agentes secundarios, con un solo escritor por ámbito de archivos. Un modelo ligero puede hacer tareas simples por lotes solo si la plataforma ofrece esa selección real; en otro caso se hereda el modelo disponible sin afirmar lo contrario. Sin agentes secundarios, el principal continúa con resúmenes breves de las herramientas.
-
-Consulta el [contrato y los límites](../skills/build-with-ai-mcu/references/project-tools.md) y el [ejemplo ficticio ejecutable](../skills/build-with-ai-mcu/assets/project-example/mcu-project.json). La IA debe comparar el C/C++ real con los pines y revisar la imagen. Un diagrama lógico o una prueba en el equipo no demuestra éxito eléctrico o físico. La detección de secretos es incompleta: aún hay que revisar el contenido elegido. Crear un ZIP local no autoriza publicarlo.
-
-## Un proyecto real: STMGames V1
-
-Una consola STM32 con OLED y carcasa amarilla impresa, creada tras **muchas rondas de conversación, montaje y revisión**. Su creador realizó el modelado 3D y el trabajo físico; **GPT-6.1 Sol completó todo el código de aplicación**, conservando los créditos de terceros. No fue una generación de un solo intento ni un resultado de CAD automático.
-
-| Frente | Interior |
-| --- | --- |
-| ![Consola OLED en una carcasa amarilla impresa](../showcases/stm-games-v1/photos/front.jpg) | ![Placa STM32 y pilas dentro de la carcasa](../showcases/stm-games-v1/photos/inside.jpg) |
-
-La colección incluye Snake, Tetris, Space Invaders, Dino, 2048, Minesweeper, Breakout, Tower Defense, Stack y Timberman, además de nueve proyectos independientes. Consulta [el caso y los materiales](../showcases/stm-games-v1/README.es.md), descarga [todo el código del firmware](../showcases/stm-games-v1/firmware-source.zip), revisa [el diagrama](../showcases/stm-games-v1/wiring.svg) y [la tabla de conexiones](../showcases/stm-games-v1/README.es.md#conexiones-y-alimentación), o abre [el modelo y proyecto de laminado 3MF original](../showcases/stm-games-v1/OLEDGames.3mf). Las fotos muestran el montaje real; parte de la alimentación sigue sin verificarse y esta publicación no repitió todos los juegos ni operó hardware.
-
-## Elige cómo trabajar
-
-| Entrada | Qué hace | Quién escribe el código |
-| --- | --- | --- |
-| [Haz realidad tus ideas con microcontroladores](../skills/build-with-ai-mcu/SKILL.md) | La IA lleva la parte técnica desde la idea hasta el producto | La IA por defecto |
-| [Desarrollo colaborativo](../skills/develop-with-ai-mcu/SKILL.md) | Colabora en un producto nuevo o continúa un proyecto existente | Tú o la IA; puedes cambiar de elección |
-| [Pruebas en segundo plano](../skills/test-mcu-in-background/SKILL.md) | Ejecuta comprobaciones con scripts incluidos y entorno reutilizable | La IA prepara y ejecuta las pruebas útiles |
-| [Carga de firmware](../skills/flash-mcu-firmware/SKILL.md) | Reutiliza programas de carga mediante un script incluido | La IA comprueba el destino y realiza cargas autorizadas |
-| [Elegir productos y llenar el carrito](../skills/select-products-to-cart/SKILL.md) | Compara productos adecuados en tu sitio y completa faltantes | La IA elige variantes y añade; no hace pedidos |
-
-Las cinco entradas funcionan por separado. Las dos entradas de creación se adaptan a tu experiencia y preferencias. Una petición clara evita preguntas ajenas a la tarea; no hay una prueba de nivel que decida qué puedes crear. Las llamadas existentes siguen siendo compatibles. Las tres herramientas permiten reutilizar pruebas, carga de firmware y selección de productos sin exigir otras instalaciones.
-
-## De la idea al producto
-
-1. **Define el resultado.** Habla de lo que debe hacer y cómo comprobarlo. La memoria relevante puede incluir herramientas, experiencia, preferencias al conversar, forma de aprender y pequeños hábitos. Tu petición actual tiene prioridad, sin cuestionarios de presupuesto o estilo.
-2. **Reutiliza lo adecuado.** Primero se revisan código, configuración, interfaces y hardware existentes. Para piezas nuevas se prefieren combinaciones de MCU y módulos con simulación documentada que cumplan la necesidad; no se cambia una placa útil por comodidad.
-3. **Comprueba qué comprar.** El panel muestra especificaciones, cantidades, materiales disponibles, faltantes y coste adicional estimado. Los enlaces regionales son ejemplos; puedes elegir piezas equivalentes de otras tiendas.
-4. **La IA implementa y verifica.** Escribe, compila y corrige el firmware con las herramientas disponibles, eligiendo pruebas o simulación cuando sean útiles. Si quieres escribir, elige la entrada colaborativa. No necesitas completar un curso ni gestionar cambios de código.
-5. **Conecta y prueba.** Recibe una imagen revisada y texto coincidente. El orden entre conexiones sin alimentación y carga en la placa depende del montaje. Cada vez se indica una acción breve, el resultado esperado y qué comunicar; se conserva la autorización del mismo dispositivo.
-6. **Conserva tu producto.** Recibe código, conexiones, los archivos y resultados de pruebas o simulación que se hayan producido, una guía breve y límites conocidos. Tú decides si el producto será privado o de código abierto.
-
-La conversación sigue tu ritmo sin insistir en la misma pregunta ni desviarse. Cuando el siguiente paso está claro, se empieza. Obtener algo útil en pocos días es un objetivo cuando lo permiten el alcance, las herramientas y las piezas, no una promesa para cualquier idea ni un catálogo fijo de ejercicios iniciales.
-
-## Comprobaciones, vista previa y primera puesta en marcha
-
-No todos los proyectos necesitan pruebas o simulación. La IA elige comprobaciones que resuelvan una incertidumbre o un riesgo real y utiliza por defecto las herramientas existentes en segundo plano. Si quieres ver el efecto antes de cargar el programa, puede ofrecer una vista previa en el navegador o imágenes renderizadas. El proceso se adapta a tu necesidad actual, sin imponer una secuencia fija.
-
-Se conservan las evidencias de las comprobaciones realizadas, vinculadas al código y las conexiones probadas. Compilar, probar lógica en el ordenador o crear una maqueta web no equivale a simular el MCU. Ejecutar instrucciones ARM con periféricos simulados cubre las rutas de código ejercitadas, pero no toda la placa ni su comportamiento eléctrico. Los cambios pertinentes requieren volver a comprobar lo afectado cuando sea necesario.
-
-La simulación no demuestra ausencia total de errores ni que sea imposible dañar el hardware. Se comprueban aparte alimentación, polaridad, niveles lógicos, corriente, resistencias, controladores y límites de carga. Se informa por separado de compilación, pruebas de lógica, simulación MCU, revisión eléctrica, carga/lectura y comportamiento físico.
-
-Si tu placa o módulo no tiene un modelo adecuado, se conserva cuando cumple el objetivo. La IA explica las carencias relevantes y continúa el trabajo seguro y útil con las herramientas disponibles. Con permiso para el dispositivo exacto y tras revisar objetivo y condiciones eléctricas, puede hacerse una carga y diagnóstico de la placa aislando las cargas externas. Eso no demuestra que funcione todo el producto ni permite pasar directamente a plena carga. Consulta [las reglas de verificación](../skills/build-with-ai-mcu/references/verification.md).
-
-## Instalar y empezar
-
-Descarga con **Code → Download ZIP** en GitHub o ejecuta:
+Las seis carpetas son independientes. Se conservan los cinco nombres de llamada y la ruta del repositorio. Ninguna entrada obliga a instalar sus compañeras. Descarga el ZIP o clona y copia las carpetas completas elegidas desde `skills/` al directorio de Skills de tu herramienta. En Codex usa `$CODEX_HOME/skills` o `~/.codex/skills` si no está definido; revisa copias existentes antes de reemplazarlas y actualiza el descubrimiento si hace falta. Las herramientas disponibles dependen de la plataforma.
 
 ```sh
 git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 ```
 
-Copia las carpetas completas que necesites de `skills/` al directorio de habilidades admitido por tu herramienta. Las entradas de creación son `build-with-ai-mcu` y `develop-with-ai-mcu`; las herramientas son `test-mcu-in-background`, `flash-mcu-firmware` y `select-products-to-cart`. En Codex, usa `$CODEX_HOME/skills` si está definido; si no, `~/.codex/skills`. Revisa una habilidad del mismo nombre antes de sustituirla; actualiza la detección o abre otra sesión si hace falta. Cada entrada incluye sus recursos y unas instrucciones para los tres idiomas. Las herramientas disponibles varían según la plataforma.
-
-`select-products-to-cart` también se instala por separado. Tras mostrar la lista, la IA ofrece una sola vez elegir faltantes en tu sitio y añadirlos al carrito. Puedes seguir pidiendo solo enlaces. El botón separado del panel envía esa petición explícita; la página no accede a tiendas por sí misma.
-
 ```text
-Usa $build-with-ai-mcu. Crea un avisador que suene si dejo la puerta abierta
-más de 30 segundos. Encárgate de la parte técnica; ya tengo un ESP32
-y Arduino IDE. Ayúdame a conseguir un resultado que funcione.
+Usa $build-with-ai-mcu. Quiero un aviso sonoro si la puerta queda abierta
+más de 30 segundos. Tengo ESP32 y Arduino IDE. Encárgate del código.
 ```
 
 ```text
-Usa $develop-with-ai-mcu. Continúa mi proyecto STM32 que ya funciona y añade PWM.
-Quiero escribir el código. Revisa el temporizador y ayúdame a elegir
-el siguiente cambio pequeño.
+Usa $develop-with-ai-mcu. Continúa mi proyecto STM32 y añade control PWM.
+Quiero escribir el código. Revisa el temporizador y guía el siguiente paso.
 ```
 
-Si no tienes una idea, pide cinco posibilidades adecuadas. Si ya hay materiales o un producto a medias, empieza desde ahí. Los pasos deben llevar a tu objetivo, no sustituirlo por un ejercicio ajeno.
+## Primero una lista que puedas copiar
 
-## Herramientas y evidencias incluidas
+La salida predeterminada es una lista numerada completa de texto normal. Cada pieza indica modelo/especificación exactos, función, cantidades necesarias/disponibles/faltantes y coste estimado de lo que falta con fuente/fecha, o indica que se desconoce. Una frase de búsqueda separada y copiable conserva especificaciones críticas y unidades por paquete. Incluye cables, alimentación y consumibles necesarios. Desconocer tienda o región no retrasa la lista; enlaces verificados pueden complementar las palabras. Los paneles antiguos son opcionales solo si se solicitan.
 
-- **Elegir y añadir sin hacer pedidos:** la [habilidad de selección](../skills/select-products-to-cart/SKILL.md) combina información del navegador con un [script sin dependencias externas](../skills/select-products-to-cart/references/workflow.md). La IA comprueba variantes, paquetes, entrega y precio publicado más envío, elige entre candidatos adecuados y completa solo la cantidad de la misma variante que falta en el carrito. Conserva otros productos. No abre el pago, no hace pedidos, no paga ni acepta suscripciones. Envío o especificaciones desconocidos quedan pendientes; no se promete el menor precio de todo el mercado. El acceso y las capacidades del sitio pueden limitar el flujo. La validación usa una tienda local ficticia, no cuentas reales.
+Después de la lista COMPLETA, la IA ofrece ayuda con el carrito una vez. Al aceptar pregunta la plataforma solo si se desconoce y aclara: solo carrito, sin tramitar pedidos, pagar ni suscribirse. Reutiliza permiso y sitio conocidos; respeta una negativa o una petición de enlaces solamente. Requisitos duros, compatibilidad, stock, entrega, vendedor y presupuesto explícito son filtros; después cuenta preferencias verificadas antes de comparar precio. El mapa escalar opcional `preferred_specs` usa `specs` y `spec_evidence` por campo; sin evidencia no hay coincidencia ni puntuación inventada. Omitirlo conserva el orden anterior de total/plazo/vendedor oficial. Verifica variante, paquetes y carrito actual, conservando otros productos. [Contrato de selección](../skills/select-products-to-cart/references/workflow.md).
 
-- **Herramientas ejecutables reutilizables:** el [script de pruebas](../skills/test-mcu-in-background/references/workflow.md) ejecuta comprobaciones existentes o compila y ejecuta C para Cortex-M, con imágenes opcionales del búfer OLED. El [script de carga](../skills/flash-mcu-firmware/references/workflow.md) muestra una vista previa sin hardware por defecto y reutiliza programas STM32, ESP o Arduino para escrituras autorizadas. La IA prepara la configuración del proyecto; no necesitas editar scripts ni JSON. Requiere Python 3.10 o posterior. Las dependencias ARM se preparan una vez en una caché privada y se reutilizan. El compilador y una herramienta de carga compatible deben estar disponibles; cualquier instalación necesaria se explica primero. Los scripts no simulan todos los periféricos ni garantizan cualquier placa sin adaptación.
+## Chat principal para el producto, agentes para el trabajo técnico
 
-- [Panel de materiales](../skills/build-with-ai-mcu/assets/parts-checklist.html) y [notas de integración](../skills/build-with-ai-mcu/references/checklist.md): marca materiales y conserva el progreso válido en chats compatibles o HTML independiente. Las solicitudes de enlaces usan la acción de IA disponible o muestran texto para copiar. La página no contacta en secreto con tiendas ni con una IA.
-- [Ejemplo de baja tensión](../skills/build-with-ai-mcu/references/uno-led/README.md): imagen, conexiones, firmware y diagrama coherentes, con un [registro real de simulación MCU](../skills/build-with-ai-mcu/references/uno-led/simulation-result.json) ligado a los archivos probados. Arranque y salida digital se comprobaron en Wokwi; no se probó hardware físico ni se demostró seguridad eléctrica. Es evidencia de esos escenarios, no un primer producto obligatorio.
-- [Flujo opcional de REA](../skills/build-with-ai-mcu/references/rea.md): al reproducir una función, reutiliza una conexión pertinente de [REA](https://github.com/morluto/rea) y solo propone configurarlo si es necesario y falta. Rechazarlo no impide proyectos normales. Antes de comercializar o publicar se aclaran los derechos; el acceso a una herramienta no autoriza a distribuir código o recursos propietarios.
+Si hay agentes, un mismo agente de firmware capaz lleva fuentes, compilación, pruebas y depuración. Solo una petición PCB añade un agente PCB separado. Máximo dos agentes simultáneos y un escritor por ámbito. La IA principal conserva decisiones y autorización, y recibe resultados breves, rutas de pruebas/evidencia, límites y siguiente acción. Si tú escribes código, no lo reescribe sin permiso. Sin agentes continúa trabajo acotado y explica límites. Delegar no autoriza hardware, compras, instalaciones ni publicación.
 
-## Alcance mecánico y límites prácticos
+Ambas entradas de producto incluyen el mismo `scripts/mcu_project.py`, independiente y de biblioteca estándar; requiere Python 3.10+, sin importar Skills vecinas ni crear registros globales. La IA mantiene datos opcionales del proyecto; no pide formularios JSON. Reutiliza programas y cachés actuales, explicando antes las descargas necesarias.
 
-Esta versión no incluye normalmente CAD automático, diseño mecánico listo para imprimir ni impresión directa. Para una carcasa se prefieren piezas comerciales, estructuras existentes o modelos aportados por el usuario. La experiencia en CAD y las impresoras o CNC siguen siendo contexto útil. Una futura etapa automática de CAD/impresión requiere una actualización explícita de la habilidad; no se activa por la confianza del propio modelo.
+| Comando | Resultado |
+| --- | --- |
+| `validate` / `export --for test\|flash\|shopping` | Comprobaciones por etapa y entradas compatibles; resta existencias físicas. |
+| `parts` | Lista numerada exacta, búsquedas copiables y estado de oferta única/sitio conocido. |
+| `wiring` | SVG, texto por cable y asignaciones de pines desde una conexión explícita. |
+| `acceptance` / `diagnostics` | Estados/evidencia honestos y resúmenes acotados de informes permitidos. |
+| `package` | ZIP permitido con hashes, marcado borrador/no verificado. |
+| `package --reproducible` | Contrato final con categorías, entradas, compilación/versión y guía al extraer. |
 
-La IA necesita conexiones reales para compilar, depurar, simular o acceder al hardware. Las descargas, cuentas y costes necesarios se explican antes. La carga desde el navegador necesita hardware compatible y acceso local; no se promete funcionar siempre sin instalaciones. Credenciales, memoria y registros privados no se publican. Es un flujo para crear productos, no un curso fijo de microcontroladores.
+[Contrato de herramientas](../skills/build-with-ai-mcu/references/project-tools.md) · [Contrato de réplica](../skills/build-with-ai-mcu/references/replication.md) · [Ejemplo ficticio de borrador](../skills/build-with-ai-mcu/assets/project-example/mcu-project.json).
 
-## Comprobar el código fuente
+## PCB solo cuando se solicita
 
-Ejecuta `node --test tests/*.test.mjs` para comprobar panel, paquetes, conexiones y coherencia del registro. El formato puede revisarse con el [validador oficial de skill-creator](https://github.com/openai/skills/tree/main/skills/.system/skill-creator). Las pruebas unitarias son distintas de la ejecución MCU registrada y no sustituyen pruebas físicas.
+La IA principal prepara `pcb-brief.json` con piezas exactas, redes/pines y alimentación comprobados, fuentes de encapsulados, contorno con dimensiones/forma/unidades, conectores, agujeros, zonas excluidas y límites de fabricación. Pregunta solo datos bloqueantes. El agente PCB persistente hace esquema, colocación y ruteado en tu EDA existente y utilizable, separado del firmware. Sin conexión utilizable o sin agentes entrega un brief/borrador honesto, nunca una PCB terminada ni una instalación forzada.
 
-Ejecuta `python -B -m unittest discover -s tests -p "*_test.py"` para comprobar reutilización, fallos, adaptadores de carga sin hardware y exportación OLED. Las pruebas de carga usan procesos de proveedor simulados; la ejecución ARM real del ejemplo tiene evidencias separadas en la guía de pruebas.
+Revisa esquema/ERC, pieza real contra pads/polaridad del encapsulado, colocación/ruteado/DRC y montaje virtual/3D: holguras, orientación, dimensiones y acceso a conectores. Modelos ausentes siguen desconocidos. Simulación de circuito solo cuando sea útil y haya modelos fiables. Separa cada tipo de prueba; no hay garantía de cero errores.
 
-## Licencia
+Entrega fuentes EDA editables, esquema, PCB, BOM exacta, redes/conexiones e informes/límites. Para fabricante: Gerber/taladros y datos de montaje necesarios. Para DIY: guías específicas del proceso a escala 1:1 para cobre/contorno/taladros. Sin máquina, herramienta y proceso exactos no se genera G-code genérico. Reabre archivos finales de fabricación y vincúlalos a la revisión. Datos críticos desconocidos de piezas, redes, alimentación, encapsulados o proceso implican borrador. PCB es diseño electrónico; CAD mecánico automático e impresión directa quedan fuera. [Flujo PCB](../skills/design-pcb-with-ai/references/workflow.md).
 
-[MIT](../LICENSE). Puedes usar, compartir y modificar estas habilidades y sus scripts originales. Las dependencias descargadas conservan sus propias licencias. Cada persona decide la publicación y licencia de su producto.
+## Un paquete que otra persona pueda construir
+
+La entrega final incluye imagen de conexiones Y texto con pines de cada cable; BOM/especificaciones/cantidades/búsquedas exactas; fuentes completas compilables, configuración, bibliotecas y recursos; firmware compilado correspondiente cuando proceda; versiones exactas de herramientas/entorno y pasos de compilación/grabación; instrucciones de alimentación/montaje/uso/aceptación; archivos PCB/mecánicos/impresión utilizados; licencias/créditos; evidencia, versión, hashes y límites. Incluye todas las entradas específicas del proyecto, sin rutas privadas, includes/recursos ausentes, arreglos ocultos de IA ni otra sesión de IA para terminar el diseño.
+
+Herramientas o dependencias que no se puedan redistribuir requieren versión exacta e instrucciones oficiales de adquisición/configuración como requisitos externos visibles. `START-HERE.md` las enumera tras extraer; no promete cero descargas ni funcionamiento totalmente desconectado. Cada replicador configura sus credenciales localmente. `--reproducible` comprueba archivos/categorías, includes entre comillas y un informe de compilación exitosa vinculado a entradas/firmware/herramientas/versión sin ejecutar código. La IA aún revisa una compilación limpia real y el inventario completo: las etiquetas no prueban dependencias transitivas arbitrarias ni veracidad del informe. El paquete básico sigue siendo borrador.
+
+El objetivo es el mismo diseño, configuración y comportamiento especificados, con piezas exactas y pasos suministrados, sin volver a programar o diseñar. Integridad de archivos y prueba física son distintas; tolerancias físicas y comportamiento sin probar no pueden garantizarse idénticos. Resuelve hechos críticos de alimentación/pines/diseño antes de declarar entrega final, o explica el bloqueo.
+
+## Comprobaciones y límites físicos
+
+Elige pruebas según proyecto, cambio y riesgo; no todos necesitan cada prueba o simulador. Prioriza herramientas existentes en segundo plano y vistas de navegador si se desean. Informa por separado compilación, lógica del host, simulación MCU, revisión eléctrica, grabación/lectura y resultado físico, ligados a la versión probada. Una prueba del host o maqueta web no es simulación MCU ni prueba seguridad eléctrica.
+
+Antes de conectar/alimentar verifica modelos, pines, fuente, polaridad, corriente y controladores, y compara imagen con firmware. Desconecta alimentación para cambiar cables; movimiento requiere límites y parada. Solo compilar no autoriza grabar. Reutiliza autorización clara del mismo objetivo durante depuración normal, comprobando firmware actual, objetivo y depurador y preservando el trabajo previo. Descarga, instalación y publicación tienen su alcance; registros/secretos siguen privados y crear un ZIP no publica.
+
+## Ejemplo real y evidencia histórica
+
+[STMGames V1](../showcases/stm-games-v1/README.es.md) es un dispositivo STM32 OLED real creado mediante muchas conversaciones y revisiones. Su autor diseñó la carcasa e hizo el montaje; GPT-6.1 Sol completó el código de aplicación con créditos de terceros conservados. [Fuentes](../showcases/stm-games-v1/firmware-source.zip), [conexiones](../showcases/stm-games-v1/wiring.svg), [3MF original](../showcases/stm-games-v1/OLEDGames.3mf). Aún faltan hechos eléctricos/de alimentación: **no es totalmente reproducible**; esta entrega no operó hardware ni volvió a ejecutar todos los juegos.
+
+![STMGames V1 con carcasa amarilla](../showcases/stm-games-v1/photos/front.jpg)
+
+El [ejemplo UNO de baja tensión](../skills/build-with-ai-mcu/references/uno-led/README.md) y el [registro del navegador de tienda ficticia](../skills/select-products-to-cart/references/fixture-verification.json) son evidencia histórica de sus fuentes/escenarios registrados. Editar código no implica una nueva ejecución MCU/navegador. [REA](../skills/build-with-ai-mcu/references/rea.md) sigue siendo opcional; primero hardware/software existentes.
+
+## Verificar fuentes y licencia
+
+Ejecuta `python -B -m unittest discover -s tests -p "*_test.py"` y `node --test tests/*.test.mjs`; valida cada Skill con skill-creator. Las pruebas usan objetivos/procesos de proveedores ficticios locales, no hardware ni cuentas de compra reales. [MIT](../LICENSE) cubre código/Skills originales; terceros conservan sus términos. Cada usuario decide si publica su proyecto.
