@@ -10,6 +10,25 @@ Start with the hardware and software you already have. Get a checkable materials
 
 A reminder, a controller, a sensor device: your desired behavior sets the direction. The path follows your idea and actual feasibility rather than an imposed experience tier. Work toward a usable result in clear milestones, with the files and instructions to keep using and improving it.
 
+## Talk about the product; let a coding agent handle the code
+
+Keep the main chat on what your product should do, key choices and the next useful result. When the platform has child agents, one capable coding child stays with the project and reads/writes source, builds, tests and debugs. The main agent gets a short outcome, check results and evidence paths, limits and your next action. It does not need to carry source files, diffs or raw logs in the product conversation. Ask for a code explanation whenever you want one; AI can bring back the small relevant part.
+
+Standard work uses packaged scripts first. Both product entries now include an identical, standalone Python standard-library helper, `scripts/mcu_project.py`. AI can keep an optional local `mcu-project.json` up to date from your conversation and checked facts: requirements, counts/specs for parts, wiring/pin bindings, existing test/flash settings, shopping observations, behavior checks, progress and selected deliverables. You do not fill forms, edit JSON or manage a new project registry. Native Projects and project records keep their usual role; the five Skill entries and their installation choices stay the same.
+
+| Command | Useful result |
+| --- | --- |
+| `validate` | Check supplied data or just the next stage; missing unrelated facts do not block useful work. |
+| `export --for test\|flash\|shopping` | Reuse existing runner inputs; shopping subtracts available physical stock (need five, own three, buy two), while retaining exact variant/cart data and unknowns. |
+| `wiring` | One explicit connection list generates a readable SVG, numbered table and `pins.generated.json`; unknown electrical facts stay pending. |
+| `acceptance` | A practical behavior checklist with unrun/pass/fail/needs-confirmation status; pass/fail needs supplied evidence. |
+| `diagnostics` | A bounded summary of only allowlisted existing logs/reports; no device access or commands from log text. |
+| `package` | A local ZIP of only selected files, with hashes and project/version linkage; stale, missing and recognizable private inputs are refused. |
+
+The coding child uses the current tool caches and runner APIs, and keeps hardware, cart, installation and publication authorization in the main agent's hands. At most two children run by default, with one writer per file scope. Simple bulk work may use a lightweight child only when the platform offers an actual model choice; otherwise it inherits the default honestly. Without child agents, the main agent continues with compact tool summaries.
+
+See the [tool contract and safe limits](skills/build-with-ai-mcu/references/project-tools.md) and [fictional runnable example](skills/build-with-ai-mcu/assets/project-example/mcu-project.json). AI still checks actual C/C++ against generated pin bindings and inspects the wiring image. A logical diagram or passing host test does not prove electrical or physical success. ZIP secret checks are incomplete, so selected content still needs review. A local package does not grant permission to publish.
+
 ## Built with AI: STMGames V1
 
 A real STM32 OLED game device, made through **many rounds of discussion, building and revision**. The maker designed the 3D enclosure and did the physical work; **GPT-6.1 Sol completed the application code**, with third-party credits preserved. This was not a one-prompt build or automatic CAD output.
