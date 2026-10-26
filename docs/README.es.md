@@ -10,6 +10,25 @@ Aprovecha el hardware y los programas que ya tienes. Recibe una lista de materia
 
 Un avisador, un controlador, un dispositivo con sensores: el comportamiento que buscas marca el rumbo. El proceso sigue tu idea y su viabilidad real, sin imponer un límite por tu nivel de experiencia. Avanza mediante resultados concretos hasta obtener algo útil, con los archivos e indicaciones para seguir usándolo y mejorándolo.
 
+## Habla del producto; un agente de código se encarga del código
+
+El chat principal se centra en lo que debe hacer tu producto, las decisiones clave y el próximo resultado útil. Cuando la plataforma admite agentes secundarios, un mismo agente de código capaz lee y modifica los archivos, compila, prueba y depura. El agente principal recibe un resultado breve, comprobaciones y rutas de evidencia, límites y tu siguiente acción. No necesita acumular archivos fuente, diferencias ni registros completos en la conversación del producto. Si quieres una explicación del código, la IA puede recuperar el fragmento pequeño que importa.
+
+El trabajo estándar usa primero los scripts incluidos. Las dos entradas de producto incorporan el mismo ayudante independiente, `scripts/mcu_project.py`, que solo usa la biblioteca estándar de Python. La IA puede mantener un `mcu-project.json` local y opcional a partir de la conversación y los hechos comprobados: requisitos, cantidades/especificaciones, conexiones y pines, ajustes existentes de pruebas y grabación, observaciones de compra, comprobaciones de comportamiento, progreso y archivos de entrega. No tienes que rellenar formularios, editar JSON ni gestionar un registro nuevo. Los Projects y registros del proyecto conservan su función; siguen existiendo las mismas cinco entradas Skill.
+
+| Comando | Resultado útil |
+| --- | --- |
+| `validate` | Comprueba los datos disponibles o solo la etapa actual; la información ajena no bloquea el trabajo útil. |
+| `export --for test\|flash\|shopping` | Reutiliza las entradas actuales; resta existencias físicas (necesitas cinco, tienes tres, faltan dos) y conserva variantes, carrito e incógnitas. |
+| `wiring` | Una lista explícita genera SVG, tabla numerada y `pins.generated.json`; los datos eléctricos desconocidos quedan pendientes. |
+| `acceptance` | Lista práctica de comportamiento con estado sin ejecutar, aprobado, fallido o pendiente; aprobar/fallar exige evidencia aportada. |
+| `diagnostics` | Resume de forma limitada solo los registros e informes existentes autorizados, sin acceder a dispositivos ni ejecutar texto de los registros. |
+| `package` | Crea un ZIP local solo con los archivos elegidos, hashes y vínculo a proyecto/versión; rechaza entradas obsoletas, ausentes o privadas reconocibles. |
+
+El agente de código reutiliza las cachés y las interfaces actuales. La autorización para hardware, carrito, instalaciones y publicación sigue en manos del agente principal. Por defecto hay como máximo dos agentes secundarios, con un solo escritor por ámbito de archivos. Un modelo ligero puede hacer tareas simples por lotes solo si la plataforma ofrece esa selección real; en otro caso se hereda el modelo disponible sin afirmar lo contrario. Sin agentes secundarios, el principal continúa con resúmenes breves de las herramientas.
+
+Consulta el [contrato y los límites](../skills/build-with-ai-mcu/references/project-tools.md) y el [ejemplo ficticio ejecutable](../skills/build-with-ai-mcu/assets/project-example/mcu-project.json). La IA debe comparar el C/C++ real con los pines y revisar la imagen. Un diagrama lógico o una prueba en el equipo no demuestra éxito eléctrico o físico. La detección de secretos es incompleta: aún hay que revisar el contenido elegido. Crear un ZIP local no autoriza publicarlo.
+
 ## Un proyecto real: STMGames V1
 
 Una consola STM32 con OLED y carcasa amarilla impresa, creada tras **muchas rondas de conversación, montaje y revisión**. Su creador realizó el modelado 3D y el trabajo físico; **GPT-6.1 Sol completó todo el código de aplicación**, conservando los créditos de terceros. No fue una generación de un solo intento ni un resultado de CAD automático.
