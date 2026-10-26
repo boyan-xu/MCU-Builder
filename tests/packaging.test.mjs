@@ -21,7 +21,7 @@ test('Markdown references stay inside each standalone skill package and exist', 
   function visit(dir) {
     return readdirSync(dir, {withFileTypes:true}).flatMap(entry => entry.isDirectory() ? visit(join(dir, entry.name)) : [join(dir,entry.name)]);
   }
-  for (const name of [...names, ...toolNames]) {
+  for (const name of [...names, ...toolNames, 'select-products-to-cart']) {
     const base=resolve(root,name);
     assert.ok(existsSync(join(base,'SKILL.md')),name);
     assert.ok(existsSync(join(base,'agents/openai.yaml')),name);

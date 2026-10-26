@@ -95,3 +95,54 @@ test('invalid quantities, prices and duplicate ids are rejected', () => {
   d.parts[1].unitPrice = 3; d.parts[1].id = 'board';
   assert.throws(() => app.validateChecklist(d));
 });
+
+test('cart request only includes missing parts and explicitly stops before checkout', () => {
+  const d = data(), s = app.restoreChecklist(d, null);
+  s.site = 'https://shop.example.org'; s.region = 'Spain';
+  const request = app.cartRequest(d, s);
+  assert.match(request, /\$select-products-to-cart/);
+  assert.match(request, /Door switch/); assert.doesNotMatch(request, /Existing board/);
+  assert.match(request, /shop\.example\.org/); assert.match(request, /Spain/);
+  assert.match(request, /Do not check out/); assert.match(request, /unrelated/);
+});
+
+test('shopping site survives checklist reload and is not inferred from language', () => {
+  const d = data(), s = app.restoreChecklist(d, null);
+  assert.equal(s.site, ''); s.site = 'My selected shop';
+  assert.equal(app.restoreChecklist(d, JSON.parse(JSON.stringify(s))).site, s.site);
+  d.projectId = 'another'; assert.equal(app.restoreChecklist(d, s).site, '');
+});
+
+test('localized cart requests ask for missing site and do not request empty carts', () => {
+  const d = data(); d.language = 'zh';
+  const s = app.restoreChecklist(d, null);
+  assert.match(app.cartRequest(d, s), /网站/); assert.match(app.cartRequest(d, s), /不下单/);
+  assert.match(app.cartRequest(d, s), /请用中文回复。$/);
+  d.language = 'es'; assert.match(app.cartRequest(d, s), /carrito/);
+  s.rows.switch.ready = true; assert.doesNotMatch(app.cartRequest(d, s), /\$select-products-to-cart/);
+});
+
+test('a declined or already accepted cart offer stays off until an explicit new choice', () => {
+  const d = data(); d.offerCart = false;
+  const s = app.restoreChecklist(d, null);
+  assert.equal(app.cartRequest(d, s), '');
+  delete d.offerCart;
+  assert.equal(app.restoreChecklist(d, JSON.parse(JSON.stringify(s))).offerCart, false);
+  d.offerCart = true; d.cartOfferId='explicit-renewal-2';
+  const renewed=app.restoreChecklist(d,s);
+  assert.equal(renewed.offerCart,true);
+  renewed.offerCart=false;
+  assert.equal(app.restoreChecklist(d,JSON.parse(JSON.stringify(renewed))).offerCart,false);
+  d.offerCart = 'yes'; assert.throws(() => app.validateChecklist(d));
+});
+
+test('partial physical stock is represented separately from the quantity still to buy', () => {
+  const d = data();
+  d.parts = [
+    {id:'stock',name:'Available switches',specification:'Same switch',quantity:3,purpose:'Use stock',owned:true},
+    {id:'gap',name:'Missing switches',specification:'Same switch',quantity:2,purpose:'Complete five total',owned:false}
+  ];
+  const request=app.cartRequest(d,app.restoreChecklist(d,null));
+  assert.match(request,/Missing switches \| Same switch \| 2/);
+  assert.doesNotMatch(request,/Available switches/);
+});
