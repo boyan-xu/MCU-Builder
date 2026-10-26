@@ -1,4 +1,4 @@
 interface:
-  display_name: "Test MCU Code in the Background"
+  display_name: "MCU Builder — Test MCU Code in the Background"
   short_description: "Run focused MCU checks with cached tools"
   default_prompt: "Use $test-mcu-in-background to run useful checks on my code with the bundled runner, reusing my project tools and cached environment."
