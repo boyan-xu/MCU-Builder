@@ -28,8 +28,9 @@ The collection includes Snake, Tetris, Space Invaders, Dino, 2048, Minesweeper, 
 | [Develop with AI MCU](skills/develop-with-ai-mcu/SKILL.md) | Collaborate on a new product or continue an existing project | You or AI; change the choice when needed |
 | [Background MCU checks](skills/test-mcu-in-background/SKILL.md) | Reuse bundled scripts and a cached runtime to test code | AI prepares and runs focused checks |
 | [Firmware flashing](skills/flash-mcu-firmware/SKILL.md) | Reuse installed flashing tools through a bundled runner | AI checks the target and handles authorized uploads |
+| [Choose products and fill a cart](skills/select-products-to-cart/SKILL.md) | Compare verified products on your chosen website and add missing quantities | AI researches and adds to cart; never orders |
 
-Each entry works on its own. The two product entries adapt to your actual experience and preferred way of working. A clear request skips unrelated intake; no level test determines what you are allowed to create. The repository address, folders and `$build-with-ai-mcu` / `$develop-with-ai-mcu` calls remain compatible. `$test-mcu-in-background` and `$flash-mcu-firmware` add executable tools for direct use.
+All five entries work independently. The two product entries adapt to your experience and preferred way of working. A clear request skips unrelated intake; no level test determines what you are allowed to create. Existing calls remain compatible. The three tool entries provide reusable background checks, flashing and product selection without forcing companion installations.
 
 ## From idea to product
 
@@ -60,7 +61,9 @@ Download with **Code → Download ZIP** or clone:
 git clone https://github.com/boyan-xu/build-with-ai-mcu.git
 ```
 
-Copy any complete Skill folders you need from `skills/` into your tool's supported skills directory. The product entries are `build-with-ai-mcu` and `develop-with-ai-mcu`; the executable tools are `test-mcu-in-background` and `flash-mcu-firmware`. For Codex, use `$CODEX_HOME/skills` when set, otherwise `~/.codex/skills`. Check an existing same-name skill before replacing it; refresh discovery or start a new session if needed. Each entry carries its own resources and one instruction set for all three languages. Available tools vary by platform.
+Copy any complete Skill folders you need from `skills/` into your tool's supported skills directory. The product entries are `build-with-ai-mcu` and `develop-with-ai-mcu`; the tool entries are `test-mcu-in-background`, `flash-mcu-firmware` and `select-products-to-cart`. For Codex, use `$CODEX_HOME/skills` when set, otherwise `~/.codex/skills`. Check an existing same-name skill before replacing it; refresh discovery or start a new session if needed. Each entry carries its own resources and one instruction set for all three languages. Available tools vary by platform.
+
+`select-products-to-cart` is also independently installable. After the parts list, AI offers once to choose missing items and add them to a cart on your selected site. You can keep asking for links only. The panel's separate cart button sends that explicit request; it never contacts a store itself.
 
 ```text
 Use $build-with-ai-mcu. Make a reminder that sounds when my door stays open
@@ -77,6 +80,8 @@ choose the next small implementation step.
 No idea yet? Ask for five suitable possibilities. Already have parts or a partly working product? Start there. A milestone should lead toward your own goal, not replace it with an unrelated exercise.
 
 ## Included tools and evidence
+
+- **Product selection without ordering:** [the shopping Skill](skills/select-products-to-cart/SKILL.md) combines browser evidence with a [standard-library comparison script](skills/select-products-to-cart/references/workflow.md). AI checks exact variants, pack quantities, delivery and listed price plus shipping, then tops up only matching missing quantities in the current cart. It preserves unrelated goods and stops before checkout, orders, payment or subscriptions. Missing shipping/specification evidence is held for review; the choice is among compared candidates, not a claim of the cheapest price everywhere. Login and website support can limit automation. Development checks use a local fictional shop, not real shopping accounts.
 
 - **Reusable executable tools:** the [background test runner](skills/test-mcu-in-background/references/workflow.md) reuses existing software commands or compiles and runs Cortex-M C checks, with optional OLED framebuffer images. The [flash runner](skills/flash-mcu-firmware/references/workflow.md) defaults to an offline preview and uses existing STM32, ESP or Arduino tools for authorized writes. AI prepares the small project config; users need not edit scripts or JSON. Python 3.10+ is required. ARM dependencies are prepared once in a private cache and reused; a compiler and compatible flash backend must already be available or be installed as an explained separate step. The runners do not emulate every peripheral or promise support for arbitrary boards without adaptation.
 
