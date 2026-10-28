@@ -4,7 +4,9 @@
 
 **Bring an idea. Make something you can use.**
 
-Describe the product you want. AI helps with requirements, design, parts, firmware, useful checks, setup and debugging using tools it can actually access. Start with your existing hardware and software. You need not take a programming course or manage code to begin; you can also choose to write the code yourself. A clear goal skips unrelated intake, and experience does not set an artificial complexity ceiling.
+Describe the product you want. AI owns design and technical progress using tools it can actually access; you do necessary physical actions and confirm the result. It chooses one practical plan using existing hardware and software first. New parts favor easy assembly, such as pre-soldered modules and ready connectors, balanced against function, reliability and cost. You need not take a course or manage code; you can also choose to write it. A clear goal skips unrelated intake, and experience does not set an artificial complexity ceiling.
+
+While parts ship, AI prepares code, builds, draft wiring, flash settings and useful checks. Draft wiring stays provisional until the real variant, pins and power are checked. AI then gives short physical steps with expected results, reads available logs directly and owns debugging to the agreed behavior. It keeps a compact project note for resuming and checks affected files and evidence when parts or functions change. Missing tools or agents leave only the dependent work pending. Payment, local prompts, plugging or soldering may still need you; the design aims to reduce that work.
 
 ## Choose an entry
 
@@ -47,6 +49,7 @@ Both product entries carry the identical standalone standard-library `scripts/mc
 
 | Helper command | Result |
 | --- | --- |
+| `status` | Read-only resume view: current version/hashes, supplied notes, tracked Git changes and historical report references. |
 | `validate` / `export --for test\|flash\|shopping` | Stage checks and compatible existing runner inputs; shopping subtracts owned physical stock. |
 | `parts` | Numbered exact parts/search text and one-offer/site-reuse state. |
 | `wiring` | Matching SVG, per-wire text and pin bindings from one explicit connection list. |
@@ -56,9 +59,13 @@ Both product entries carry the identical standalone standard-library `scripts/mc
 
 [Project tool contract](skills/build-with-ai-mcu/references/project-tools.md) · [Final replication contract](skills/build-with-ai-mcu/references/replication.md) · [Fictional draft example](skills/build-with-ai-mcu/assets/project-example/mcu-project.json).
 
+Resume from short `status` or existing project notes, then read relevant source/callers and evidence as needed. Routine test/flash calls can use optional `--summary`: current status, process counts, known hashes, error excerpt and exact full report/log paths, with full saved evidence and original default output/exit codes preserved. Expand on failures, stale evidence or missing detail; an excerpt is not a diagnosis, and old reports never become fresh passes. Changed files guide navigation without excluding unchanged callers or hardware references. Status uses existing optional data only, writes nothing and scans no arbitrary notes. Its bounded Git view omits untracked files; missing Git/context remains unavailable. Keep private outputs local.
+
+Reuse the persistent capable coding child with brief goals, acceptance, paths and current rights; return outcomes, evidence paths and open decisions. Select a light model only for suitable standard tasks when one is actually available. Reuse existing tool fingerprints/runtime checks instead of new setup; re-probe changed paths, versions or failed imports, while still verifying actual parts, supply, target and authority for each action. No new platform, registry, installation or context-mode dependency is required. These changes reduce repeated output/reads; real token savings and model quality are unmeasured. Flash preview's original output is already short, so summary may add bytes while adding evidence.
+
 ## PCB when requested
 
-The main AI prepares `pcb-brief.json` from checked exact parts, nets/pins, supply, footprint sources, outline dimensions/shape/units, connectors, holes, keepouts and fabrication constraints. It asks only blocking facts. The persistent PCB child does actual schematic, placement and routing in your existing usable EDA software, separately from firmware work. No usable software connection or no agents means an honest brief/draft fallback, never a finished PCB claim or forced install.
+The main AI prepares `pcb-brief.json` from checked exact parts, nets/pins, supply, footprint sources, outline dimensions/shape/units, connectors, holes, keepouts and fabrication constraints. It asks only blocking facts. The persistent PCB child does actual schematic, placement and routing in your existing usable EDA software, separately from firmware work; without agents, the main AI does the work. No usable software connection means an honest brief/draft fallback, never a finished PCB claim or forced install.
 
 Checks cover schematic/ERC, actual part-to-footprint pad/polarity mapping, layout/routing/DRC and virtual part/3D assembly clearance, orientation, dimensions and connector access. Missing models remain unknown. Circuit simulation is selective when useful models exist. Keep each proof type separate; there is no zero-error guarantee.
 
@@ -89,3 +96,5 @@ The [UNO low-voltage example](skills/build-with-ai-mcu/references/uno-led/README
 ## Check the source and license
 
 Run `python -B -m unittest discover -s tests -p "*_test.py"` and `node --test tests/*.test.mjs`. Tests use local fictional targets/vendor processes, not real hardware/shopping accounts. Validate each Skill with the skill-creator validator. [MIT license](LICENSE) covers original code/Skills; third-party files keep their own terms. Each user chooses whether to publish their project.
+
+For instruction changes, also walk through realistic next actions: a one-sentence idea; clear needs with owned hardware; parts shipping; no agents or a missing tool; a next-day resume; a replacement part; a physical fault; and a final package with an essential fact missing. Check useful progress, honest evidence and the right stopping point. Preserve own-code mode, optional REA/publication and cart/flash rights. File checks alone do not prove this behavior.
