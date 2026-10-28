@@ -85,6 +85,33 @@ def write_json(path, value):
             temporary.unlink(missing_ok=True)
 
 
+def result_summary(result, report=None):
+    """A view of this invocation, never a replacement for its saved evidence."""
+    runs = ([result['build']] if isinstance(result.get('build'), dict) else []) + result.get('runs', [])
+    completed = [run for run in runs if not run.get('timed_out') and run.get('returncode') is not None]
+    summary = {key: result[key] for key in ('status', 'layer', 'hardware_accessed', 'physical_behavior',
+               'config_sha256', 'configuration_sha256', 'compiler_target', 'esptool_major') if key in result}
+    summary.update(evidence_scope='current-invocation-only', report=str(report) if report else None,
+                   processes={'recorded': len(runs), 'completed': len(completed),
+                              'succeeded': sum(run['returncode'] == 0 for run in completed),
+                              'failed': sum(run['returncode'] != 0 for run in completed),
+                              'timed_out': sum(bool(run.get('timed_out')) for run in runs)},
+                   logs=[run['log'] for run in runs if run.get('log')])
+    for key in ('tested_files', 'images'):
+        value = result.get(key)
+        if value is not None:
+            encoded = json.dumps(value, sort_keys=True, ensure_ascii=True).encode('utf-8')
+            summary[key] = {'count': len(value), 'manifest_sha256': hashlib.sha256(encoded).hexdigest()}
+    if result.get('elf'):
+        summary['elf_sha256'] = result['elf']['sha256']
+    failed = next((run for run in reversed(runs) if run.get('timed_out') or run.get('returncode') != 0), None)
+    excerpt = result.get('error') or (failed or {}).get('tail')
+    if excerpt:
+        summary['excerpt'] = str(excerpt)[-600:]
+    summary['detail'] = 'Process counts are not test-case counts. Read the full report/logs for coverage, context and errors outside this excerpt.'
+    return summary
+
+
 def _read_json(path):
     try:
         data = json.loads(Path(path).read_text(encoding='utf-8'))

@@ -6,7 +6,7 @@ from pathlib import Path
 import re
 import sys
 
-from mcu_common import UserError, cache_root, find_tool, load_config, run_process, sha256_file, write_json
+from mcu_common import UserError, cache_root, find_tool, load_config, result_summary, run_process, sha256_file, write_json
 
 
 def number(value, name, minimum=0):
@@ -231,6 +231,7 @@ def main(argv=None):
     parser.add_argument('config', type=Path)
     parser.add_argument('--cache-dir', type=Path)
     parser.add_argument('--output', type=Path)
+    parser.add_argument('--summary', action='store_true', help='emit compact current results; keep the full report and logs')
     parser.add_argument('--execute', action='store_true')
     parser.add_argument('--authorized', action='store_true', help='Caller has applicable authorization for this exact target and overwrite scope')
     args = parser.parse_args(argv)
@@ -244,6 +245,8 @@ def main(argv=None):
             raise UserError('Result output must be a JSON file distinct from the input configuration')
         if args.execute and not args.authorized:
             raise UserError('Execution requires --authorized for the already reviewed exact target; preview needs neither flag')
+        if args.summary:
+            result['configuration_sha256'] = sha256_file(args.config)
         cache = cache_root(args.cache_dir)
         build = config.get('build')
         if build is not None:
@@ -267,13 +270,21 @@ def main(argv=None):
             write_json(output, result)
             execute(config, root, cache, result, output)
         write_json(output, result)
-        print(json.dumps({'status': result['status'], 'result': str(output), 'hardware_accessed': result['hardware_accessed']}))
+        print(json.dumps(result_summary(result, output) if args.summary else
+                         {'status': result['status'], 'result': str(output), 'hardware_accessed': result['hardware_accessed']}))
         return 0
     except (UserError, OSError, ValueError) as error:
         result.update(status='error', error=str(error))
         if output:
-            write_json(output, result)
-        print(json.dumps(result), file=sys.stderr)
+            if args.summary:
+                try:
+                    write_json(output, result)
+                except (UserError, OSError) as save_error:
+                    result['error'] += '; ' + str(save_error)
+                    output = None
+            else:
+                write_json(output, result)
+        print(json.dumps(result_summary(result, output) if args.summary else result), file=sys.stderr)
         return 2
 
 
