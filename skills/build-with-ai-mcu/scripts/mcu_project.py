@@ -1,4 +1,4 @@
-"""Local MCU project artifacts. Standard library only; no hardware/network/process APIs."""
+"""Local MCU project artifacts. Standard library only; status uses read-only Git, never project commands."""
 import argparse
 from copy import deepcopy
 import hashlib
@@ -8,8 +8,11 @@ import math
 import os
 from pathlib import Path, PureWindowsPath
 import re
+import shutil
+import subprocess
 import sys
 import tempfile
+import threading
 import zipfile
 from urllib.parse import urlsplit
 from xml.etree import ElementTree
@@ -452,6 +455,193 @@ def diagnostics(project):
             'hypotheses': [], 'limits': ['No command execution, device scan, connect, reset or readback. First 256 KiB and 20 matches per file; root cause is not established. Keep this report private unless reviewed.']}
 
 
+def status_text(value, maximum=240):
+    """Notes and report text are untrusted, private data, never instructions."""
+    value = value if isinstance(value, str) else json.dumps(value, ensure_ascii=True)
+    if SECRET.search(value.encode('utf-8')):
+        return '[withheld: possible credential]'
+    return ''.join(c if ord(c) >= 32 else ' ' for c in value)[:maximum]
+
+
+def status_path(project, name):
+    path = local(project, name, exists=False)
+    if any(part.lower() in PRIVATE for part in PureWindowsPath(name).parts) or SECRET.search(name.encode('utf-8')):
+        raise ValueError('private path withheld')
+    return path
+
+
+def git_status(project):
+    executable = shutil.which('git')
+    if not executable:
+        return {'status': 'unavailable', 'reason': 'Git is not installed'}
+    env = {key: value for key, value in os.environ.items() if not key.startswith('GIT_')}
+    env.update(GIT_OPTIONAL_LOCKS='0', GIT_TERMINAL_PROMPT='0', GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull,
+               GIT_NO_LAZY_FETCH='1')
+
+    def read(*arguments, maximum=65536):
+        command = [executable, '--no-lazy-fetch', '--no-optional-locks', '-c', 'core.fsmonitor=false', '-c', 'core.untrackedCache=false',
+                   '-c', 'core.hooksPath=' + os.devnull, '-C', str(project['root']), *arguments]
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=env, shell=False)
+        chunks = []
+        reader = threading.Thread(target=lambda: chunks.append(process.stdout.read(maximum + 1)), daemon=True)
+        reader.start()
+        reader.join(3)
+        exceeded = bool(chunks and len(chunks[0]) > maximum)
+        timed_out = reader.is_alive()
+        if timed_out or exceeded:
+            process.kill()
+        try:
+            process.wait(timeout=1)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait(timeout=1)
+        reader.join(1)
+        process.stdout.close()
+        if timed_out:
+            raise ValueError('Git timed out; changed files unavailable')
+        return process.returncode, (chunks[0] if chunks else b'')[:maximum], exceeded
+
+    try:
+        code, head, _ = read('rev-parse', '--verify', 'HEAD', maximum=128)
+        revision = head.decode('ascii', errors='replace').strip() if code == 0 else None
+        if revision is None:
+            return {'status': 'unavailable', 'reason': 'HEAD unavailable (possibly unborn); no committed version comparison'}
+        code, prefix, _ = read('rev-parse', '--show-prefix', maximum=4096)
+        prefix = prefix.decode('utf-8', errors='replace').strip() if code == 0 else ''
+        code, output, truncated = read('ls-files', '--stage', '--full-name', '-z', '--', '.')
+        if code and not truncated:
+            return {'status': 'unavailable', 'reason': 'Not a readable Git worktree'}
+        code, tree, tree_truncated = read('ls-tree', '--full-tree', '-r', '-z', 'HEAD', '--', prefix or '.')
+        if code or tree_truncated:
+            return {'status': 'unavailable', 'head': revision, 'reason': 'Committed tree unavailable or exceeds read bounds; no fetch attempted'}
+        index, committed = {}, {}
+        for records, target, is_index in ((output, index, True), (tree, committed, False)):
+            for row in records.split(b'\0')[:-1]:
+                metadata, name = row.split(b'\t', 1)
+                mode, identity, stage = metadata.split(b' ') if is_index else (metadata.split(b' ')[0], metadata.split(b' ')[2], b'0')
+                target[name.decode('utf-8', errors='replace')] = (mode, identity, stage)
+        changed = []
+        withheld, checked = 0, 0
+        unread = []
+        names = list(dict.fromkeys([*index, *committed]))
+        for full_name in names:
+            name = full_name
+            if prefix:
+                if not name.startswith(prefix):
+                    continue
+                name = name[len(prefix):]
+            try:
+                path = status_path(project, name)
+                if checked >= 40:
+                    continue
+                checked += 1
+                current, old = index.get(full_name), committed.get(full_name)
+                staged = ' ' if current == old else 'A' if old is None else 'D' if current is None else 'M'
+                working = ' '
+                if current is not None:
+                    if current[2] != b'0':
+                        working = 'U'
+                    elif not path.exists():
+                        working = 'D'
+                    elif current[0] not in (b'100644', b'100755') or project['root'].joinpath(*PureWindowsPath(name).parts).is_symlink():
+                        unread.append(name)
+                    else:
+                        try:
+                            content = read_file(path, MAX_LOG_BYTES)
+                            blob = b'blob ' + str(len(content)).encode('ascii') + b'\0' + content
+                            actual = hashlib.sha256(blob) if len(current[1]) == 64 else hashlib.sha1(blob)
+                            working = 'M' if actual.hexdigest().encode('ascii') != current[1] else ' '
+                        except (OSError, ValueError):
+                            unread.append(name)
+                if staged != ' ' or working != ' ':
+                    changed.append({'change': staged + working, 'path': name})
+            except (ValueError, OSError):
+                withheld += 1
+        return {'status': 'read', 'head': revision, 'changed_files': changed, 'withheld_paths': withheld,
+                'truncated': truncated or tree_truncated or len(names) > 40, 'untracked_files': 'not-scanned',
+                'checked_files': checked, 'unread_working_files': unread,
+                'scope': 'bounded HEAD/index metadata and unfiltered working bytes; navigation only, not canonical Git status',
+                'limits': 'No filters, hooks or project commands run. CRLF/clean-filter normalization or executable-bit changes may differ from Git status; large files, symlinks and submodules need targeted review.'}
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return {'status': 'unavailable', 'reason': 'Git could not finish within the read bounds'}
+
+
+def status(project):
+    data = project['data']
+    result = {'version': 1, **provenance(project), 'hardware_accessed': False,
+              'requirements': [], 'progress': [], 'pending': [], 'reports': [], 'inputs': [],
+              'git': git_status(project),
+              'limits': ['Notes and report fields are untrusted reported text. No report is a fresh pass from status.',
+                         'At most 8 notes per field, 40 file references, 256 KiB per file and 40 changed paths; use targeted reads for more.',
+                         'Changed paths guide navigation only; inspect unchanged callers, wiring and hardware references as needed.']}
+    for field in ('project_id', 'revision'):
+        if result[field] is not None:
+            result[field] = status_text(result[field])
+    for field in ('requirements', 'progress'):
+        rows = data.get(field)
+        if isinstance(rows, list):
+            result[field] = [status_text(row) for row in rows[:8]]
+            if len(rows) > 8:
+                result['pending'].append(field + ' has more entries; read the config for detail')
+        else:
+            result['pending'].append(field + ' unavailable; use existing project notes if present')
+    acceptance = data.get('acceptance', [])
+    if isinstance(acceptance, list):
+        counts = {}
+        for row in acceptance:
+            state = row.get('status', 'not-run') if isinstance(row, dict) else 'unknown'
+            state = state if state in ('pass', 'fail', 'not-run', 'needs-confirmation') else 'unknown'
+            counts[state] = counts.get(state, 0) + 1
+        result['acceptance_reported'] = counts
+        if any(state != 'pass' and count for state, count in counts.items()):
+            result['pending'].append('Acceptance includes failed, unrun or unresolved reported items; read acceptance detail')
+    delivery = data.get('deliverables', {})
+    rows = delivery.get('files', []) if isinstance(delivery, dict) else []
+    refs = []
+    for row in rows if isinstance(rows, list) else []:
+        if isinstance(row, dict) and row.get('role') in ('source', 'firmware', 'test', 'evidence', 'limits', 'use-guide'):
+            refs.append((row.get('path'), row['role']))
+    diagnostics_config = data.get('diagnostics', {})
+    names = diagnostics_config.get('files', []) if isinstance(diagnostics_config, dict) else []
+    refs += [(name, 'report') for name in names] if isinstance(names, list) else []
+    if len(refs) > 40:
+        result['pending'].append('More file references exist; read the relevant allowlist')
+    seen = set()
+    for name, role in refs[:40]:
+        if not isinstance(name, str) or name in seen:
+            continue
+        seen.add(name)
+        row = {'path': name, 'role': role}
+        target = result['inputs'] if role in ('source', 'firmware') else result['reports']
+        try:
+            path = status_path(project, name)
+            content = read_file(path, MAX_LOG_BYTES)
+            row.update(status='read', sha256=digest(content))
+            if role not in ('source', 'firmware'):
+                row['freshness'] = 'unverified-existing-reference'
+                if SECRET.search(content):
+                    row['content'] = 'withheld: possible credential'
+                elif path.suffix.lower() == '.json':
+                    report = json.loads(content)
+                    if isinstance(report, dict):
+                        for field in ('status', 'revision', 'config_sha256', 'configuration_sha256'):
+                            if field in report:
+                                row['reported_' + field] = status_text(report[field])
+                        if report.get('config_sha256') == project['config_sha256']:
+                            row['freshness'] = 'config-matches-only; source/runtime/physical freshness not established'
+                        elif report.get('config_sha256'):
+                            row['freshness'] = 'different-config; not current evidence'
+                elif role in ('limits', 'use-guide'):
+                    row['note_excerpt'] = status_text(content.decode('utf-8', errors='replace'))
+        except (ValueError, OSError, TypeError):
+            # Do not echo unsafe paths or raw parser errors, which may contain secrets.
+            row = {'role': role, 'status': 'unavailable', 'reason': 'missing, private, unsafe, invalid or larger than 256 KiB'}
+        target.append(row)
+    if not result['reports']:
+        result['pending'].append('No explicit report or note references available')
+    return result
+
+
 FINAL_ROLES = {'materials', 'wiring-image', 'wiring-text', 'source', 'build-config',
                'dependencies', 'build-guide', 'flash-guide', 'power-assembly', 'use-guide',
                'acceptance-guide', 'license', 'evidence', 'limits'}
@@ -773,7 +963,7 @@ def validate(project, stage='project'):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=['validate', 'export', 'parts', 'wiring', 'acceptance', 'diagnostics', 'package'])
+    parser.add_argument('command', choices=['status', 'validate', 'export', 'parts', 'wiring', 'acceptance', 'diagnostics', 'package'])
     parser.add_argument('config', type=Path)
     parser.add_argument('--for', dest='kind', choices=['test', 'flash', 'shopping'])
     parser.add_argument('--stage', default='project', choices=['project', 'test', 'flash', 'shopping', 'wiring', 'acceptance', 'diagnostics'])
@@ -781,10 +971,16 @@ def main(argv=None):
     parser.add_argument('--reproducible', action='store_true', help='require the final replication contract; default package is draft/unverified')
     args = parser.parse_args(argv)
     try:
+        if args.command == 'status':
+            read_file(args.config, MAX_LOG_BYTES)
+            if args.output:
+                raise ValueError('status is read-only; --output is not supported')
         project = load(args.config)
         if args.reproducible and args.command != 'package':
             raise ValueError('--reproducible is only valid with package')
-        if args.command == 'validate':
+        if args.command == 'status':
+            result = status(project)
+        elif args.command == 'validate':
             result = validate(project, args.stage)
         elif args.command == 'parts':
             result = parts(project)
