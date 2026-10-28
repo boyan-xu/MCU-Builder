@@ -417,15 +417,25 @@ class PcbBriefTests(unittest.TestCase):
         self.data['parts'][0].update(footprint='Fixture:J1', footprint_source='https://example.org/fictional-drawing')
         return self.data
 
-    def test_no_software_or_agents_is_draft_never_finished(self):
+    def test_no_software_is_draft_never_finished(self):
         result = self.tool.check(self.data, self.root)
         self.assertEqual(result['status'], 'draft')
         self.assertFalse(result['finished_pcb'])
-        for field in ('software', 'agents'):
+        self.ready()
+        self.data['software']['connection_usable'] = False
+        self.assertEqual(self.tool.check(self.data, self.root)['status'], 'draft')
+
+    def test_main_agent_can_use_checked_brief_without_children(self):
+        for agents in (False, None):
             self.ready()
-            if field == 'software': self.data[field]['connection_usable'] = False
-            else: self.data['agents_available'] = False
-            self.assertEqual(self.tool.check(self.data, self.root)['status'], 'draft')
+            if agents is None:
+                self.data.pop('agents_available')
+            else:
+                self.data['agents_available'] = agents
+            result = self.tool.check(self.data, self.root)
+            self.assertEqual(result['status'], 'ready-for-eda')
+            self.assertFalse(result['finished_pcb'])
+            self.assertEqual(result['checks'], [])
 
     def test_existing_software_and_checked_brief_only_enable_eda_work(self):
         result = self.tool.check(self.ready(), self.root)

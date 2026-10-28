@@ -25,7 +25,7 @@ def main():
         config = project / 'mcu-project.json'
         script = package / 'scripts/mcu_project.py'
         commands = [
-            ['validate'], ['validate', '--stage', 'wiring'],
+            ['status'], ['validate'], ['validate', '--stage', 'wiring'],
             ['export', '--for', 'test', '--output', str(project / 'test-config.json')],
             ['export', '--for', 'flash', '--output', str(project / 'flash-config.json')],
             ['export', '--for', 'shopping', '--output', str(project / 'shopping-config.json')],

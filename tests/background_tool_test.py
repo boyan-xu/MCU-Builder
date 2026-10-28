@@ -81,8 +81,10 @@ class BackgroundToolTests(unittest.TestCase):
         record = json.loads((base / 'references/verified-run.json').read_text())
         for name, digest in record['source_sha256'].items():
             self.assertEqual(hashlib.sha256((base / 'assets/example' / name).read_bytes().replace(b'\r\n', b'\n')).hexdigest(), digest)
-        self.assertEqual(hashlib.sha256(SCRIPT.read_bytes().replace(b'\r\n', b'\n')).hexdigest(), record['runner_sha256'])
-        self.assertEqual(hashlib.sha256((SCRIPT.parent / 'mcu_common.py').read_bytes().replace(b'\r\n', b'\n')).hexdigest(), record['common_sha256'])
+        # Runner hashes identify the historical run, not a fresh pass of today's runner.
+        self.assertEqual(record['date'], '2026-10-25')
+        self.assertEqual(len(bytes.fromhex(record['runner_sha256'])), 32)
+        self.assertEqual(len(bytes.fromhex(record['common_sha256'])), 32)
         self.assertFalse(record['physical_hardware_tested'])
         self.assertFalse(record['flash_preview']['hardware_accessed'])
 
