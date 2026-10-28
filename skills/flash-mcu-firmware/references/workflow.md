@@ -6,10 +6,13 @@ AI prepares configuration once, after reading the real project. Copy and adapt [
 
 ```sh
 python scripts/mcu_flash.py /path/to/project/mcu-flash.json
+python scripts/mcu_flash.py /path/to/project/mcu-flash.json --summary
 python scripts/mcu_flash.py /path/to/project/mcu-flash.json --execute --authorized
 ```
 
 Use the installed Skill script's absolute path when invoking it outside its folder. `--cache-dir` overrides the normal user cache; `--output` chooses the result JSON, otherwise `.mcu-results/flash-result.json` is written under the project. Logs and bounded-range backups are kept beside the result. A fresh timestamp prevents replacing an earlier backup. Backups stay local; they may contain private firmware or data.
+
+Optional `--summary` adds current known configuration/firmware hash evidence, process counts, exact full JSON/log paths and a bounded error excerpt. Counts are recorded processes, not acceptance tests. Full reports/logs remain available; read targeted detail when an excerpt misses a key line. Default output/exit codes are unchanged; successful preview output was already tiny, so summary may be larger while adding evidence. Preview is not execution or verification. Missing tools, build failures and timeouts never become a pass, and an unwritable summary error report is null rather than an old report path. Tool cache fingerprints still recheck moved/changed executables; reuse them, while checking actual target, supply and authority for each physical action.
 
 ## Backends and project fields
 
