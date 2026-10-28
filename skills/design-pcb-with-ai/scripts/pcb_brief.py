@@ -17,8 +17,6 @@ def check(data, root):
     software = data.get('software', {})
     if software.get('connection_usable') is not True:
         blockers.append('No verified usable EDA connection')
-    if data.get('agents_available') is not True:
-        blockers.append('No persistent PCB child available')
     supply = data.get('supply', {})
     outline = data.get('outline', {})
     for name, value in [('supply voltage', supply.get('voltage_v')), ('current limit', supply.get('current_limit_ma')),
