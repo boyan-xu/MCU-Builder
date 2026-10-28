@@ -10,7 +10,7 @@ import time
 import zlib
 
 from mcu_common import (UserError, cache_root, find_tool, load_config, run_process,
-                        runtime_env, runtime_python, sha256_file, write_json)
+                        result_summary, runtime_env, runtime_python, sha256_file, write_json)
 
 
 def strings(value, label):
@@ -218,10 +218,13 @@ def main():
     parser.add_argument('config', nargs='?')
     parser.add_argument('--cache-dir')
     parser.add_argument('--output')
+    parser.add_argument('--summary', action='store_true', help='emit compact current results; keep the full report and logs')
     parser.add_argument('--prepare', action='store_true', help='prepare or reuse the isolated ARM runtime')
     parser.add_argument('--module-path', action='append', default=[], help='reuse an existing compatible module directory during --prepare')
     parser.add_argument('--arm-worker', help=argparse.SUPPRESS)
     args = parser.parse_args()
+    output = directory = None
+    result = {'status': 'error'}
     try:
         if args.arm_worker:
             return arm_worker(args.arm_worker)
@@ -247,7 +250,9 @@ def main():
         if isinstance(test.get('harness'), str):
             protected.add((root / test['harness']).resolve())
         if output.suffix.lower() != '.json' or output in protected:
+            output = None
             raise UserError('result output must be a .json file distinct from the configuration and test inputs')
+        result['config_sha256'] = sha256_file(Path(args.config))
         directory = root / '.mcu-results' / ('run-' + str(time.time_ns()))
         directory.mkdir(parents=True, exist_ok=False)
         backend = test.get('backend')
@@ -261,10 +266,24 @@ def main():
         result['cache'] = str(cache)
         result['report'] = str(output)
         write_json(result['report'], result)
-        print(json.dumps(result, ensure_ascii=True))
+        print(json.dumps(result_summary(result, output) if args.summary else result, ensure_ascii=True))
         return 0 if result['status'] == 'passed' else 1
     except (UserError, OSError, ValueError, TypeError, KeyError, ImportError) as error:
-        print(json.dumps({'status': 'error', 'error': str(error)}, ensure_ascii=True))
+        failure = {'status': 'error', 'error': str(error)}
+        if args.summary:
+            result.update(failure)
+            # Discovery/startup errors can occur before a process record is returned.
+            if directory:
+                result['available_logs'] = [str(path) for path in directory.glob('*.log')]
+            if output:
+                try:
+                    write_json(output, result)
+                except (UserError, OSError) as save_error:
+                    result['error'] += '; ' + str(save_error)
+                    output = None
+            failure = result_summary(result, output)
+            failure['logs'] += result.get('available_logs', [])
+        print(json.dumps(failure, ensure_ascii=True))
         return 2
 
 
