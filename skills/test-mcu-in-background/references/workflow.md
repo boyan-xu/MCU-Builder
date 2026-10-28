@@ -7,6 +7,7 @@ Requires Python 3.10 or newer. AI runs these commands and writes the configurati
 ```sh
 python scripts/mcu_test.py --prepare
 python scripts/mcu_test.py /path/to/project/mcu-test.json
+python scripts/mcu_test.py /path/to/project/mcu-test.json --summary
 ```
 
 `--prepare` first reuses compatible dependencies. If unavailable, it prepares a private cached Python environment with **unicorn 2.1.4** and **pyelftools 0.33** from the official Python Package Index. Explain the download before running it. Existing compatible module directories can be registered once with `--prepare --module-path /existing/site-packages`. Later invocations use the cached descriptor; they do not rebuild or download the environment. Missing or changed cached paths produce a clear preparation error. The ordinary `command` backend does not need ARM packages.
@@ -25,7 +26,7 @@ Tool discovery checks explicit `tools` paths, valid machine cache entries, PATH 
 
 The [included example](../assets/example/project.json) exercises [game logic](../assets/example/logic.c) with [its assertions](../assets/example/test_logic.c). Copy the small example to a scratch project, then run its config. `arm-c` requires an installed `arm-none-eabi-gcc` toolchain; this Skill does not silently download a compiler.
 
-A [recorded real background run](verified-run.json) binds the included source and runner versions to successful ARM execution and framebuffer capture. Repeated execution reused the same runtime descriptor without rewriting it; separate return-value and instruction-limit cases failed as expected. The flash result in this record is an offline preview only.
+A [recorded real background run](verified-run.json) binds the included source and historical runner hashes to successful ARM execution and framebuffer capture on its recorded date. It is not a fresh ARM pass of later runner edits. Repeated execution reused the same runtime descriptor without rewriting it; separate return-value and instruction-limit cases failed as expected. The flash result in this record is an offline preview only.
 
 The runner supports explicit compiler targets `cortex-m0`, `cortex-m0plus`, `cortex-m3`, `cortex-m4` and `cortex-m7`, with soft-float Thumb code. This selects compilation, not a claim of exact cycle timing or complete core/peripheral coverage. The entry is `int test_main(void)` by default: zero passes; another value fails. Returning is required. Instruction and wall-clock bounds stop runaway tests.
 
@@ -36,6 +37,8 @@ Default **synthetic** regions are flash at `0x08000000` (256 KiB) and RAM at `0x
 Captures read actual ELF symbols after execution. Each capture has `symbol`, `bytes` and a unique plain `.bin` `output` filename. For an SSD1306 page buffer, add `format="ssd1306"`, `width` and `height`; the runner emits both raw bytes and a PNG. This is a rendering of the tested buffer, not proof that a physical OLED works.
 
 ## Results
+
+Optional `--summary` emits a compact current-invocation view with status, known config/input/build hash evidence, process counts, bounded error excerpt and exact full report/log paths. Counts describe recorded processes, not test cases or tests that never started. The full result and raw logs are preserved; a decisive compiler line may be outside the excerpt or tail, so retrieve targeted regions of the full log when needed. Summary-mode setup errors save a current error report when a safe output is writable, and otherwise give a null report rather than referencing an old pass. Default full output and exit codes are unchanged. `--prepare --summary` retains the already short readiness output; it does not run tests.
 
 Each run stores logs/artifacts under the project's `.mcu-results/run-*` and a current `.mcu-results/test-result.json`. `--output PATH` changes the report location. Keep results local unless publication is requested. Exit 0 means the configured check passed, 1 means failure/timeout, and 2 means configuration, environment or input error. Failures do not become passes when a simulator or dependency is missing. The `command` backend reports that command's exit status; AI still explains what it actually checked.
 
