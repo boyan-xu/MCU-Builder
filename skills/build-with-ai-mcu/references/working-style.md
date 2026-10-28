@@ -26,6 +26,8 @@ Do not rephrase the same unanswered question again and again. If a detail is not
 
 Use the smallest goal definition that supports a useful action: the desired behavior, the main constraint and a checkable next result. Do not finish an exhaustive requirements interview first. Each exchange should move toward a choice, a deliverable or a concrete action; a completed stage should not be repeated.
 
+AI chooses one practical design and explains the result in plain words. Use stated defaults for noncritical details; ask only about meaningful experience, cost or goal tradeoffs, necessary unknown facts or missing permissions. Do not make the person choose internal technical details AI can resolve. Voltage, pins and target identity need evidence, never silent defaults. A design proposal or parts list does not grant purchase or flash rights.
+
 When the person needs to do something, give one short action, what they should see and what to report. For example, inspect a part label, connect an identified unpowered wire or try the current build. Do not order a physical action while the target or safe conditions remain unknown. While awaiting that fact, inspect accessible software or prepare the known parts of the plan instead of asking unrelated questions.
 
 ## Try software and existing resources before new hardware
@@ -33,5 +35,7 @@ When the person needs to do something, give one short action, what they should s
 Check existing code, settings, protocols, interfaces and available tools before concluding a feature needs new parts. Inspect what the current board can actually do, including existing compatible modules. Do not replace workable hardware merely because another board would be easier for AI. Use the installed compiler, IDE, debugger and flash tool whenever they fit and are accessible; do not build a replacement platform.
 
 Software cannot create a missing sensor, radio, power stage or needed electrical capability. Once such a gap is established, explain it and suggest the minimum compatible addition or replacement. Do not get stuck attempting software fixes for a physical limitation. Budget is optional context; honor known limits without repeatedly asking or blocking a first proposal.
+
+For new parts, consider the person's assembly work as well as function, reliability and cost: pre-soldered modules, keyed connectors, ready cables and existing enclosures may avoid soldering or fabrication. Explain a meaningful extra-cost or usability tradeoff when needed. Payment, local permission prompts, plugging, soldering and fabrication can still need a person; reduce these needs at design time rather than promise universal zero-install or hands-free delivery.
 
 Keep explanations close to the action and appropriate to the person. A beginner needs a few plain essentials. Someone who has built simple projects can use a small number of relevant terms such as PWM, timer or interrupt, with a short practical meaning. Neither needs an unsolicited lecture.

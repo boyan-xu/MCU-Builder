@@ -20,6 +20,10 @@ For checks actually run, preserve the tested source/build version, relevant conn
 
 ## Separate electrical review and first operation
 
+While parts are shipping, prepare authorized source, the build environment, model-based wiring drafts, flash settings and applicable checks. Use documented candidate parts for provisional plans; do not claim arrival, actual wiring, flashing or physical success. If a tool is missing, explain that limit, reuse installed alternatives where suitable and continue work that does not need it. Explain needed external acquisition or setup; reuse applicable authorization, asking only when it is missing or the scope changes. A blocked tool does not block independent preparation.
+
+On arrival, check the actual variant, pin labels/orientation, power requirements and needed protection against the plan. Obtain only labels, photos or observations AI cannot access. Resolve differences through the [change-impact check](project-tools.md#keep-enough-state-to-resume). Prepare and inspect the matching wiring image and per-wire instructions before the person starts wiring; a provisional model-based diagram is not proof of the arrived part's pinout.
+
 Simulation success is limited to its models and exercised scenarios. It does not establish zero bugs or prove that hardware cannot be damaged. Digital simulators may have limited analog/power modeling; check provider documentation, such as [Wokwi analog support](https://docs.wokwi.com/chips-api/analog).
 
 Separately verify actual supply voltage/polarity, logic levels, current demand versus board/supply ratings, required resistors/drivers, shared ground and any motor/load stop conditions. Use exact part references, not a simulation animation, for these checks. Keep the user-facing instruction short and specific; AI does the analysis it can perform. Do not ask repeatedly for approval of the same authorized flash operation.
@@ -33,6 +37,10 @@ Explain the coverage gap when it affects the next decision. Continue code, build
 Under authorization for that exact target, allow board-only flash/diagnostic tests with external loads isolated and appropriate initial output states, after target, existing firmware and electrical checks. This necessarily powers the development board; it is an explicit fallback, not a claim that a full connected product has passed simulation. Tell the person what was observed, what remains unknown and the next suitable physical check. Do not silently jump from a board diagnostic to full-power movement or load operation.
 
 ## Report and deliver honestly
+
+Own the debug loop: read accessible build/serial/debug/status reports directly, identify the strongest supported cause and choose a bounded next check. Ask the person only for inaccessible physical actions or observations, with one short action, expected result and useful feedback. Fix and verify affected code/configuration in AI-code mode; in own-code mode give the cause and next coding step. Stop unsafe operation, such as a hot part or uncontrolled movement, before further checks. If evidence stays inconclusive, preserve the result and request the one missing observation; do not cycle through speculative changes or blind retries.
+
+Accept against the original agreed behaviors and their expected results, not merely a build or flash success. AI prepares the checks and captures available evidence; the person confirms physical behavior AI cannot observe. Keep unresolved behaviors pending and state which evidence or action can close them. Update the compact project note before pausing or handing over.
 
 For relevant layers, distinguish build, host-side logic checks, ARM emulation with mocks, MCU simulation, electrical review, flash/readback and physical product behavior. Mark results passed, failed, unavailable or not run with evidence and limits. A skipped or unavailable check is not a pass, and there is no need to present a long empty checklist. A bounded retry may fix a concrete failure; repeated blind simulation or flashing does not add evidence.
 
