@@ -4,7 +4,9 @@
 
 **Trae una idea. Crea algo que puedas usar.**
 
-Describe tu producto. La IA ayuda con requisitos, diseño, piezas, firmware, comprobaciones útiles, configuración y depuración mediante herramientas que realmente puede usar. Aprovecha tu hardware y software actuales. No necesitas hacer un curso ni gestionar código; también puedes elegir escribirlo. Un objetivo claro evita preguntas ajenas y la experiencia no impone un límite artificial de complejidad.
+Describe tu producto. La IA lleva el diseño y el avance técnico con herramientas que realmente puede usar; tú haces las acciones físicas necesarias y confirmas el resultado. Elige un plan práctico aprovechando primero tu hardware y software actuales. Las piezas nuevas favorecen el montaje fácil, como módulos soldados y conectores listos, equilibrando función, fiabilidad y coste. No necesitas un curso ni gestionar código; también puedes elegir escribirlo. Un objetivo claro evita preguntas ajenas y la experiencia no impone un límite artificial de complejidad.
+
+Mientras llegan las piezas, la IA prepara código, compilaciones, borradores de conexiones, ajustes de grabación y pruebas útiles. El cableado es provisional hasta revisar variante, pines y alimentación reales. Después da pasos físicos breves con resultados esperados, lee los registros accesibles y lleva la depuración hasta el comportamiento acordado. Mantiene una nota breve para retomar el proyecto y revisa archivos y evidencia afectados al cambiar piezas o funciones. Si faltan herramientas o agentes, solo queda pendiente el trabajo que depende de ellos. Pagar, aceptar avisos locales, conectar o soldar aún puede requerirte; el diseño busca reducir ese trabajo.
 
 ## Elige una entrada
 
@@ -47,6 +49,7 @@ Ambas entradas de producto incluyen el mismo `scripts/mcu_project.py`, independi
 
 | Comando | Resultado |
 | --- | --- |
+| `status` | Vista de solo lectura para retomar: versión y hashes actuales, notas existentes, cambios Git seguidos y referencias históricas. |
 | `validate` / `export --for test\|flash\|shopping` | Comprobaciones por etapa y entradas compatibles; resta existencias físicas. |
 | `parts` | Lista numerada exacta, búsquedas copiables y estado de oferta única/sitio conocido. |
 | `wiring` | SVG, texto por cable y asignaciones de pines desde una conexión explícita. |
@@ -56,9 +59,13 @@ Ambas entradas de producto incluyen el mismo `scripts/mcu_project.py`, independi
 
 [Contrato de herramientas](../skills/build-with-ai-mcu/references/project-tools.md) · [Contrato de réplica](../skills/build-with-ai-mcu/references/replication.md) · [Ejemplo ficticio de borrador](../skills/build-with-ai-mcu/assets/project-example/mcu-project.json).
 
+Al retomar, lea primero `status` o las notas breves existentes; después consulte el código, sus llamadas y la evidencia necesaria. Las pruebas y la carga admiten `--summary` opcional: estado de esta ejecución, recuentos de procesos, hashes conocidos, extracto de error y rutas exactas del informe y los registros completos. Se conservan la evidencia guardada, la salida predeterminada y los códigos de retorno. Amplíe la lectura ante fallos, evidencia antigua o datos insuficientes; un extracto no es un diagnóstico y un informe antiguo no se convierte en una aprobación actual. Los archivos cambiados orientan la búsqueda sin excluir llamadas ni referencias de hardware sin cambios. La vista usa solo datos opcionales existentes, no escribe archivos ni busca notas arbitrarias. Git tiene límites y omite archivos no seguidos; si falta Git o contexto, lo indica. Mantenga las salidas privadas en local.
+
+Reutilice el agente de código capaz y persistente con objetivos, aceptación, rutas y permisos actuales; reciba resultados, rutas de prueba y decisiones abiertas. Elija un modelo ligero solo para tareas estándar adecuadas cuando sea seleccionable. Reutilice las huellas de herramientas y las comprobaciones del entorno; vuelva a comprobar rutas o versiones cambiadas e importaciones fallidas, verificando piezas, alimentación, destino y permiso para cada acción. No se añade plataforma, registro, instalación obligatoria ni dependencia de context-mode. Se reduce la repetición de salidas y lecturas; el ahorro real de tokens y la calidad del modelo no se han medido. La vista previa de carga ya era breve, por lo que el resumen puede añadir bytes al aportar más evidencia.
+
 ## PCB solo cuando se solicita
 
-La IA principal prepara `pcb-brief.json` con piezas exactas, redes/pines y alimentación comprobados, fuentes de encapsulados, contorno con dimensiones/forma/unidades, conectores, agujeros, zonas excluidas y límites de fabricación. Pregunta solo datos bloqueantes. El agente PCB persistente hace esquema, colocación y ruteado en tu EDA existente y utilizable, separado del firmware. Sin conexión utilizable o sin agentes entrega un brief/borrador honesto, nunca una PCB terminada ni una instalación forzada.
+La IA principal prepara `pcb-brief.json` con piezas exactas, redes/pines y alimentación comprobados, fuentes de encapsulados, contorno con dimensiones/forma/unidades, conectores, agujeros, zonas excluidas y límites de fabricación. Pregunta solo datos bloqueantes. El agente PCB persistente hace esquema, colocación y ruteado en tu EDA existente y utilizable, separado del firmware; sin agentes, la IA principal hace el trabajo. Sin conexión utilizable entrega un brief/borrador honesto, nunca una PCB terminada ni una instalación forzada.
 
 Revisa esquema/ERC, pieza real contra pads/polaridad del encapsulado, colocación/ruteado/DRC y montaje virtual/3D: holguras, orientación, dimensiones y acceso a conectores. Modelos ausentes siguen desconocidos. Simulación de circuito solo cuando sea útil y haya modelos fiables. Separa cada tipo de prueba; no hay garantía de cero errores.
 
@@ -89,3 +96,5 @@ El [ejemplo UNO de baja tensión](../skills/build-with-ai-mcu/references/uno-led
 ## Verificar fuentes y licencia
 
 Ejecuta `python -B -m unittest discover -s tests -p "*_test.py"` y `node --test tests/*.test.mjs`; valida cada Skill con skill-creator. Las pruebas usan objetivos/procesos de proveedores ficticios locales, no hardware ni cuentas de compra reales. [MIT](../LICENSE) cubre código/Skills originales; terceros conservan sus términos. Cada usuario decide si publica su proyecto.
+
+Al cambiar instrucciones, recorre también los siguientes pasos de casos reales: una idea de una frase; necesidades claras con hardware propio; piezas en camino; sin agentes o sin una herramienta; retomar al día siguiente; sustituir una pieza; una falla física; y un paquete final sin un dato esencial. Revisa avance útil, evidencia honesta y dónde parar. Conserva el modo de código propio, REA/publicación opcionales y los permisos de carrito/grabación. Comprobar archivos no prueba por sí solo estos comportamientos.
