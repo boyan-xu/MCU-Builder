@@ -10,6 +10,8 @@ Mientras llegan las piezas, la IA prepara código, compilaciones, borradores de 
 
 ## Elige una entrada
 
+La IA considera solo los casos que importan al producto, como un reinicio o la pérdida de red, y usa opciones breves o valores provisionales visibles. El control por teléfono define quién puede cambiar ajustes, la primera conexión y la recuperación; el acceso local no demuestra permiso. El plan y la lista de piezas incluyen una nota breve: recursos, herramientas y acceso al dispositivo confirmados, dudas, tus acciones necesarias y trabajo que la IA puede continuar. Las decisiones y resultados esperados quedan en las notas y guías finales de uso y aceptación, sin otro formulario ni un sistema universal de cuentas.
+
 | Skill | Función |
 | --- | --- |
 | [MCU Builder](../skills/build-with-ai-mcu/SKILL.md) — `$build-with-ai-mcu` | La IA gestiona el trabajo técnico de idea a producto. |
