@@ -42,6 +42,8 @@ The required image/text are the exact current `wiring` command's `wiring.svg` an
 
 ## Guide content contract
 
+Use the saved project behavior decisions and defaults when writing the existing use/acceptance sections. For each relevant edge case, give the action or condition and the expected visible result; include phone access/provisioning and network recovery when applicable. Keep unresolved provisional choices explicit. A replication user should not need old chat or new design decisions to learn the behavior. No extra section marker or form is required; record actual run/not-run proof separately from expected behavior.
+
 Required guides are UTF-8 text with the exact current `<!-- mcu-project-sha256:... mcu-source-sha256:... -->` marker produced by `marker(project)`. Within each guide, invisible `<!-- mcu-section:KEY -->` comments identify the sections below; headings and prose may be in the user's language. Give actual project steps/details in every required section, with at least 32 letters/digits (Unicode supported). Empty/placeholder sections, duplicate keys and obvious standalone TODO/TBD/FIXME/PLACEHOLDER artifacts are rejected. This is a content/structure floor, not a claim that arbitrary prose is true or sufficient.
 
 | Role | Required section keys and meaning |
