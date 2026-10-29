@@ -12,9 +12,15 @@ Return this compact handoff: `{outcome, checks_and_evidence_paths, limits_or_blo
 
 Default to at most **two concurrent children**, with independent inputs and disjoint file ownership. One writer owns a given source tree; reuse the same child and environment instead of duplicate setup or competing writes. Capability-sensitive implementation/review goes to a capable coding agent. A lightweight child may do simple bulk standard-answer work only if the platform actually exposes a selectable lightweight model; otherwise inherit/default and say so honestly. Do not claim a lower model was selected without evidence. If children are unavailable, the main agent continues with bounded tool summaries. Delegation never expands installation, hardware, shopping-cart or publication rights.
 
+## Show implementation readiness
+
+With the proposed route and parts list, briefly state confirmed available parts/resources, usable tools and actual local-device connection; then unknowns/blockers, necessary user actions and work AI can continue now. Reuse known facts, `status`, `validate` and existing tool evidence as applicable; no new doctor, detector, platform or schema is needed. Separate an installed tool from verified USB/debug access. Unknown tools or region do not block a provisional list, but do not recommend spending based on guessed compatibility. Keep the note short and update only affected facts rather than repeating setup checks.
+
 ## Keep enough state to resume
 
 The main agent maintains a compact current note in the project's existing notes, or the optional `progress` support below. Keep agreed needs/acceptance, actual parts and arrival/verification state, current version, completed actions with evidence, pending work, blockers and next step. Update after useful work or a changed decision, without creating a second status system or asking the person to fill a form. Keep secrets and unrelated memory out.
+
+Include the relevant behavior decisions/defaults from [working style](working-style.md#make-behavior-checkable) and their expected results, identifying provisional choices. Existing `requirements` and `acceptance` fields or ordinary project notes suffice. Use them in implementation briefs, checks and final guides; do not rely on the person remembering old chat. A written expected result is a requirement, not evidence that it passed.
 
 On resume, start with `status` when optional project data exists, or the short existing project note. Read source, callers, wiring and full reports on demand for the next decision. Do not reload the whole project or repeat setup when current evidence is enough. Expand the read when a summary is insufficient, a check fails, or evidence is stale; no hard context cap may hide useful evidence. Check for drift in the source version, actual parts, wiring and rights before choosing the next action. Reuse current decisions and evidence instead of restarting intake or setup; a past success is not a fresh pass.
 

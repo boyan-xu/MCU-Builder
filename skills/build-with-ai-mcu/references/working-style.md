@@ -30,6 +30,14 @@ AI chooses one practical design and explains the result in plain words. Use stat
 
 When the person needs to do something, give one short action, what they should see and what to report. For example, inspect a part label, connect an identified unpowered wire or try the current build. Do not order a physical action while the target or safe conditions remain unknown. While awaiting that fact, inspect accessible software or prepare the known parts of the plan instead of asking unrelated questions.
 
+## Make behavior checkable
+
+Internally consider ambiguous behavior relevant to this product: no internet versus no router, power loss/restart, missing or invalid time, and settings changed during an operation. Select only cases that can change this project's result; these are examples, not a required interview or timer checklist. Turn each selected case into an observable expected result. Resolve a material safety, cost or usability tradeoff with a few short choices; for a noncritical gap, show a safe provisional default and continue independent work. Critical electrical facts and target identity still need evidence.
+
+When phone/network control is relevant, establish who should view or change what, first connection/provisioning, recovery after the network changes or disappears, and local versus internet scope. A local network alone does not establish who may change settings. Choose suitable existing framework support for the intended access; do not add a universal account system, ask offline products irrelevant access questions, or silently expose controls to the internet. Keep credentials in private local provisioning.
+
+Save chosen behavior, provisional defaults and their expected outcomes in the existing project notes or config requirements/acceptance, following [project tools](project-tools.md#keep-enough-state-to-resume). Revisit only affected choices when facts change. Carry them into the final use and acceptance guides so another person can repeat the design without finding old chat or inventing missing behavior; see [replication](replication.md#guide-content-contract).
+
 ## Try software and existing resources before new hardware
 
 Check existing code, settings, protocols, interfaces and available tools before concluding a feature needs new parts. Inspect what the current board can actually do, including existing compatible modules. Do not replace workable hardware merely because another board would be easier for AI. Use the installed compiler, IDE, debugger and flash tool whenever they fit and are accessible; do not build a replacement platform.
