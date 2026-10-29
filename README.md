@@ -10,6 +10,8 @@ While parts ship, AI prepares code, builds, draft wiring, flash settings and use
 
 ## Choose an entry
 
+AI considers only edge behavior that matters to your product, such as restart or loss of network, then uses short choices or visible provisional defaults. Phone control includes who may change settings, first connection and recovery; local access is not proof of permission. The route and parts list include a short readiness note: confirmed resources/tools/device access, unknowns, your needed actions and work AI can continue. These decisions and expected results stay in project notes and final use/acceptance guides, without a new form or account system.
+
 | Skill | What it does |
 | --- | --- |
 | [MCU Builder](skills/build-with-ai-mcu/SKILL.md) — `$build-with-ai-mcu` | AI manages the technical work from idea to product. |
